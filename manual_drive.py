@@ -58,18 +58,27 @@ def Roam():
     UA_R = UA4.Ultrasonic_Avoidance('D14', 'D12')
     threshold = 10
     
-    
+    distR=[]
+    distL=[]
     try:
         while True:
             # key = getch().lower()
             # if key == 'q':       # forward
             #     break
             distance_L =UA_L.get_distance()
+            if(distance_L>0 and distance_L<1000):
+                distL.append(distance_L)
+            if(len(distL)>5):
+                distL.pop(0)
             time.sleep(0.05)
             distance = UA_F.get_distance()
             time.sleep(0.05)
             distance_R = UA_R.get_distance()
-            print(distance_L,"|",distance,"|",distance_R)
+            if(distance_R>0 and distance_R<1000):
+                distR.append(distance_R)
+            if(len(distR)>5):
+                distR.pop(0)
+            print(sum(distL)/len(distL) if distL else 0,"|",distance,"|",sum(distR)/len(distR) if distR else 0)
             #print("distance_F",distance)
             status = UA_F.less_than(threshold)
             # if distance != -1:
