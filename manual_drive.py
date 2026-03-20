@@ -89,7 +89,7 @@ def Roam():
                 bw.forward()
                 #bw.speed = SPEED
                 if(distance_L>=0 and distance_L<1000):
-                    steer = (distance_L-50)/50
+                    steer = (distance_L-distance_R)/100
                     #print("raw ", steer)
                     steer = max(-1,min(steer,1))
                     #print("filterd ", steer)
