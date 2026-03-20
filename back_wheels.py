@@ -49,8 +49,8 @@ class Back_Wheels(object):
 			pulse_wide = int(self.pwm.map(value, 0, 100, 0, 4095))
 			self.pwm.write(self.PWM_B, 0, pulse_wide)
 
-		self.left_wheel.pwm  = _set_a_pwm
-		self.right_wheel.pwm = _set_b_pwm
+		self.right_wheel.pwm  = _set_a_pwm
+		self.left_wheel.pwm = _set_b_pwm
 
 		self._speed = 0
 		self._speedR = 0
