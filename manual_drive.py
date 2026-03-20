@@ -55,6 +55,7 @@ def CaptureTest():
 def Roam():
     UA_F = UA2.Ultrasonic_Avoidance2(20)
     UA_L = UA4.Ultrasonic_Avoidance('D13', 'D10')
+    UA_R = UA4.Ultrasonic_Avoidance('D14', 'D12')
     threshold = 10
     
     
@@ -66,7 +67,9 @@ def Roam():
             distance_L =UA_L.get_distance()
             time.sleep(0.05)
             distance = UA_F.get_distance()
-            print("distance_L",distance_L)
+            time.sleep(0.05)
+            distance_R = UA_R.get_distance()
+            print(distance_L,"|",distance,"|",distance_R)
             #print("distance_F",distance)
             status = UA_F.less_than(threshold)
             # if distance != -1:
