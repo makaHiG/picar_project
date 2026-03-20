@@ -204,29 +204,27 @@ class Pin(object):
 class Ultrasonic_Avoidance(object):
     # timeout = 0.05
 
-    # def __init__(self):
-    # 	self.channel = channel
-    # 	GPIO.setmode(GPIO.BCM)
+    def __init__(self, trig_pin, echo_pin):
+        self.trig = Pin(trig_pin)
+        self.echo = Pin(echo_pin)
 
     def distance(self):
         ##timeout=0.01  default
         timeout=0.02
-        trig = Pin('D13')
-        echo = Pin('D10')
         
-        trig.low()
+        self.trig.low()
         time.sleep(0.01)
-        trig.high()
+        self.trig.high()
         time.sleep(0.000015)
-        trig.low()
+        self.trig.low()
         pulse_end = 0
         pulse_start = 0
         timeout_start = time.time()
-        while echo.value()==0:
+        while self.echo.value()==0:
             pulse_start = time.time()
             if pulse_start - timeout_start > timeout:
                 return -1
-        while echo.value()==1:
+        while self.echo.value()==1:
             pulse_end = time.time()
             if pulse_end - timeout_start > timeout:
                 return -2
@@ -264,22 +262,40 @@ class Ultrasonic_Avoidance(object):
         return status
 
 def test():
-    UA = Ultrasonic_Avoidance()
+    UA1 = Ultrasonic_Avoidance('D13', 'D10')  # First sensor
+    UA2 = Ultrasonic_Avoidance('D14', 'D12')  # Second sensor, example pins
     threshold = 10
     while True:
-        distance = UA.get_distance()
-        status = UA.less_than(threshold)
-        if distance != -1:
-            print('distance', distance, 'cm')
-            time.sleep(0.2)
+        distance1 = UA1.get_distance()
+        status1 = UA1.less_than(threshold)
+        distance2 = UA2.get_distance()
+        status2 = UA2.less_than(threshold)
+        
+        print('Sensor 1:')
+        if distance1 != -1:
+            print('distance', distance1, 'cm')
         else:
             print(False)
-        if status == 1:
+        if status1 == 1:
             print("Less than %d" % threshold)
-        elif status == 0:
+        elif status1 == 0:
             print("Over %d" % threshold)
         else:
             print("Read distance error.")
+        
+        print('Sensor 2:')
+        if distance2 != -1:
+            print('distance', distance2, 'cm')
+        else:
+            print(False)
+        if status2 == 1:
+            print("Less than %d" % threshold)
+        elif status2 == 0:
+            print("Over %d" % threshold)
+        else:
+            print("Read distance error.")
+        
+        time.sleep(0.2)
 
 if __name__ == '__main__':
     test()
