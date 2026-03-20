@@ -54,7 +54,7 @@ def CaptureTest():
     
 def Roam():
     UA_F = UA2.Ultrasonic_Avoidance2(20)
-    UA_L = UA4.Ultrasonic_Avoidance()
+    UA_L = UA4.Ultrasonic_Avoidance('D13', 'D10')
     threshold = 10
     
     
