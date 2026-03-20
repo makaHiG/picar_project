@@ -109,7 +109,7 @@ class Back_Wheels(object):
 		self.right_wheel.speed = self._speed
 		self._debug_('Set speed to %s' % self._speed)
 	@property
-	def speedR(self, speedR):
+	def speedR(self):
 		return self._speedR
 	
 	@speedR.setter
@@ -121,7 +121,7 @@ class Back_Wheels(object):
 		##self._debug_('Set speedR to %s' % self._speed)
 
 	@property
-	def speedL(self, speedL):
+	def speedL(self):
 		return self._speedL
 	
 	@speedL.setter
