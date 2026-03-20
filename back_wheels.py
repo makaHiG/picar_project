@@ -53,6 +53,8 @@ class Back_Wheels(object):
 		self.right_wheel.pwm = _set_b_pwm
 
 		self._speed = 0
+		self._speedR = 0
+		self._speedL = 0
 
 		self.debug = debug
 		self._debug_('Set left wheel to #%d, PWM channel to %d' % (self.Motor_A, self.PWM_A))
@@ -119,8 +121,8 @@ class Back_Wheels(object):
 		##self._debug_('Set speedR to %s' % self._speed)
 
 	@property
-	def speedL(self, speedR):
-		return self._speedR
+	def speedL(self, speedL):
+		return self._speedL
 	
 	@speedL.setter
 	def speedL(self, speed):
