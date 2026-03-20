@@ -104,7 +104,7 @@ def Roam():
                     #print("filterd ", steer)
                     print("steer ", steer)
                     veer(steer)
-                else:veer(-1)
+                #else:veer(-1)
 
 
                 
@@ -186,7 +186,8 @@ try:
             TakePhoto()
         elif key =="e":
             bw.forward() 
-            veer(random.uniform(-1, 1))
+            bw.speedR = int(SPEED)
+            bw.speedL = int(0)
         elif key == 'q':     # quit
             bw.stop()
             fw.turn_straight()
