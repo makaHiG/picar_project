@@ -85,16 +85,13 @@ def Roam():
             trendL = 0
             for i in range(1, len(distL)):
                 trendL += distL[i]-distL[i-1]
-<<<<<<< HEAD
+
             trendR = 0
             for i in range(1, len(distR)):
                 trendR += distR[i]-distR[i-1]
 
             print("trend", trendR -trendL)    
-=======
 
-            print("trendL", trendL)    
->>>>>>> 0f540c0e532d531e43a30935e66be340a31996ae
             # if distance != -1:
             #     print('distance', distance, 'cm')
             #     time.sleep(0.2)
