@@ -229,12 +229,12 @@ class Ultrasonic_Avoidance(object):
             if pulse_end - timeout_start > timeout:
                 return -2
         during = pulse_end - pulse_start
-        #Added by me---
+        ##Added by me---
         # if pulse_start == 0 or pulse_end == 0: 
         #     return -3
         # if during <= 0 or during > 0.03:
-            return -3
-        #----Added by me
+        #    return -3
+        ##----Added by me
         cm = round(during * 340 / 2 * 100, 2)
         #print(cm)
         return cm
