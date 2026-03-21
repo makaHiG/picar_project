@@ -81,6 +81,11 @@ def Roam():
             print(sum(distL)/len(distL) if distL else 0,"|",distance,"|",sum(distR)/len(distR) if distR else 0)
             #print("distance_F",distance)
             status = UA_F.less_than(threshold)
+            trendL = 0
+            for i in range(1, len(distL)):
+                trendL += distL[i]-distL[i-1]
+
+            print("trendL", trendL)    
             # if distance != -1:
             #     print('distance', distance, 'cm')
             #     time.sleep(0.2)
@@ -93,7 +98,7 @@ def Roam():
             # else:
             #     print("Read distance error2.")
             # print(status)
-
+            
             if(distance>=40):
                 bw.forward()
                 #bw.speed = SPEED
