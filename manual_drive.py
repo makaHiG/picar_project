@@ -25,7 +25,7 @@ print(picar.back_wheels.__file__)
 
 # Steering & speed parameters
 STEER_ANGLE = 30  # degrees left/right
-SPEED = 99        # speed 0-100
+SPEED = 50        # speed 0-100
 TURN_TIME = 1.6
 #bw.speed = SPEED
 TURN_SPEED = 30
