@@ -70,9 +70,9 @@ def Roam():
                 distL.append(distance_L)
             if(len(distL)>5):
                 distL.pop(0)
-            time.sleep(0.05)
+            #time.sleep(0.05)
             distance = UA_F.get_distance()
-            time.sleep(0.05)
+            #time.sleep(0.05)
             distance_R = UA_R.get_distance()
             if(distance_R>0 and distance_R<1000):
                 distR.append(distance_R)
@@ -97,7 +97,7 @@ def Roam():
             if(distance>=40):
                 bw.forward()
                 #bw.speed = SPEED
-                if(distance_L>=0 and distance_L<1000):
+                if(distR and distL):
                     steer = (sorted(distR)[len(distR)//2] -sorted(distL)[len(distL)//2])/100
                     #print("raw ", steer)
                     steer = max(-1,min(steer,1))
