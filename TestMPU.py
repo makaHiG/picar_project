@@ -29,14 +29,22 @@ def read_accel():
     az = read_word(ACCEL_XOUT_H + 4)
     return ax, ay, az
 
+samples = []
+for _ in range(50):
+    samples.append(read_gyro_z())
+    time.sleep(0.01)
+
+offset = sum(samples) / len(samples)
+print("Gyro offset:", offset)
+
 print("Reading MPU6050... Ctrl+C to stop")
 
 try:
     while True:
-        gz = read_gyro_z()
+        gyro_corrected = read_gyro_z() - offset
         ax, ay, az = read_accel()
 
-        print(f"Gyro Z: {gz:6} | Accel: X={ax:6} Y={ay:6} Z={az:6}")
+        print(f"Gyro Z: {gyro_corrected:6} | Accel: X={ax:6} Y={ay:6} Z={az:6}")
 
         time.sleep(0.1)
 
