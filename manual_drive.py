@@ -55,8 +55,7 @@ offset = sum(samples) / len(samples)
 #print("Offset:", offset)
 
 # --- Integration ---
-angle = 0.0
-prev_time = time.time()
+
 
 #print("Tracking rotation...")
 
@@ -98,6 +97,9 @@ def Roam():
     
     distR=[]
     distL=[]
+
+    angle = 0.0
+    prev_time = time.time()
     try:
         while True:
             raw = read_gyro_z()
@@ -111,7 +113,7 @@ def Roam():
 
             print(f"Rate: {gyro_z:6.2f} deg/s | Angle: {angle:7.2f} deg")
 
-            time.sleep(0.01)
+            #time.sleep(0.01)
 
 
 
