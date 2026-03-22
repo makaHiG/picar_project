@@ -90,7 +90,7 @@ def Roam():
             for i in range(1, len(distR)):
                 trendR += distR[i]-distR[i-1]
 
-            print("trend", trendR +trendL)    
+            print("trend", trendL - trendR)    
 
             # if distance != -1:
             #     print('distance', distance, 'cm')
@@ -107,14 +107,15 @@ def Roam():
             
             if(distance>=40):
                 bw.forward()
-                #bw.speed = SPEED
-                if(distR and distL):
-                    steer = (sorted(distR)[len(distR)//2] -sorted(distL)[len(distL)//2])/100
-                    #print("raw ", steer)
-                    steer = max(-1,min(steer,1))
-                    #print("filterd ", steer)
-                    print("steer ", steer)
-                    veer(steer)
+                bw.speed = SPEED
+                
+                # if(distR and distL):
+                #     steer = (sorted(distR)[len(distR)//2] -sorted(distL)[len(distL)//2])/100
+                #     #print("raw ", steer)
+                #     steer = max(-1,min(steer,1))
+                #     #print("filterd ", steer)
+                #     print("steer ", steer)
+                #     veer(steer)
                 #else:veer(-1)
 
 
