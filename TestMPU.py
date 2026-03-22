@@ -44,7 +44,7 @@ try:
         dt = now - prev_time
         prev_time = now
 
-        angle += gyro_z * dt
+        angle -= gyro_z * dt
 
         print(f"Rate: {gyro_z:6.2f} deg/s | Angle: {angle:7.2f} deg")
 
