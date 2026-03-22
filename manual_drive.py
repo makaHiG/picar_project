@@ -79,7 +79,7 @@ def Roam():
                 distR.append(distance_R)
             if(len(distR)>5):
                 distR.pop(0)
-            #print(sum(distL)/len(distL) if distL else 0,"|",distance,"|",sum(distR)/len(distR) if distR else 0)
+            print(sum(distL)/len(distL) if distL else 0,"|",distance,"|",sum(distR)/len(distR) if distR else 0)
             #print("distance_F",distance)
             status = UA_F.less_than(threshold)
             trendL = 0
@@ -90,7 +90,7 @@ def Roam():
             for i in range(1, len(distR)):
                 trendR += distR[i]-distR[i-1]
 
-            print("trend", trendL - trendR)    
+            #print("trend", trendL - trendR)    
 
             # if distance != -1:
             #     print('distance', distance, 'cm')
@@ -109,13 +109,14 @@ def Roam():
                 bw.forward()
                 bw.speed = SPEED
                 
-                # if(distR and distL):
-                #     steer = (sorted(distR)[len(distR)//2] -sorted(distL)[len(distL)//2])/100
-                #     #print("raw ", steer)
-                #     steer = max(-1,min(steer,1))
-                #     #print("filterd ", steer)
-                #     print("steer ", steer)
-                #     veer(steer)
+                if(distR and distL):
+                    #steer = (sorted(distR)[len(distR)//2] -sorted(distL)[len(distL)//2])/100
+                    #print("raw ", steer)
+                    steer =(trendL-trendR)/100 
+                    steer = max(-1,min(steer,1))
+                    #print("filterd ", steer)
+                    print("steer ", steer)
+                    veer(steer)
                 #else:veer(-1)
 
 
