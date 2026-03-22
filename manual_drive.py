@@ -99,7 +99,7 @@ def Roam():
     distL=[]
 
     k = 0.01
-    i=0
+    i=0.005
     angle = 0.0
     target_angle = 0.0
     prev_time = time.time()
