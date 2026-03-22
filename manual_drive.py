@@ -99,6 +99,7 @@ def Roam():
     distL=[]
 
     k = 0.01
+    i=0
     angle = 0.0
     target_angle = 0.0
     prev_time = time.time()
@@ -111,7 +112,7 @@ def Roam():
             dt = now - prev_time
             prev_time = now
 
-            angle -= gyro_z * dt
+            angle += gyro_z * dt
 
             print(f"Rate: {gyro_z:6.2f} deg/s | Angle: {angle:7.2f} deg")
 
@@ -168,11 +169,11 @@ def Roam():
                     target_angle= (sorted(distR)[len(distR)//2] -sorted(distL)[len(distL)//2])/100
                     print("target ", target_angle)
                     #steer =(trendL-trendR)/100 
-                    steer = (target_angle-angle)*k
+                    steer = (target_angle-angle)*k - (gyro_z)*i
                     steer = max(-1,min(steer,1))
                     #print("filterd ", steer)
                     print("steer ", steer)
-                    veer(steer)
+                    veer(-steer)
                 #else:veer(-1)
 
 
