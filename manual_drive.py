@@ -115,7 +115,7 @@ def Roam():
             print(f"Rate: {gyro_z:6.2f} deg/s | Angle: {angle:7.2f} deg")
 
             #time.sleep(0.01)
-
+            k = 0.1
 
 
             # key = getch().lower()
@@ -168,7 +168,7 @@ def Roam():
                     target_angle= (sorted(distR)[len(distR)//2] -sorted(distL)[len(distL)//2])/100
                     #print("raw ", steer)
                     #steer =(trendL-trendR)/100 
-                    steer = target_angle-angle
+                    steer = (target_angle-angle)*k
                     steer = max(-1,min(steer,1))
                     #print("filterd ", steer)
                     print("steer ", steer)
