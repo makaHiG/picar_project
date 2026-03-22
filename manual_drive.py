@@ -166,7 +166,7 @@ def Roam():
                 
                 if(distR and distL):
                     target_angle= (sorted(distR)[len(distR)//2] -sorted(distL)[len(distL)//2])/100
-                    #print("raw ", steer)
+                    print("target ", target_angle)
                     #steer =(trendL-trendR)/100 
                     steer = (target_angle-angle)*k
                     steer = max(-1,min(steer,1))
