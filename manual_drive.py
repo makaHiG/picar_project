@@ -166,11 +166,12 @@ def Roam():
                 if(distR and distL):
                     #steer = (sorted(distR)[len(distR)//2] -sorted(distL)[len(distL)//2])/100
                     #print("raw ", steer)
-                    steer =(trendL-trendR)/100 
+                    #steer =(trendL-trendR)/100 
+                    steer = angle/45
                     steer = max(-1,min(steer,1))
                     #print("filterd ", steer)
                     print("steer ", steer)
-                    veer(-angle)
+                    veer(steer)
                 #else:veer(-1)
 
 
