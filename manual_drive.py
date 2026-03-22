@@ -79,7 +79,7 @@ def Roam():
                 distR.append(distance_R)
             if(len(distR)>5):
                 distR.pop(0)
-            print(sum(distL)/len(distL) if distL else 0,"|",distance,"|",sum(distR)/len(distR) if distR else 0)
+            #print(sum(distL)/len(distL) if distL else 0,"|",distance,"|",sum(distR)/len(distR) if distR else 0)
             #print("distance_F",distance)
             status = UA_F.less_than(threshold)
             trendL = 0
@@ -90,7 +90,7 @@ def Roam():
             for i in range(1, len(distR)):
                 trendR += distR[i]-distR[i-1]
 
-            print("trend", trendR -trendL)    
+            print("trend", trendR +trendL)    
 
             # if distance != -1:
             #     print('distance', distance, 'cm')
