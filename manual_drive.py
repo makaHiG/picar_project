@@ -98,7 +98,7 @@ def Roam():
     distR=[]
     distL=[]
 
-    k = 0.1
+    k = 0.05
     i=0.0005
     angle = 0.0
     target_angle = 0.0
