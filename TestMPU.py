@@ -1,15 +1,12 @@
 import smbus
 import time
 
-bus = smbus.SMBus(1)  # J8 = I2C bus 1
+bus = smbus.SMBus(1)
 MPU6050_ADDR = 0x68
 
-# Registers
 PWR_MGMT_1 = 0x6B
 GYRO_ZOUT_H = 0x47
-ACCEL_XOUT_H = 0x3B
 
-# Wake up MPU6050
 bus.write_byte_data(MPU6050_ADDR, PWR_MGMT_1, 0)
 
 def read_word(reg):
@@ -23,30 +20,35 @@ def read_word(reg):
 def read_gyro_z():
     return read_word(GYRO_ZOUT_H)
 
-def read_accel():
-    ax = read_word(ACCEL_XOUT_H)
-    ay = read_word(ACCEL_XOUT_H + 2)
-    az = read_word(ACCEL_XOUT_H + 4)
-    return ax, ay, az
-
+# --- Calibration ---
 samples = []
-for _ in range(50):
+for _ in range(100):
     samples.append(read_gyro_z())
-    time.sleep(0.01)
+    time.sleep(0.005)
 
 offset = sum(samples) / len(samples)
-print("Gyro offset:", offset)
+print("Offset:", offset)
 
-print("Reading MPU6050... Ctrl+C to stop")
+# --- Integration ---
+angle = 0.0
+prev_time = time.time()
+
+print("Tracking rotation...")
 
 try:
     while True:
-        gyro_corrected = read_gyro_z() - offset
-        ax, ay, az = read_accel()
+        raw = read_gyro_z()
+        gyro_z = (raw - offset) / 131.0  # deg/sec
 
-        print(f"Gyro Z: {gyro_corrected:6} | Accel: X={ax:6} Y={ay:6} Z={az:6}")
+        now = time.time()
+        dt = now - prev_time
+        prev_time = now
 
-        time.sleep(0.1)
+        angle += gyro_z * dt
+
+        print(f"Rate: {gyro_z:6.2f} deg/s | Angle: {angle:7.2f} deg")
+
+        time.sleep(0.01)
 
 except KeyboardInterrupt:
     print("\nStopped")
