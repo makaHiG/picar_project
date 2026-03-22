@@ -98,6 +98,7 @@ def Roam():
     distR=[]
     distL=[]
 
+    k = 0.01
     angle = 0.0
     target_angle = 0.0
     prev_time = time.time()
@@ -115,7 +116,6 @@ def Roam():
             print(f"Rate: {gyro_z:6.2f} deg/s | Angle: {angle:7.2f} deg")
 
             time.sleep(0.01)
-            k = 0.001
 
 
             # key = getch().lower()
