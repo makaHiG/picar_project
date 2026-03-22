@@ -99,6 +99,7 @@ def Roam():
     distL=[]
 
     angle = 0.0
+    target_angle = 0.0
     prev_time = time.time()
     try:
         while True:
@@ -164,10 +165,10 @@ def Roam():
                 bw.speed = SPEED
                 
                 if(distR and distL):
-                    #steer = (sorted(distR)[len(distR)//2] -sorted(distL)[len(distL)//2])/100
+                    target_angle= (sorted(distR)[len(distR)//2] -sorted(distL)[len(distL)//2])/100
                     #print("raw ", steer)
                     #steer =(trendL-trendR)/100 
-                    steer = angle/45
+                    steer = target_angle-angle
                     steer = max(-1,min(steer,1))
                     #print("filterd ", steer)
                     print("steer ", steer)
