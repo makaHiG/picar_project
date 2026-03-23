@@ -174,7 +174,7 @@ def Roam():
                     print("steer ", steer)
                     steer = max(-1,min(steer,1))
                     #print("filterd ", steer)
-                    veer(steer)
+                    veer(-steer)
                 #else:veer(-1)
 
 
