@@ -166,8 +166,8 @@ def Roam():
                 bw.speed = SPEED
                 
                 if(distR and distL):
-                    target_angle= (sorted(distR)[len(distR)//2] -sorted(distL)[len(distL)//2])/100
-                    print("target ", target_angle)
+                    target_angle= distR-distL#(sorted(distR)[len(distR)//2] -sorted(distL)[len(distL)//2])/100
+                    print("distR-distL ", target_angle)
                     #steer =(trendL-trendR)/100 
                     steer = (target_angle-angle)*k #- (gyro_z)*i
                     steer = max(-1,min(steer,1))
