@@ -170,7 +170,7 @@ def Roam():
                     target_angle =  (d_L - d_R) / (d_R + d_L) if (d_R + d_L) != 0 else 0
                     print("Center_Offset ", target_angle)
                     #steer =(trendL-trendR)/100 
-                    steer = (target_angle*45-angle) #- (gyro_z)*i
+                    steer = (target_angle*45-angle)/90 #- (gyro_z)*i
                     print("steer ", steer)
                     steer = max(-1,min(steer,1))
                     #print("filterd ", steer)
