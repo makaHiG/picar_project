@@ -170,8 +170,8 @@ def Roam():
                     print("distR-distL ", target_angle)
                     #steer =(trendL-trendR)/100 
                     steer = (target_angle-angle)*k #- (gyro_z)*i
-                    steer = max(-1,min(steer,1))
                     print("steer ", steer)
+                    steer = max(-1,min(steer,1))
                     #print("filterd ", steer)
                     veer(-steer)
                 #else:veer(-1)
