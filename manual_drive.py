@@ -164,10 +164,11 @@ def Roam():
             if(distance>=40):
                 bw.forward()
                 bw.speed = SPEED
-                
+                d_R = (sorted(distR)[len(distR)//2]) if distR else 0
+                d_L = (sorted(distL)[len(distL)//2]) if distL else 0
                 if(distR and distL):
-                    target_angle= (distance_R-distance_L)/(distance_R+distance_L) #(sorted(distR)[len(distR)//2] -sorted(distL)[len(distL)//2])/100
-                    print("distR-distL ", target_angle)
+                    target_angle =  (d_R - d_L) / (d_R + d_L) if (d_R + d_L) != 0 else 0
+                    print("Center_Offset ", target_angle)
                     #steer =(trendL-trendR)/100 
                     steer = (target_angle-angle)*k #- (gyro_z)*i
                     print("steer ", steer)
