@@ -16,13 +16,13 @@ import picar
 
 picar.setup() ## Car will not move before this is run 
 # Initialize wheels
-fw = front_wheels.Front_Wheels(db='config')
-bw = back_wheels.Back_Wheels(db='config')
-bw.stop()
-fw.turn_straight()
-bw.speed = 0
-fw.ready()
-bw.ready()
+camera_servo = front_wheels.Front_Wheels(db='config')
+wheels = back_wheels.Back_Wheels(db='config')
+wheels.stop()
+camera_servo.turn_straight()
+wheels.speed = 0
+camera_servo.ready()
+wheels.ready()
 print(picar.back_wheels.__file__)
 
 # Gyro setup
@@ -62,26 +62,26 @@ offset = sum(samples) / len(samples)
 
 # Steering & speed parameters
 STEER_ANGLE = 30  # degrees left/right
-SPEED = 100        # speed 0-100
+SPEED = 50        # speed 0-100
 TURN_TIME = 1.6
-#bw.speed = SPEED
+#wheels.speed = SPEED
 TURN_SPEED = 30
 def UpDownTest():
-    fw.turn_right()
+    camera_servo.turn_right()
     TakePhoto()
     time.sleep(1)
-    fw.turn_straight()
+    camera_servo.turn_straight()
     TakePhoto()
     time.sleep(1)
-    fw.turn_left()
+    camera_servo.turn_left()
     TakePhoto()
     time.sleep(1)
-    fw.turn_straight()
+    camera_servo.turn_straight()
 def SpinTest():
-    bw.speed = TURN_SPEED
-    bw.spin_right()
+    wheels.speed = TURN_SPEED
+    wheels.spin_right()
     time.sleep(TURN_TIME)
-    bw.stop()
+    wheels.stop()
 def CaptureTest():
     turns=0
     while (turns<12):
@@ -97,7 +97,11 @@ def Roam():
     
     distR=[]
     distL=[]
-
+    obstructed = 0
+    obs_distance = 0
+    clear_angle = 0
+    front_clearance = 30 #distance considered clear in front of the car
+    side_clearance = 20 #clearance needed sideways
     k = 0.5
     i=0.0005
     angle = 0.0
@@ -160,17 +164,21 @@ def Roam():
             # else:
             #     print("Read distance error2.")
             # print(status)
-            
-            if(distance>=40):
-                bw.forward()
-                bw.speed = SPEED
+            if(distance != -1 and distance < front_clearance):
+                obstructed = 1
+            else:
+                obstructed = 0  
+
+            if(obstructed == 0):
+                wheels.forward()
+                wheels.speed = SPEED
                 d_R = (sorted(distR)[len(distR)//2]) if distR else 0
                 d_L = (sorted(distL)[len(distL)//2]) if distL else 0
                 if(distR and distL):
                     target_angle =  (d_L - d_R) / (d_R + d_L) if (d_R + d_L) != 0 else 0
                     print("Center_Offset ", target_angle)
                     #steer =(trendL-trendR)/100 
-                    steer = (target_angle*45-angle)/90 #- (gyro_z)*i
+                    steer = (target_angle*90-angle)/90 #- (gyro_z)*i
                     print("steer ", steer)
                     steer = max(-1,min(steer,1))
                     #print("filterd ", steer)
@@ -180,15 +188,20 @@ def Roam():
 
                 
             # elif(25<=distance<=40):
-            #     bw.spin_right()
-            #     bw.speed = TURN_SPEED
-            else:
-                bw.backward()
-                bw.speed = TURN_SPEED
+            #     wheels.spin_right()
+            #     wheels.speed = TURN_SPEED
+            
+            elif(obstructed == 1):
+                obs_distance = distance
+                if (distance > front_clearance):
+                    print("free")
+                wheels.backward()
+                wheels.speed = TURN_SPEED
                 time.sleep(1)
+
     except Exception:
-        bw.stop()
-        fw.turn_straight()
+        wheels.stop()
+        camera_servo.turn_straight()
         raise
             
 def TakePhoto():
@@ -211,11 +224,11 @@ def TakePhoto():
 
 def veer(steer):
     if(steer<0):
-        bw.speedL = int(SPEED+steer*SPEED)
-        bw.speedR = SPEED
+        wheels.speedL = int(SPEED+steer*SPEED)
+        wheels.speedR = SPEED
     if(steer>0):
-        bw.speedL = SPEED
-        bw.speedR = int(SPEED-steer*SPEED)
+        wheels.speedL = SPEED
+        wheels.speedR = int(SPEED-steer*SPEED)
     
 def getch():
     """Read a single key press from the terminal"""
@@ -234,21 +247,21 @@ try:
     while True:
         key = getch().lower()
         if key == 'w':       # forward
-            bw.forward()
-            bw.speed=SPEED
+            wheels.forward()
+            wheels.speed=SPEED
         elif key == 's':     # backward
-            bw.backward()
-            bw.speed=SPEED
+            wheels.backward()
+            wheels.speed=SPEED
         elif key == 'a':     # turn left
-            bw.spin_left()
-            bw.speed = TURN_SPEED
+            wheels.spin_left()
+            wheels.speed = TURN_SPEED
         elif key == 'd':     # turn right
-            bw.spin_right()
-            bw.speed = TURN_SPEED
+            wheels.spin_right()
+            wheels.speed = TURN_SPEED
         elif key == ' ':     # stop
-            bw.stop()
-            bw.ready()
-            fw.turn_straight()
+            wheels.stop()
+            wheels.ready()
+            camera_servo.turn_straight()
         elif key =="1": #try turning servo
             CaptureTest()
         elif key =="2": #test Navigation
@@ -256,17 +269,17 @@ try:
         elif key =="3": #testPhoto
             TakePhoto()
         elif key =="e":
-            bw.forward() 
-            bw.speedR = int(SPEED)
-            bw.speedL = int(0)
+            wheels.forward() 
+            wheels.speedR = int(SPEED)
+            wheels.speedL = int(0)
         elif key == 'q':     # quit
-            bw.stop()
-            fw.turn_straight()
+            wheels.stop()
+            camera_servo.turn_straight()
             break
         else:
-            ##bw.stop()
-            fw.turn_straight()
+            ##wheels.stop()
+            camera_servo.turn_straight()
 
 except KeyboardInterrupt:
-    bw.stop()
-    fw.turn_straight()
+    wheels.stop()
+    camera_servo.turn_straight()
