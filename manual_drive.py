@@ -88,15 +88,21 @@ def CaptureTest():
         UpDownTest()
         SpinTest()
         turns+=1
-    
+
+
+
 def Roam():
     UA_F = UA2.Ultrasonic_Avoidance2(20)
     UA_L = UA4.Ultrasonic_Avoidance('D13', 'D10')
     UA_R = UA4.Ultrasonic_Avoidance('D14', 'D12')
+    
+    
     threshold = 10
     
     distR=[]
+    confidence_R =1.0
     distL=[]
+    confidence_L =1.0
     obstructed = 0
     obs_distance = 0
     clear_angle = 0
@@ -107,6 +113,19 @@ def Roam():
     angle = 0.0
     target_angle = 0.0
     prev_time = time.time()
+    
+    def HandleUltrasonicData(dist, lst):
+        if 0<dist<1000:
+            lst.append(dist)
+        elif dist == -2:
+            lst.append(200)
+        else:
+            print(f"Faulty reading {dist } from {'Right' lst is distR else 'Left'}")
+    
+        if(len(lst)>5):
+                lst.pop(0)
+
+
     try:
         while True:
             raw = read_gyro_z()
@@ -135,10 +154,12 @@ def Roam():
             distance = UA_F.get_distance()
             #time.sleep(0.05)
             distance_R = UA_R.get_distance()
-            if(distance_R>0 and distance_R<1000):
-                distR.append(distance_R)
-            if(len(distR)>5):
-                distR.pop(0)
+            
+            HandleUltrasonicData(distance_R,distR)
+            HandleUltrasonicData(distance_L,distL)
+
+            
+            
             print(sum(distL)/len(distL) if distL else 0,"|",distance,"|",sum(distR)/len(distR) if distR else 0)
             #print("distance_F",distance)
             status = UA_F.less_than(threshold)
