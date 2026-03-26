@@ -125,7 +125,7 @@ def Roam():
         else:
             print(f"Faulty reading {dist } from {'Right'if lst is distR else 'Left'}")
             print("lst is distL: ", lst is distL)
-            list.append(-3)  # Append a default value for faulty readings
+            lst.append(-3)  # Append a default value for faulty readings
  
     
         if(len(lst)>5):
