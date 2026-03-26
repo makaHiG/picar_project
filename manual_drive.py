@@ -164,7 +164,7 @@ def Roam():
             HandleUltrasonicData(distance_R,distR)
             HandleUltrasonicData(distance_L,distL)
 
-            
+            errors = []
             
             print(sum(distL)/len(distL) if distL else 0,"|",distance,"|",sum(distR)/len(distR) if distR else 0)
             #print("distance_F",distance)
@@ -212,11 +212,16 @@ def Roam():
                     target_angle = cor_angle
                     steer = 0
                     if(confidence_L>0 and confidence_R>0):
-                        
                         target_angle =  (d_L - d_R) / (d_R + d_L) if (d_R + d_L) != 0 else 0
+                        error = (target_angle*90-angle)/90
+                        errors.append(error)
+                        integral = sum(errors)
+                        if(len(errors)>5):
+                            errors.pop(0)
+                        derivative = error - errors[-2] if len(errors) > 1 else 0
                         print("Center_Offset ", target_angle)
                         #steer =(trendL-trendR)/100 
-                        steer = (target_angle*90-angle)/90 #- (gyro_z)*i
+                        steer = k*(error) +i*integral + d*derivative #- (gyro_z)*i
                         print("steer ", steer)
                         steer = max(-1,min(steer,1))
                         #print("filterd ", steer)
