@@ -120,7 +120,7 @@ def Roam():
         elif dist == -2:
             lst.append(200)
         else:
-            print(f"Faulty reading {dist } from {'Right' lst is distR else 'Left'}")
+            print(f"Faulty reading {dist } from {'Right'if lst is distR else 'Left'}")
     
         if(len(lst)>5):
                 lst.pop(0)
