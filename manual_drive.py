@@ -109,8 +109,8 @@ def Roam():
     front_clearance = 30 #distance considered clear in front of the car
     side_clearance = 20 #clearance needed sideways
     k = 0.1
-    i=0.0005
-    d=0.01
+    i=0.0000
+    d=0.00
     angle = 0.0
     target_angle = 0.0
     prev_time = time.time()
@@ -221,7 +221,7 @@ def Roam():
                         derivative = 0
                         for i in range(1, len(errors)):
                             derivative += errors[i] - errors[i-1]
-                            
+
                         print("Center_Offset ", target_angle)
                         #steer =(trendL-trendR)/100 
                         steer = k*(error) +i*integral + d*derivative #- (gyro_z)*i
