@@ -110,7 +110,7 @@ def Roam():
     side_clearance = 20 #clearance needed sideways
     k = 0.1
     i=0.0000
-    d=0.00
+    d=0.01
     angle = 0.0
     target_angle = 0.0
     prev_time = time.time()
