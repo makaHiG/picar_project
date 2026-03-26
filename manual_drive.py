@@ -98,7 +98,7 @@ def Roam():
     
     
     threshold = 10
-    
+    cor_angle = 0
     distR=[]
     confidence_R =1.0
     distL=[]
@@ -110,18 +110,23 @@ def Roam():
     side_clearance = 20 #clearance needed sideways
     k = 0.5
     i=0.0005
+    d=0.1
     angle = 0.0
     target_angle = 0.0
     prev_time = time.time()
     
     def HandleUltrasonicData(dist, lst):
+        
         if 0<dist<1000:
             lst.append(dist)
+            
         elif dist == -2:
             lst.append(200)
         else:
             print(f"Faulty reading {dist } from {'Right'if lst is distR else 'Left'}")
             print("lst is distL: ", lst is distL)
+            list.append(-3)  # Append a default value for faulty readings
+ 
     
         if(len(lst)>5):
                 lst.pop(0)
@@ -197,13 +202,27 @@ def Roam():
                 d_R = (sorted(distR)[len(distR)//2]) if distR else 0
                 d_L = (sorted(distL)[len(distL)//2]) if distL else 0
                 if(distR and distL):
-                    target_angle =  (d_L - d_R) / (d_R + d_L) if (d_R + d_L) != 0 else 0
-                    print("Center_Offset ", target_angle)
-                    #steer =(trendL-trendR)/100 
-                    steer = (target_angle*90-angle)/90 #- (gyro_z)*i
-                    print("steer ", steer)
-                    steer = max(-1,min(steer,1))
-                    #print("filterd ", steer)
+                        
+                    if d_R == -3:
+                        confidence_R = 0
+                    else:confidence_R = 1-distR.count (-3)/len(distR) if distR else 0
+                    if(d_L == -3):
+                        confidence_L = 0
+                    else:confidence_L = 1-distL.count (-3)/len(distL) if distL else 0
+                    target_angle = cor_angle
+                    steer = 0
+                    if(confidence_L>0 and confidence_R>0):
+                        
+                        target_angle =  (d_L - d_R) / (d_R + d_L) if (d_R + d_L) != 0 else 0
+                        print("Center_Offset ", target_angle)
+                        #steer =(trendL-trendR)/100 
+                        steer = (target_angle*90-angle)/90 #- (gyro_z)*i
+                        print("steer ", steer)
+                        steer = max(-1,min(steer,1))
+                        #print("filterd ", steer)
+                    else:
+                        steer = (target_angle-angle)/90
+                        steer = max(-1,min(steer,1))
                     veer(-steer)
                 #else:veer(-1)
 

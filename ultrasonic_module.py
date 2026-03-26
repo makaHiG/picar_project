@@ -220,13 +220,13 @@ class Ultrasonic_Avoidance(object):
         pulse_end = 0
         pulse_start = 0
         timeout_start = time.time()
-        print("Check1 ", self.echo.value())
+        #print("Check1 ", self.echo.value())
         while self.echo.value()==0:
             pulse_start = time.time()
             if pulse_start - timeout_start > timeout:
                 return -1
         
-        print("Check2 ", self.echo.value())
+        #print("Check2 ", self.echo.value())
 
         while self.echo.value()==1:
             pulse_end = time.time()
