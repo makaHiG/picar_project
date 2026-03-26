@@ -218,7 +218,10 @@ def Roam():
                         integral = sum(errors)
                         if(len(errors)>5):
                             errors.pop(0)
-                        derivative = error - errors[-2] if len(errors) > 1 else 0
+                        derivative = 0
+                        for i in range(1, len(errors)):
+                            derivative += errors[i] - errors[i-1]
+                            
                         print("Center_Offset ", target_angle)
                         #steer =(trendL-trendR)/100 
                         steer = k*(error) +i*integral + d*derivative #- (gyro_z)*i
