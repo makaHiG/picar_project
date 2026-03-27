@@ -152,13 +152,13 @@ def Roam():
             if debug["gryo"]:
                 print(f"Rate: {gyro_z:6.2f} deg/s | Angle: {angle:7.2f} deg")
 
-            time.sleep(0.0001)
+            time.sleep(0.001)
 
 
             # key = getch().lower()
             # if key == 'q':       # forward
             #     break
-            distance_L =UA_L.get_distance()
+            distance_L =UA_L.distance()
             if(distance_L>0 and distance_L<1000):
                 distL.append(distance_L)
             if(len(distL)>5):
