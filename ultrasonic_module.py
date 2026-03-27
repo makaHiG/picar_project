@@ -210,7 +210,7 @@ class Ultrasonic_Avoidance(object):
 
     def distance(self):
         ##timeout=0.01  default
-        timeout=0.02
+        timeout=0.01
         
         self.trig.low()
         time.sleep(0.001)
