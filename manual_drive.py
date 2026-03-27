@@ -55,8 +55,13 @@ offset = sum(samples) / len(samples)
 #print("Offset:", offset)
 
 # --- Integration ---
-
-
+debug = {
+    "wheels": False,
+    "camera": False,
+    "sensors": True,
+    "gryo": False,
+    "navigation": False
+}
 #print("Tracking rotation...")
 
 
@@ -123,8 +128,9 @@ def Roam():
         elif dist == -2:
             lst.append(200)
         else:
-            print(f"Faulty reading {dist } from {'Right'if lst is distR else 'Left'}")
-            print("lst is distL: ", lst is distL)
+            if debug["sensors"]:
+                print(f"Faulty reading {dist } from {'Right'if lst is distR else 'Left'}")
+                print("lst is distL: ", lst is distL)
             lst.append(-3)  # Append a default value for faulty readings
  
     
@@ -143,7 +149,8 @@ def Roam():
 
             angle += gyro_z * dt
 
-            print(f"Rate: {gyro_z:6.2f} deg/s | Angle: {angle:7.2f} deg")
+            if debug["gryo"]:
+                print(f"Rate: {gyro_z:6.2f} deg/s | Angle: {angle:7.2f} deg")
 
             time.sleep(0.0001)
 
@@ -165,8 +172,8 @@ def Roam():
             HandleUltrasonicData(distance_L,distL)
 
             errors = []
-            
-            print(sum(distL)/len(distL) if distL else 0,"|",distance,"|",sum(distR)/len(distR) if distR else 0)
+            if debug["sensors"]:
+                print(sum(distL)/len(distL) if distL else 0,"|",distance,"|",sum(distR)/len(distR) if distR else 0)
             #print("distance_F",distance)
             status = UA_F.less_than(threshold)
             trendL = 0
@@ -222,10 +229,11 @@ def Roam():
                         for i in range(1, len(errors)):
                             derivative += errors[i] - errors[i-1]
 
-                        print("Center_Offset ", target_angle)
                         #steer =(trendL-trendR)/100 
                         steer = k*(error) +i*integral + d*derivative #- (gyro_z)*i
-                        print("steer ", steer)
+                        if debug["sensors"]:
+                            print("Center_Offset ", target_angle)
+                            print("steer ", steer)
                         steer = max(-1,min(steer,1))
                         #print("filterd ", steer)
                     else:
