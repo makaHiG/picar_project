@@ -62,10 +62,10 @@ offset = sum(samples) / len(samples)
 
 # Steering & speed parameters
 STEER_ANGLE = 30  # degrees left/right
-SPEED = 50        # speed 0-100
+SPEED = 0        # speed 0-100 default 50
 TURN_TIME = 1.6
 #wheels.speed = SPEED
-TURN_SPEED = 30
+TURN_SPEED = 0 #default 30
 def UpDownTest():
     camera_servo.turn_right()
     TakePhoto()
