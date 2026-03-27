@@ -34,8 +34,8 @@ class Back_Wheels(object):
 
 		self.db = filedb.fileDB(db=db)
 
-		self.forward_A = 0 # Changed these ##int(self.db.get('forward_A', default_value=1))
-		self.forward_B = 0 ##int(self.db.get('forward_B', default_value=1))
+		self.forward_A = 1 # Changed these ##int(self.db.get('forward_A', default_value=1))
+		self.forward_B = 1 ##int(self.db.get('forward_B', default_value=1))
 
 		self.left_wheel = TB6612.Motor(self.Motor_A, offset=self.forward_A)
 		self.right_wheel = TB6612.Motor(self.Motor_B, offset=self.forward_B)
