@@ -17,7 +17,7 @@ import os
 import smbus #for gyro
 
 from picar import front_wheels, back_wheels  # PiCar-S library
-from ultrasonic_avoidance_3pin import Ultrasonic_Avoidance2 as UA2
+#from ultrasonic_avoidance_3pin import Ultrasonic_Avoidance2 as UA2
 
 import picar
 
