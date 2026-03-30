@@ -167,9 +167,9 @@ def Roam():
 
 
             errors = []
-            # if debug["sensors"]:
-            #     print(sum(distL)/len(distL) if distL else 0,"|",distance_F,"|",sum(distR)/len(distR) if distR else 0)
-            # #print("distance_F",distance)
+            if debug["sensors"]:
+                print(sum(distance_L),"|",distance_F,"|",distance_R)
+            #print("distance_F",distance)
             trendL = 0
             for i in range(1, len(distL)):
                 trendL += distL[i]-distL[i-1]
@@ -200,8 +200,8 @@ def Roam():
             if(obstructed == 0):
                 wheels.forward()
                 wheels.speed = SPEED
-                d_R = US_Manager.right_distance
-                d_L = US_Manager.left_distance
+                d_R = distance_R
+                d_L = distance_L
                 
                     
                 if d_R == -3:
