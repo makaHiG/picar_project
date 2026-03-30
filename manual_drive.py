@@ -188,7 +188,6 @@ def Roam():
             if debug["sensors"]:
                 print(sum(distL)/len(distL) if distL else 0,"|",distance_F,"|",sum(distR)/len(distR) if distR else 0)
             #print("distance_F",distance)
-            status = UA_F.less_than(threshold)
             trendL = 0
             for i in range(1, len(distL)):
                 trendL += distL[i]-distL[i-1]
