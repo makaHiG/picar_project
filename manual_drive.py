@@ -4,9 +4,14 @@ import termios
 import time
 import random
 from datetime import datetime
-from . import ultrasonic_manager
-from ultrasonic_manager import UltrasonicManager
-import ultrasonic_module as UA4
+# from . import ultrasonic_manager
+# from ultrasonic_manager import UltrasonicManager
+# import ultrasonic_module as UA4
+from .ultrasonic_manager import UltrasonicManager
+from . import ultrasonic_module as UA4
+from .ultrasonic_avoidance_3pin import Ultrasonic_Avoidance2 as UA2
+
+
 import subprocess
 import os
 import smbus #for gyro
