@@ -170,13 +170,13 @@ def Roam():
             if debug["sensors"]:
                 print(distance_L,"|",distance_F,"|",distance_R)
             #print("distance_F",distance)
-            trendL = 0
-            for i in range(1, len(distL)):
-                trendL += distL[i]-distL[i-1]
+            # trendL = 0
+            # for i in range(1, len(distL)):
+            #     trendL += distL[i]-distL[i-1]
 
-            trendR = 0
-            for i in range(1, len(distR)):
-                trendR += distR[i]-distR[i-1]
+            # trendR = 0
+            # for i in range(1, len(distR)):
+            #     trendR += distR[i]-distR[i-1]
 
             #print("trend", trendL - trendR)    
 
