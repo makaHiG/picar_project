@@ -28,8 +28,8 @@ class UltrasonicManager:
         self.running = False
         self.thread.join()
 
-    def get_distance_left():
-        return()
+    # def get_distance_left():
+    #     return()
 
     def HandleUltrasonicData(self,dist, lst):
         
