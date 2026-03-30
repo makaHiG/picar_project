@@ -165,15 +165,15 @@ def Roam():
             # key = getch().lower()
             # if key == 'q':       # forward
             #     break
-            distance_L =US_Manager.left.get_distance()
+            distance_L =US_Manager.left_distance
             if(distance_L>0 and distance_L<1000):
                 distL.append(distance_L)
             if(len(distL)>5):
                 distL.pop(0)
             #time.sleep(0.05)
-            distance_F = US_Manager.front.get_distance()
+            distance_F = US_Manager.front_distance
             #time.sleep(0.05)
-            distance_R = US_Manager.right.get_distance()
+            distance_R = US_Manager.right_distance
 
             HandleUltrasonicData(distance_R,distR)
             HandleUltrasonicData(distance_L,distL)
