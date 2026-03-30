@@ -133,12 +133,12 @@ def Roam():
     d=0.00
     angle = 0.0
     target_angle = 0.0
-    prev_time = time.time()
+    prev_time = time.time() ##
     distance_x=0
     distance_y=0
     def DriveStraight():
         veer(angle-cor_angle)
-    def EstimateDistance(angle):
+    def EstimateDistance(angle): ##Not functional 
         now = time.time()
         dt = now - prev_time
         prev_time = now
@@ -247,7 +247,7 @@ def Roam():
                     steer = (target_angle-angle)/90
                     steer = max(-1,min(steer,1))
                 veer(-steer)
-                EstimateDistance(angle)
+                
                 #else:veer(-1)
 
 
