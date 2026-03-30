@@ -2,7 +2,7 @@ import threading
 import time
 from .ultrasonic_module import Ultrasonic_Avoidance
 from .ultrasonic_avoidance_3pin import Ultrasonic_Avoidance2
-from . import manual_drive
+#from . import manual_drive
 class UltrasonicManager:
     def __init__(self,front,left,right):
         self.front = front
@@ -47,8 +47,8 @@ class UltrasonicManager:
         
         if(len(lst)>5):
                 lst.pop(0)
-        if manual_drive.debug["sensors"]:
-                print(self.left_distance,"|",self.front_distance,"|",self.right_distance)
+        # if manual_drive.debug["sensors"]:
+        #         print(self.left_distance,"|",self.front_distance,"|",self.right_distance)
 
 
 
