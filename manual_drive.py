@@ -4,6 +4,7 @@ import termios
 import time
 import random
 from datetime import datetime
+from picar import ultrasonic_manager
 from ultrasonic_manager import UltrasonicManager
 import ultrasonic_module as UA4
 import subprocess
