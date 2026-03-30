@@ -10,10 +10,14 @@ class UltrasonicManager:
         self.right = right
         self.thread = threading.Thread(target=self.run)
         self.thread.daemon = True
-        #self.thread.start()
+        
         self.left_distance = 0
         self.right_distance = 0
         self.front_distance = 0
+        self.right_trend = 0
+        self.left_trend = 0
+        self.right_values = []
+        self.left_values = []
 
     def start(self):
         self.running = True
@@ -23,13 +27,34 @@ class UltrasonicManager:
         self.running = False
         self.thread.join()
 
+
+    def HandleUltrasonicData(self,dist, lst):
+        
+        if 0<dist<1000:
+            lst.append(dist)
+            
+        elif dist == -2:
+            lst.append(200)
+        else:
+            
+            print(f"Faulty reading {dist } from {'Right'if lst is self.left_values else 'Left'}")
+            
+            lst.append(-3)  # Append a default value for faulty readings
+ 
+    
+        if(len(lst)>5):
+                lst.pop(0)
+
+
     def run(self):
         while True:
             self.front_distance = self.front.get_distance()
             time.sleep(0.06)
-            self.left_distance = self.left.get_distance()
+            self.HandleUltrasonicData(self.left_values, self.left.get_distance())
+            self.left_distance = (sorted(self.left_values)[len(self.left_values)//2]) if self.left_values else 0
             time.sleep(0.06)
-            self.right_distance = self.right.get_distance()
+            self.HandleUltrasonicData(self.right_values, self.right.get_distance())
+            self.right_distance = (sorted(self.right_values)[len(self.right_values)//2]) if self.right_values else 0
             time.sleep(0.06)
 
             

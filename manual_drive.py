@@ -218,8 +218,8 @@ def Roam():
             if(obstructed == 0):
                 wheels.forward()
                 wheels.speed = SPEED
-                d_R = (sorted(distR)[len(distR)//2]) if distR else 0
-                d_L = (sorted(distL)[len(distL)//2]) if distL else 0
+                d_R = US_Manager.right_distance
+                d_L = US_Manager.left_distance
                 if(distR and distL):
                         
                     if d_R == -3:
