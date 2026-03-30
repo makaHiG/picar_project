@@ -167,8 +167,7 @@ def Roam():
 
 
             errors = []
-            if debug["sensors"]:
-                print(distance_L,"|",distance_F,"|",distance_R)
+            
             #print("distance_F",distance)
             # trendL = 0
             # for i in range(1, len(distL)):
