@@ -4,6 +4,7 @@ import termios
 import time
 import random
 from datetime import datetime
+import Ultrasonic_Manager
 from picar import ultrasonic_module as UA4
 import subprocess
 import os
@@ -24,6 +25,12 @@ wheels.speed = 0
 camera_servo.ready()
 wheels.ready()
 print(picar.back_wheels.__file__)
+
+# Initialize ultrasonic sensors
+UA_F = UA2.Ultrasonic_Avoidance2(20)
+UA_L = UA4.Ultrasonic_Avoidance('D13', 'D10')
+UA_R = UA4.Ultrasonic_Avoidance('D14', 'D12')
+US_Manager = Ultrasonic_Manager(UA_F, UA_L, UA_R)
 
 # Gyro setup
 bus = smbus.SMBus(1)
@@ -99,11 +106,9 @@ def CaptureTest():
 
 
 def Roam():
-    UA_F = UA2.Ultrasonic_Avoidance2(20)
-    UA_L = UA4.Ultrasonic_Avoidance('D13', 'D10')
-    UA_R = UA4.Ultrasonic_Avoidance('D14', 'D12')
     
     
+    US_Manager.start()
     threshold = 10
     cor_angle = 0
     distR=[]
@@ -160,22 +165,22 @@ def Roam():
             # key = getch().lower()
             # if key == 'q':       # forward
             #     break
-            distance_L =UA_L.distance()
+            distance_L =US_Manager.left.get_distance()
             if(distance_L>0 and distance_L<1000):
                 distL.append(distance_L)
             if(len(distL)>5):
                 distL.pop(0)
             #time.sleep(0.05)
-            distance = UA_F.get_distance()
+            distance_F = US_Manager.front.get_distance()
             #time.sleep(0.05)
-            distance_R = UA_R.get_distance()
-            
+            distance_R = US_Manager.right.get_distance()
+
             HandleUltrasonicData(distance_R,distR)
             HandleUltrasonicData(distance_L,distL)
 
             errors = []
             if debug["sensors"]:
-                print(sum(distL)/len(distL) if distL else 0,"|",distance,"|",sum(distR)/len(distR) if distR else 0)
+                print(sum(distL)/len(distL) if distL else 0,"|",distance_F,"|",sum(distR)/len(distR) if distR else 0)
             #print("distance_F",distance)
             status = UA_F.less_than(threshold)
             trendL = 0
@@ -188,8 +193,8 @@ def Roam():
 
             #print("trend", trendL - trendR)    
 
-            # if distance != -1:
-            #     print('distance', distance, 'cm')
+            # if distance_F != -1:
+            #     print('distance_F', distance_F, 'cm')
             #     time.sleep(0.2)
             # else:
             #     print(False)
@@ -200,7 +205,7 @@ def Roam():
             # else:
             #     print("Read distance error2.")
             # print(status)
-            if(distance != -1 and distance < front_clearance):
+            if(distance_F != -1 and distance_F < front_clearance):
                 obstructed = 1
             else:
                 obstructed = 0  
@@ -251,8 +256,8 @@ def Roam():
             #     wheels.speed = TURN_SPEED
             
             elif(obstructed == 1):
-                obs_distance = distance
-                if (distance > front_clearance):
+                obs_distance = distance_F
+                if (distance_F > front_clearance):
                     print("free")
                 wheels.backward()
                 wheels.speed = TURN_SPEED
