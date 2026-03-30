@@ -73,7 +73,7 @@ debug = {
     "camera": False,
     "sensors": True,
     "gryo": False,
-    "navigation": False
+    "navigation": True
 }
 #print("Tracking rotation...")
 
