@@ -18,7 +18,8 @@ class UltrasonicManager:
         self.left_trend = 0
         self.right_values = []
         self.left_values = []
-
+        self.right_confidence
+        self.left_confidence
     def start(self):
         self.running = True
         self.thread.start()
@@ -39,9 +40,9 @@ class UltrasonicManager:
             
             print(f"Faulty reading {dist } from {'Right'if lst is self.left_values else 'Left'}")
             
-            #lst.append(-3)  # Append a default value for faulty readings
+            lst.append(-3)  # Append a default value for faulty readings
  
-    
+        
         if(len(lst)>5):
                 lst.pop(0)
 
