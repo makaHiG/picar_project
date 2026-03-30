@@ -4,7 +4,7 @@ import termios
 import time
 import random
 from datetime import datetime
-from picar import Ultrasonic_Manager
+from picar import ultrasonic_manager
 from picar import ultrasonic_module as UA4
 import subprocess
 import os
@@ -30,7 +30,7 @@ print(picar.back_wheels.__file__)
 UA_F = UA2.Ultrasonic_Avoidance2(20)
 UA_L = UA4.Ultrasonic_Avoidance('D13', 'D10')
 UA_R = UA4.Ultrasonic_Avoidance('D14', 'D12')
-US_Manager = Ultrasonic_Manager(UA_F, UA_L, UA_R)
+US_Manager = ultrasonic_manager.UltrasonicManager(UA_F, UA_L, UA_R)
 
 # Gyro setup
 bus = smbus.SMBus(1)
