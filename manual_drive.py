@@ -235,7 +235,7 @@ def Roam():
                 else:
                     steer = (target_angle-angle)/90
                     steer = max(-1,min(steer,1))
-                veer(-steer)
+                veer(steer)
                 #else:veer(-1)
 
 
@@ -276,10 +276,10 @@ def TakePhoto():
     print("Saved:", filename)
 
 def veer(steer):
-    if(steer<0):
+    if(steer>0):
         wheels.speedL = int(SPEED+steer*SPEED)
         wheels.speedR = SPEED
-    if(steer>0):
+    if(steer<0):
         wheels.speedL = SPEED
         wheels.speedR = int(SPEED-steer*SPEED)
     
