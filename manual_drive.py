@@ -247,6 +247,7 @@ def Roam():
                     steer = (target_angle-angle)/90
                     steer = max(-1,min(steer,1))
                 veer(-steer)
+                EstimateDistance(angle)
                 #else:veer(-1)
 
 
