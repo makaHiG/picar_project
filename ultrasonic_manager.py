@@ -10,7 +10,7 @@ class UltrasonicManager:
         self.right = right
         self.thread = threading.Thread(target=self.run)
         self.thread.daemon = True
-        self.thread.start()
+        #self.thread.start()
 
     def start(self):
         self.running = True
