@@ -133,22 +133,6 @@ def Roam():
     target_angle = 0.0
     prev_time = time.time()
     
-    def HandleUltrasonicData(dist, lst):
-        
-        if 0<dist<1000:
-            lst.append(dist)
-            
-        elif dist == -2:
-            lst.append(200)
-        else:
-            if debug["sensors"]:
-                print(f"Faulty reading {dist } from {'Right'if lst is distR else 'Left'}")
-                print("lst is distL: ", lst is distL)
-            lst.append(-3)  # Append a default value for faulty readings
- 
-    
-        if(len(lst)>5):
-                lst.pop(0)
 
 
     try:
@@ -172,22 +156,20 @@ def Roam():
             # if key == 'q':       # forward
             #     break
             distance_L =US_Manager.left_distance
-            if(distance_L>0 and distance_L<1000):
-                distL.append(distance_L)
-            if(len(distL)>5):
-                distL.pop(0)
+            # if(distance_L>0 and distance_L<1000):
+            #     distL.append(distance_L)
+            # if(len(distL)>5):
+            #     distL.pop(0)
             #time.sleep(0.05)
             distance_F = US_Manager.front_distance
             #time.sleep(0.05)
             distance_R = US_Manager.right_distance
 
-            HandleUltrasonicData(distance_R,distR)
-            HandleUltrasonicData(distance_L,distL)
 
             errors = []
-            if debug["sensors"]:
-                print(sum(distL)/len(distL) if distL else 0,"|",distance_F,"|",sum(distR)/len(distR) if distR else 0)
-            #print("distance_F",distance)
+            # if debug["sensors"]:
+            #     print(sum(distL)/len(distL) if distL else 0,"|",distance_F,"|",sum(distR)/len(distR) if distR else 0)
+            # #print("distance_F",distance)
             trendL = 0
             for i in range(1, len(distL)):
                 trendL += distL[i]-distL[i-1]
@@ -243,7 +225,7 @@ def Roam():
 
                         #steer =(trendL-trendR)/100 
                         steer = k*(error) +i*integral + d*derivative #- (gyro_z)*i
-                        if debug["sensors"]:
+                        if debug["navigation"]:
                             print("Center_Offset ", target_angle)
                             print("steer ", steer)
                         steer = max(-1,min(steer,1))
