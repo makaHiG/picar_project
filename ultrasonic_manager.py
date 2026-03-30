@@ -11,6 +11,9 @@ class UltrasonicManager:
         self.thread = threading.Thread(target=self.run)
         self.thread.daemon = True
         #self.thread.start()
+        self.left_distance = 0
+        self.right_distance = 0
+        self.front_distance = 0
 
     def start(self):
         self.running = True
