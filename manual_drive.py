@@ -206,10 +206,12 @@ def Roam():
                     
                 if d_R == -3:
                     confidence_R = 0
-                else:confidence_R = 1-distR.count (-3)/len(distR) if distR else 0
+                else: confidence_R = 1
+                #else:confidence_R = 1-distR.count (-3)/len(distR) if distR else 0
                 if(d_L == -3):
                     confidence_L = 0
-                else:confidence_L = 1-distL.count (-3)/len(distL) if distL else 0
+                else: confidence_L = 1
+                #else:confidence_L = 1-distL.count (-3)/len(distL) if distL else 0
                 target_angle = cor_angle
                 steer = 0
                 if(confidence_L>0 and confidence_R>0):
