@@ -33,7 +33,7 @@ wheels.ready()
 print(picar.back_wheels.__file__)
 
 # Initialize ultrasonic sensors
-UA_F = UA2.Ultrasonic_Avoidance2(20)
+UA_F = UA2(20)
 UA_L = UA4.Ultrasonic_Avoidance('D13', 'D10')
 UA_R = UA4.Ultrasonic_Avoidance('D14', 'D12')
 US_Manager =UltrasonicManager(UA_F, UA_L, UA_R)
