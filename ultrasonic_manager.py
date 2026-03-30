@@ -1,7 +1,7 @@
 import threading
 import time
 import ultrasonic_module
-import Ultrasonic_Avoidance2
+import ultrasonic_avoidance_3pin
 
 class UltrasonicManager:
     def __init__(self,front,left,right):
