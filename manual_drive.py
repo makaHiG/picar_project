@@ -149,6 +149,7 @@ def Roam():
 
     try:
         while True:
+            time.sleep(0.01)
             raw = read_gyro_z()
             gyro_z = (raw - offset) / 131.0  # deg/sec
 
