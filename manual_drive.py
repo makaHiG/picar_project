@@ -202,38 +202,38 @@ def Roam():
                 wheels.speed = SPEED
                 d_R = US_Manager.right_distance
                 d_L = US_Manager.left_distance
-                if(distR and distL):
-                        
-                    if d_R == -3:
-                        confidence_R = 0
-                    else:confidence_R = 1-distR.count (-3)/len(distR) if distR else 0
-                    if(d_L == -3):
-                        confidence_L = 0
-                    else:confidence_L = 1-distL.count (-3)/len(distL) if distL else 0
-                    target_angle = cor_angle
-                    steer = 0
-                    if(confidence_L>0 and confidence_R>0):
-                        target_angle =  (d_L - d_R) / (d_R + d_L) if (d_R + d_L) != 0 else 0
-                        error = (target_angle*90-angle)/90
-                        errors.append(error)
-                        integral = sum(errors)
-                        if(len(errors)>5):
-                            errors.pop(0)
-                        derivative = 0
-                        for i in range(1, len(errors)):
-                            derivative += errors[i] - errors[i-1]
+                
+                    
+                # if d_R == -3:
+                #     confidence_R = 0
+                # else:confidence_R = 1-distR.count (-3)/len(distR) if distR else 0
+                # if(d_L == -3):
+                #     confidence_L = 0
+                # else:confidence_L = 1-distL.count (-3)/len(distL) if distL else 0
+                # target_angle = cor_angle
+                # steer = 0
+                if(confidence_L>0 and confidence_R>0):
+                    target_angle =  (d_L - d_R) / (d_R + d_L) if (d_R + d_L) != 0 else 0
+                    error = (target_angle*90-angle)/90
+                    errors.append(error)
+                    integral = sum(errors)
+                    if(len(errors)>5):
+                        errors.pop(0)
+                    derivative = 0
+                    for i in range(1, len(errors)):
+                        derivative += errors[i] - errors[i-1]
 
-                        #steer =(trendL-trendR)/100 
-                        steer = k*(error) +i*integral + d*derivative #- (gyro_z)*i
-                        if debug["navigation"]:
-                            print("Center_Offset ", target_angle)
-                            print("steer ", steer)
-                        steer = max(-1,min(steer,1))
-                        #print("filterd ", steer)
-                    else:
-                        steer = (target_angle-angle)/90
-                        steer = max(-1,min(steer,1))
-                    veer(-steer)
+                    #steer =(trendL-trendR)/100 
+                    steer = k*(error) +i*integral + d*derivative #- (gyro_z)*i
+                    if debug["navigation"]:
+                        print("Center_Offset ", target_angle)
+                        print("steer ", steer)
+                    steer = max(-1,min(steer,1))
+                    #print("filterd ", steer)
+                else:
+                    steer = (target_angle-angle)/90
+                    steer = max(-1,min(steer,1))
+                veer(-steer)
                 #else:veer(-1)
 
 
