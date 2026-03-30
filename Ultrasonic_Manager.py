@@ -1,7 +1,7 @@
 import threading
 import time
-import ultrasonic_module
-import Ultrasonic_Avoidance2
+from picar import ultrasonic_module
+from picar import Ultrasonic_Avoidance2
 
 class Ultrasonic_Manager:
     def __init__(self,front,left,right):
