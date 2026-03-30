@@ -18,8 +18,8 @@ class UltrasonicManager:
         self.left_trend = 0
         self.right_values = []
         self.left_values = []
-        self.right_confidence
-        self.left_confidence
+        self.right_confidence=1
+        self.left_confidence=1
     def start(self):
         self.running = True
         self.thread.start()
