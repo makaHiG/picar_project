@@ -2,6 +2,7 @@ import sys
 import tty
 import termios
 import time
+import math
 import random
 from datetime import datetime
 # from . import ultrasonic_manager
@@ -111,6 +112,7 @@ def CaptureTest():
 
 
 
+
 def Roam():
     
     
@@ -132,8 +134,18 @@ def Roam():
     angle = 0.0
     target_angle = 0.0
     prev_time = time.time()
-    
-
+    distance_x=0
+    distance_y=0
+    def DriveStraight():
+        veer(angle-cor_angle)
+    def EstimateDistance(angle):
+        now = time.time()
+        dt = now - prev_time
+        prev_time = now
+        distance_x+= math.sin(angle)*Travel_Speed*dt*SPEED
+        distance_y+= math.cos(angle)*Travel_Speed*dt*SPEED 
+        if debug["cordinates"]:
+            print("X:",distance_x,"Y:",distance_y) 
 
     try:
         while True:
