@@ -126,9 +126,9 @@ def Roam():
     clear_angle = 0
     front_clearance = 30 #distance considered clear in front of the car
     side_clearance = 20 #clearance needed sideways
-    k = 0.1
+    k = 1
     i=0.0000
-    d=0.01
+    d=0.00
     angle = 0.0
     target_angle = 0.0
     prev_time = time.time()
