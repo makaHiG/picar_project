@@ -22,11 +22,11 @@ class UltrasonicManager:
 
     def run(self):
         while True:
-            self.front_distance = ultrasonic_module.get_distance(self.front)
+            self.front_distance = self.front.get_distance()
             time.sleep(0.06)
-            self.left_distance = Ultrasonic_Avoidance2.get_distance(self.left)
+            self.left_distance = self.left.get_distance()
             time.sleep(0.06)
-            self.right_distance = Ultrasonic_Avoidance2.get_distance(self.right)
+            self.right_distance = self.right.get_distance()
             time.sleep(0.06)
 
             
