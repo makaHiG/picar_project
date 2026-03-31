@@ -129,8 +129,10 @@ def SteerCenter():
     if(state.right_distance>0 and state.left_distance>0):
         offset = (state.right_distance - state.left_distance)/(state.left_distance+state.right_distance)
         veer(offset)
+        print("Offset= ", offset)
     else:
         veer(0)
+        print("Go Straight")
     if(0<state.front_distance<50):
         wheels.backward()
         wheels.speed = TURN_SPEED
