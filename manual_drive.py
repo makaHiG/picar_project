@@ -77,7 +77,7 @@ debug = {
     "wheels": False,
     "camera": False,
     "sensors": True,
-    "gryo": False,
+    "gryo": True,
     "navigation": True
 }
 #print("Tracking rotation...")
@@ -115,6 +115,8 @@ def CaptureTest():
         SpinTest()
         turns+=1
 
+
+
 def ReadSensors():
     while not sensor_queue.empty():
         left,front,right = sensor_queue.get()
@@ -123,6 +125,17 @@ def ReadSensors():
         state.front_distance=front
         if(debug["sensors"]):
             print(left, "|",front,"|",right)
+def ReadGyro():
+    raw = read_gyro_z()
+    gyro_z = (raw - offset) / 131.0  # deg/sec
+
+    
+
+    state.rotation += gyro_z * dt
+
+    if debug["gryo"]:
+        print(f"Rate: {gyro_z:6.2f} deg/s | Angle: {state.rotation:7.2f} deg")
+
 
 
 def SteerCenter():
@@ -315,10 +328,12 @@ def TakePhoto():
     print("Saved:", filename)
 
 def veer(steer):
+    wheels.forward()
     if(1<steer or steer<-1):
         print("Veer got",steer, "expected -1 to 1")
         steer = max(-1,min(steer,1))
     if(steer<0):
+        
         wheels.speedL = int(SPEED+steer*SPEED)
         wheels.speedR = SPEED
     if(steer>0):
@@ -381,11 +396,17 @@ def ManualDrive(state):
     else:
         ##wheels.stop()
         camera_servo.turn_straight()
-
+dt=0
+prev_time=time()
 US_Manager.start()
 state.mode=Mode.MANUAL
 try:
     while True:
+
+        now = time.time()
+        dt = now - prev_time
+        prev_time = now
+        ReadGyro()
         ReadSensors()
         if(state.mode == Mode.MANUAL):
             ManualDrive(state)
