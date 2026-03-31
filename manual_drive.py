@@ -4,6 +4,7 @@ import tty
 import termios
 import time
 import math
+from queue import Queue
 import random
 from datetime import datetime
 # from . import ultrasonic_manager
@@ -36,10 +37,11 @@ state = RobotState()
 print(picar.back_wheels.__file__)
 
 # Initialize ultrasonic sensors
+sensor_queue = Queue()
 UA_F = UA2(20)
 UA_L = UA4.Ultrasonic_Avoidance('D13', 'D10')
 UA_R = UA4.Ultrasonic_Avoidance('D14', 'D12')
-US_Manager =UltrasonicManager(UA_F, UA_L, UA_R)
+US_Manager =UltrasonicManager(UA_F, UA_L, UA_R,sensor_queue)
 
 # Gyro setup
 bus = smbus.SMBus(1)
@@ -101,7 +103,7 @@ def UpDownTest():
     time.sleep(1)
     camera_servo.turn_straight()
 def SpinTest():
-    targetAngle=angle+30
+    
     wheels.speed = TURN_SPEED
     wheels.spin_right()
     time.sleep(TURN_TIME)
@@ -113,7 +115,14 @@ def CaptureTest():
         SpinTest()
         turns+=1
 
-
+def ReadSensors():
+    while not sensor_queue.empty():
+        left,front,right = sensor_queue.get()
+        state.left_distance=left
+        state.right_distance=right
+        state.front_distance=front
+        if(debug["sensors"]):
+            print(left, "|",front,"|",right)
 
 
 def Roam():
