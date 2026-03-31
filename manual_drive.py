@@ -126,8 +126,11 @@ def ReadSensors():
 
 
 def SteerCenter():
-    offset = (state.right_distance - state.left_distance)/(state.left_distance+state.right_distance)
-    veer(offset)
+    if(state.right_distance>0 and state.left_distance>0):
+        offset = (state.right_distance - state.left_distance)/(state.left_distance+state.right_distance)
+        veer(offset)
+    else:
+        veer(state.angle-state.targetAngle)
     if(0<state.front_distance<50):
         wheels.backward()
         wheels.speed = TURN_SPEED
@@ -310,7 +313,7 @@ def TakePhoto():
     print("Saved:", filename)
 
 def veer(steer):
-    if(1<steer<-1):
+    if(1<steer or steer<-1):
         print("Veer got",steer, "expected -1 to 1")
         steer = max(-1,min(steer,1))
     if(steer<0):
