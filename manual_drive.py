@@ -341,7 +341,7 @@ def ManualDrive(state):
     elif key == 'q':     # quit
         wheels.stop()
         camera_servo.turn_straight()
-        
+        state.mode = Mode.IDLE
     else:
         ##wheels.stop()
         camera_servo.turn_straight()
