@@ -1,3 +1,4 @@
+import select
 import sys
 import tty
 import termios
@@ -307,11 +308,18 @@ def getch():
         ch = sys.stdin.read(1)
     finally:
         termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+
+
     return ch
+def get_key_nonblocking():
+    dr, _, _ = select.select([sys.stdin], [], [], 0)
+    if dr:
+        return sys.stdin.read(1)
+    return None
 def ManualDrive(state):
     print("Manual drive mode. Use WASD to drive, Q to quit.")
     
-    key = getch().lower()
+    key = get_key_nonblocking()
     if key == 'w':       # forward
         wheels.forward()
         wheels.speed=SPEED
@@ -352,6 +360,7 @@ try:
     while True:
         if(state.mode == Mode.MANUAL):
             ManualDrive(state)
+        
 except KeyboardInterrupt:
     wheels.stop()
     camera_servo.turn_straight()
