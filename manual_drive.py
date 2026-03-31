@@ -324,6 +324,9 @@ def veer(steer):
     if(steer>0):
         wheels.speedL = SPEED
         wheels.speedR = int(SPEED-steer*SPEED)
+    if(steer == 0):
+        wheels.speedL = SPEED
+        wheels.speedR = SPEED
     
 def getch():
     """Read a single key press from the terminal"""
