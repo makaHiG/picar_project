@@ -128,7 +128,7 @@ def ReadSensors():
 def Roam():
     
     
-    US_Manager.start()
+    
     threshold = 10
     cor_angle = 0
     distR=[]
@@ -364,7 +364,7 @@ def ManualDrive(state):
         ##wheels.stop()
         camera_servo.turn_straight()
 
-
+US_Manager.start()
 state.mode=Mode.MANUAL
 try:
     ReadSensors()
