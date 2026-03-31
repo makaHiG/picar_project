@@ -311,6 +311,7 @@ def getch():
 
 
     return ch
+## This function does not block the loop, but does not read the input until enter is
 def get_key_nonblocking():
     dr, _, _ = select.select([sys.stdin], [], [], 0)
     if dr:
@@ -319,7 +320,7 @@ def get_key_nonblocking():
 def ManualDrive(state):
     print("Manual drive mode. Use WASD to drive, Q to quit.")
     
-    key = get_key_nonblocking()
+    key = getch()
     if key == 'w':       # forward
         wheels.forward()
         wheels.speed=SPEED
