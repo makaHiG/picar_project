@@ -63,7 +63,7 @@ class UltrasonicManager:
             time.sleep(0.06)
             #self.HandleUltrasonicData( self.right.get_distance(),self.right_values)
             self.right_distance = (sorted(self.right_values)[len(self.right_values)//2]) if self.right_values else 0
-            self.que.put(self.left_distance,self.front_distance,self.right_distance)
+            self.que.put((self.left_distance,self.front_distance,self.right_distance))
             time.sleep(0.06)
 
             
