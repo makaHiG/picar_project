@@ -367,8 +367,8 @@ def ManualDrive(state):
 US_Manager.start()
 state.mode=Mode.MANUAL
 try:
-    ReadSensors()
     while True:
+        ReadSensors()
         if(state.mode == Mode.MANUAL):
             ManualDrive(state)
         
