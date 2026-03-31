@@ -11,7 +11,7 @@ from datetime import datetime
 from .ultrasonic_manager import UltrasonicManager
 from . import ultrasonic_module as UA4
 from .ultrasonic_avoidance_3pin import Ultrasonic_Avoidance2 as UA2
-
+from .state import RobotState,Mode
 
 import subprocess
 import os
@@ -31,6 +31,7 @@ camera_servo.turn_straight()
 wheels.speed = 0
 camera_servo.ready()
 wheels.ready()
+state = RobotState()
 print(picar.back_wheels.__file__)
 
 # Initialize ultrasonic sensors
@@ -99,6 +100,7 @@ def UpDownTest():
     time.sleep(1)
     camera_servo.turn_straight()
 def SpinTest():
+    targetAngle=angle+30
     wheels.speed = TURN_SPEED
     wheels.spin_right()
     time.sleep(TURN_TIME)
@@ -139,8 +141,8 @@ def Roam():
     def DriveStraight():
         veer(angle-cor_angle)
     def EstimateDistance(angle): ##Not functional 
-        now = time.time()
-        dt = now - prev_time
+        # now = time.time()
+        # dt = now - prev_time
         prev_time = now
         distance_x+= math.sin(angle)*Travel_Speed*dt*SPEED
         distance_y+= math.cos(angle)*Travel_Speed*dt*SPEED 
@@ -306,11 +308,9 @@ def getch():
     finally:
         termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
     return ch
-
-print("Manual drive mode. Use WASD to drive, Q to quit.")
-
-try:
-    while True:
+def ManualDrive(state):
+    print("Manual drive mode. Use WASD to drive, Q to quit.")
+    
         key = getch().lower()
         if key == 'w':       # forward
             wheels.forward()
@@ -341,11 +341,17 @@ try:
         elif key == 'q':     # quit
             wheels.stop()
             camera_servo.turn_straight()
-            break
+            
         else:
             ##wheels.stop()
             camera_servo.turn_straight()
 
+
+
+try:
+    while True:
+        if(state.mode == Mode.MANUAL):
+            ManualDrive(state)
 except KeyboardInterrupt:
     wheels.stop()
     camera_servo.turn_straight()
