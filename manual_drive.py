@@ -128,6 +128,10 @@ def ReadSensors():
 def SteerCenter():
     offset = (state.left_distance-state.right_distance)/(state.left_distance+state.right_distance)
     veer(offset)
+    if(0<state.front_distance<50):
+        wheels.backward()
+        wheels.speed = TURN_SPEED
+        time.sleep(1)
     
 
 def Roam():
