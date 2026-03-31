@@ -397,7 +397,7 @@ def ManualDrive(state):
         ##wheels.stop()
         camera_servo.turn_straight()
 dt=0
-prev_time=time()
+prev_time=time.time()
 US_Manager.start()
 state.mode=Mode.MANUAL
 try:
