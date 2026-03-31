@@ -125,6 +125,11 @@ def ReadSensors():
             print(left, "|",front,"|",right)
 
 
+def SteerCenter():
+    offset = (state.left_distance-state.right_distance)/(state.left_distance+state.right_distance)
+    veer(offset)
+    
+
 def Roam():
     
     
@@ -353,9 +358,7 @@ def ManualDrive(state):
     elif key =="3": #testPhoto
         TakePhoto()
     elif key =="e":
-        wheels.forward() 
-        wheels.speedR = int(SPEED)
-        wheels.speedL = int(0)
+        state.mode=Mode.DIRECTIONAL_MOVE
     elif key == 'q':     # quit
         wheels.stop()
         camera_servo.turn_straight()
@@ -371,7 +374,8 @@ try:
         ReadSensors()
         if(state.mode == Mode.MANUAL):
             ManualDrive(state)
-        
+        if(state.mode == Mode.DIRECTIONAL_MOVE):
+            SteerCenter()
 except KeyboardInterrupt:
     wheels.stop()
     camera_servo.turn_straight()
