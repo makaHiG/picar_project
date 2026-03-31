@@ -367,6 +367,7 @@ def ManualDrive(state):
 
 state.mode=Mode.MANUAL
 try:
+    ReadSensors()
     while True:
         if(state.mode == Mode.MANUAL):
             ManualDrive(state)
