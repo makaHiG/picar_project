@@ -311,43 +311,43 @@ def getch():
 def ManualDrive(state):
     print("Manual drive mode. Use WASD to drive, Q to quit.")
     
-        key = getch().lower()
-        if key == 'w':       # forward
-            wheels.forward()
-            wheels.speed=SPEED
-        elif key == 's':     # backward
-            wheels.backward()
-            wheels.speed=SPEED
-        elif key == 'a':     # turn left
-            wheels.spin_left()
-            wheels.speed = TURN_SPEED
-        elif key == 'd':     # turn right
-            wheels.spin_right()
-            wheels.speed = TURN_SPEED
-        elif key == ' ':     # stop
-            wheels.stop()
-            wheels.ready()
-            camera_servo.turn_straight()
-        elif key =="1": #try turning servo
-            CaptureTest()
-        elif key =="2": #test Navigation
-            Roam()
-        elif key =="3": #testPhoto
-            TakePhoto()
-        elif key =="e":
-            wheels.forward() 
-            wheels.speedR = int(SPEED)
-            wheels.speedL = int(0)
-        elif key == 'q':     # quit
-            wheels.stop()
-            camera_servo.turn_straight()
-            
-        else:
-            ##wheels.stop()
-            camera_servo.turn_straight()
+    key = getch().lower()
+    if key == 'w':       # forward
+        wheels.forward()
+        wheels.speed=SPEED
+    elif key == 's':     # backward
+        wheels.backward()
+        wheels.speed=SPEED
+    elif key == 'a':     # turn left
+        wheels.spin_left()
+        wheels.speed = TURN_SPEED
+    elif key == 'd':     # turn right
+        wheels.spin_right()
+        wheels.speed = TURN_SPEED
+    elif key == ' ':     # stop
+        wheels.stop()
+        wheels.ready()
+        camera_servo.turn_straight()
+    elif key =="1": #try turning servo
+        CaptureTest()
+    elif key =="2": #test Navigation
+        Roam()
+    elif key =="3": #testPhoto
+        TakePhoto()
+    elif key =="e":
+        wheels.forward() 
+        wheels.speedR = int(SPEED)
+        wheels.speedL = int(0)
+    elif key == 'q':     # quit
+        wheels.stop()
+        camera_servo.turn_straight()
+        
+    else:
+        ##wheels.stop()
+        camera_servo.turn_straight()
 
 
-
+state.mode=Mode.MANUAL
 try:
     while True:
         if(state.mode == Mode.MANUAL):
