@@ -403,7 +403,7 @@ US_Manager.start()
 state.mode=Mode.IDLE
 try:
     while True:
-        if(get_key_nonblocking=="m"):
+        if(get_key_nonblocking()=="m"):
             state.mode = Mode.MANUAL
         now = time.time()
         dt = now - prev_time
