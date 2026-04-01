@@ -154,6 +154,7 @@ def SteerCenter():
             state.targetAngle = state.corridorAngle
     veer((state.targetAngle-state.rotation))
     
+
     if(0<state.front_distance<50):
         wheels.backward()
         wheels.speed = TURN_SPEED
@@ -398,8 +399,9 @@ def ManualDrive(state):
     elif key =="3": #testPhoto
         TakePhoto()
     elif key =="e":
-        state.mode=Mode.DIRECTIONAL_MOVE
-        state.targetAngle=state.rotation
+        state.mode = Mode.DIRECTIONAL_MOVE
+        state.targetAngle = state.rotation
+        state.cooridorAngle = state.rotation
     elif key == 'q':     # quit
         wheels.stop()
         camera_servo.turn_straight()
