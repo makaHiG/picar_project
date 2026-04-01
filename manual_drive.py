@@ -145,7 +145,7 @@ def SteerCenter():
     #     veer(state.rotation-state.targetAngle)
     #     print("Offset= ", offset)
     # else:
-    veer(state.targetAngle-state.rotation)
+    veer((state.targetAngle-state.rotation)/90)
     
     if(0<state.front_distance<50):
         wheels.backward()
