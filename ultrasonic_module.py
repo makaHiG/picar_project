@@ -206,7 +206,7 @@ class Ultrasonic_Avoidance(object):
 
     def __init__(self, trig_pin, echo_pin):
         self.trig = Pin(trig_pin)
-        self.echo = Pin(echo_pin)
+        self.echo = Pin(echo_pin,mode=Pin.IN, setup=Pin.PULL_DOWN)
 
     def distance(self):
         ##timeout=0.01  default
