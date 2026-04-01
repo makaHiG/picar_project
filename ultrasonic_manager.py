@@ -39,7 +39,7 @@ class UltrasonicManager:
             lst.append(dist)
             
         elif dist == -2:
-            lst.append(200)
+            lst.append(-2)
         else:
             
             print(f"Faulty reading {dist } from {'Right'if lst is self.right_values else 'Left'}")
