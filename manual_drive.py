@@ -342,6 +342,9 @@ def veer(error):
     wheels.forward()
     steer = (error + 180) % 360 - 180
     steer = steer/180
+    if(debug["navigation"]):
+        print("Error: ",error, " steer: ", steer)
+
     if(1<steer or steer<-1):
         print("Veer got",steer, "expected -1 to 1")
         steer = max(-1,min(steer,1))
