@@ -149,9 +149,11 @@ def SteerCenter():
     if(state.right_distance>0 and state.left_distance>0):
         offset = (state.right_distance-state.left_distance)/(state.right_distance+state.left_distance)
         if(abs(offset)> tolerance):
-            state.targetAngle = state.corridorAngle+90*offset
+            state.targetAngle = state.corridorAngle-90*offset
         else:
             state.targetAngle = state.corridorAngle
+    else:
+        state.targetAngle = state.corridorAngle
     veer((state.targetAngle-state.rotation))
     
 
