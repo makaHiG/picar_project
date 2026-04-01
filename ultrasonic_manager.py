@@ -42,7 +42,7 @@ class UltrasonicManager:
             lst.append(200)
         else:
             
-            print(f"Faulty reading {dist } from {'Right'if lst is self.left_values else 'Left'}")
+            print(f"Faulty reading {dist } from {'Right'if lst is self.Right_values else 'Left'}")
             
             lst.append(-3)  # Append a default value for faulty readings
  
