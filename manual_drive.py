@@ -145,7 +145,7 @@ def SteerCenter():
     #     veer(state.rotation-state.targetAngle)
     #     print("Offset= ", offset)
     # else:
-    veer((state.targetAngle-state.rotation)/90)
+    veer((state.targetAngle-state.rotation))
     
     if(0<state.front_distance<50):
         wheels.backward()
@@ -328,16 +328,17 @@ def TakePhoto():
 
     print("Saved:", filename)
 
-def veer(steer):
+def veer(error):
     wheels.forward()
+    steer = (error + 180) % 360 - 180
     if(1<steer or steer<-1):
         print("Veer got",steer, "expected -1 to 1")
         steer = max(-1,min(steer,1))
-    if(steer<0):
+    if(steer>0):
         
         wheels.speedL = int(SPEED+steer*SPEED)
         wheels.speedR = SPEED
-    if(steer>0):
+    if(steer<0):
         wheels.speedL = SPEED
         wheels.speedR = int(SPEED-steer*SPEED)
     if(steer == 0):
