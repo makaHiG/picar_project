@@ -337,11 +337,11 @@ def veer(error):
         steer = max(-1,min(steer,1))
     if(steer>0):
         
-        wheels.speedL = int(SPEED+steer*SPEED)
+        wheels.speedL = int(SPEED-steer*SPEED)
         wheels.speedR = SPEED
     if(steer<0):
         wheels.speedL = SPEED
-        wheels.speedR = int(SPEED-steer*SPEED)
+        wheels.speedR = int(SPEED+steer*SPEED)
     if(steer == 0):
         wheels.speedL = SPEED
         wheels.speedR = SPEED
