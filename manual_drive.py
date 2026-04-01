@@ -400,11 +400,11 @@ def ManualDrive(state):
 dt=0
 prev_time=time.time()
 US_Manager.start()
-state.mode=Mode.IDLE
+state.mode=Mode.MANUAL
 try:
     while True:
-        if(get_key_nonblocking()=="m"):
-            state.mode = Mode.MANUAL
+        # if(get_key_nonblocking()=="m"):
+        #     state.mode = Mode.MANUAL
         now = time.time()
         dt = now - prev_time
         prev_time = now
