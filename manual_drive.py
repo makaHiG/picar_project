@@ -139,12 +139,19 @@ def ReadGyro():
 
 
 def SteerCenter():
+    tolerance = 0.1
     # if(state.right_distance>0 and state.left_distance>0):
     #     offset = (state.right_distance - state.left_distance)/(state.left_distance+state.right_distance)
         
     #     veer(state.rotation-state.targetAngle)
     #     print("Offset= ", offset)
     # else:
+    if(state.right_distance>0 and state.left_distance>0):
+        offset = (state.right_distance-state.left_distance)/(state.right_distance+state.left_distance)
+        if(math.abs(offset)> tolerance):
+            state.targetAngle = state.corridorAngle+90*offset
+        else:
+            state.targetAngle = state.corridorAngle
     veer((state.targetAngle-state.rotation))
     
     if(0<state.front_distance<50):
