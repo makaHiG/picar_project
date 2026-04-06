@@ -5,6 +5,7 @@ import termios
 import time
 import math
 from queue import Queue
+from dataclasses import dataclass
 import random
 from datetime import datetime
 # from . import ultrasonic_manager
@@ -13,7 +14,7 @@ from datetime import datetime
 from .ultrasonic_manager import UltrasonicManager
 from . import ultrasonic_module as UA4
 from .ultrasonic_avoidance_3pin import Ultrasonic_Avoidance2 as UA2
-from .state import RobotState,Mode
+from .state import RobotState,Mode,ScanState
 
 import subprocess
 import os
@@ -91,6 +92,7 @@ TURN_TIME = 1.6
 TURN_SPEED = 100 #default 30
 Travel_Speed = 44*3.14/15 #Speed from test,cm/s
 
+
 def UpDownTest():
     camera_servo.turn_right()
     TakePhoto()
@@ -115,6 +117,16 @@ def CaptureTest():
         SpinTest()
         turns+=1
 
+@dataclass
+class SensorReading():
+    time:float
+    rotation:float
+    left_distance:float
+    fornt_distance:float
+    right_distance:float
+    score:float=0
+
+
 
 
 def ReadSensors():
@@ -123,6 +135,8 @@ def ReadSensors():
         state.left_distance=left
         state.right_distance=right
         state.front_distance=front
+        state.scan.readings.append(SensorReading(time.time(),state.roation,left,front,right))
+
         if(debug["sensors"]):
             print(left, "|",front,"|",right)
 def ReadGyro():
@@ -135,6 +149,46 @@ def ReadGyro():
 
     if debug["gryo"]:
         print(f"Rate: {gyro_z:6.2f} deg/s | Angle: {state.rotation:7.2f} deg")
+
+def OrientationSpin(state):
+    scan=state.scan
+    scan:ScanState
+    if(scan.active == False):
+        wheels.spin_left()
+        wheels.speed = TURN_SPEED
+        scan.startRotation=state.rotation
+        scan.readings.clear()
+        scan.active = True
+    
+    
+    lowestLeft=0
+    lowestRight=0
+    lowestAdded=0
+    if(state.rotation>scan.startRotation+360):
+        singleReadings=[]
+        for reading in scan.readings:
+            reading:SensorReading
+            if(reading.left > 0 and reading.left_distance<lowestLeft):
+                lowestLeft=reading
+            if(reading.right > 0 and reading.right_distance<lowestRight):
+                lowestRight=reading
+            if(reading.left > 0 and reading.right > 0 and reading.right_distance+reading.left_distance<lowestAdded):
+                lowestAdded=reading
+            singleReadings.append(reading.rotation-90, reading.right_distance)
+            singleReadings.append(reading.rotation, reading.fornt_distance)
+            singleReadings.append(reading.rotation+90, reading.left_distance)
+            
+        ## ADD a Check values against curves to check if it is likely to be valid.
+        ## ADD Check that front is clear
+            
+        if(debug["navigation"]):
+            print("coordiorAngelApriximated at ",lowestAdded.rotation)
+        
+        wheels.stop()    
+        state.mode=Mode.IDLE
+        
+            
+        
 
 
 
@@ -431,6 +485,8 @@ try:
             ManualDrive(state)
         if(state.mode == Mode.DIRECTIONAL_MOVE):
             SteerCenter()
+        if(state.mode == Mode.ORIENTING):
+            OrientationSpin(state)
 except KeyboardInterrupt:
     wheels.stop()
     camera_servo.turn_straight()
