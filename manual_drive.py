@@ -135,7 +135,7 @@ def ReadSensors():
         state.left_distance=left
         state.right_distance=right
         state.front_distance=front
-        state.scan.readings.append(SensorReading(time.time(),state.roation,left,front,right))
+        state.scan.readings.append(SensorReading(time.time(),state.rotation,left,front,right))
 
         if(debug["sensors"]):
             print(left, "|",front,"|",right)
