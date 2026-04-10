@@ -97,7 +97,7 @@ STEER_ANGLE = 30  # degrees left/right
 SPEED = 100       # speed 0-100 default 50
 TURN_TIME = 1.6
 #wheels.speed = SPEED
-TURN_SPEED = 30 #default 30
+TURN_SPEED = 100#default 30
 Travel_Speed = 44*3.14/15 #Speed from test,cm/s
 
 
@@ -133,8 +133,8 @@ def SpinnTest(state):
             
             state.mode = Mode.IDLE
     else:
-        mod = error / 30
-        wheels.speed = min(5,TURN_SPEED*mod)
+        mod = error /30
+        wheels.speed = min(100,max(10,TURN_SPEED*mod))
         if error<0 :
             wheels.spinn_right()
         else:
