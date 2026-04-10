@@ -527,7 +527,7 @@ try:
         if(state.mode == Mode.ORIENTING):
             OrientationSpinn(state)
         if(state.mode == Mode.SPINNING):
-            SpinnTest()
+            SpinnTest(state)
 except KeyboardInterrupt:
     wheels.stop()
     camera_servo.turn_straight()
