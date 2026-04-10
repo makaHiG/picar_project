@@ -47,6 +47,10 @@ UA_L = UA4.Ultrasonic_Avoidance('D13', 'D10')
 UA_R = UA4.Ultrasonic_Avoidance('D14', 'D12')
 US_Manager =UltrasonicManager(UA_F, UA_L, UA_R,sensor_queue)
 
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+PORT = 5005
 # Gyro setup
 bus = smbus.SMBus(1)
 MPU6050_ADDR = 0x68
@@ -487,6 +491,7 @@ US_Manager.start()
 state.mode=Mode.MANUAL
 try:
     while True:
+        sock.sendto(b"Hello", ("255.255.255.255", 5005))
         # if(get_key_nonblocking()=="m"):
         #     state.mode = Mode.MANUAL
         now = time.time()
