@@ -97,7 +97,7 @@ STEER_ANGLE = 30  # degrees left/right
 SPEED = 100       # speed 0-100 default 50
 TURN_TIME = 1.6
 #wheels.speed = SPEED
-TURN_SPEED = 100 #default 30
+TURN_SPEED = 30 #default 30
 Travel_Speed = 44*3.14/15 #Speed from test,cm/s
 
 
