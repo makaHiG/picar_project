@@ -441,8 +441,8 @@ def veer(error):
     state.x += v * math.cos(state.rotation) * dt
     state.y += v * math.sin(state.rotation) * dt
     if(debug["navigation"]):
-        print("Error: ",error, " steer: ", steer)
-
+        #print("Error: ",error, " steer: ", steer)
+        print("Position: X: ", state.x, "Y: ",state.y)
     if(1<steer or steer<-1):
         print("Veer got",steer, "expected -1 to 1")
         steer = max(-1,min(steer,1))
