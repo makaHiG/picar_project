@@ -122,12 +122,14 @@ def SpinnTest(state):
         spinn.targetRotation = state.rotation+ 360/spinn.maxSteps
     error = spinn.targetRotation-state.rotation
 
-    if math.abs(error<1):
+    if abs(error<1):
         time.sleep(1)
         if(spinn.stepCount<spinn.maxSteps):
             spinn.stepCount += 1
             spinn.targetRotation += 360/spinn.maxSteps
         else: 
+            spinn.active=False
+            
             state.mode = IDLE
     else:
         if error<0 :
@@ -144,7 +146,7 @@ def CaptureTest():
     turns=0
     while (turns<12):
         UpDownTest()
-        SpinnTest()
+        SpinnTest(state)
         turns+=1
 
 @dataclass
