@@ -130,7 +130,7 @@ class SensorReading():
     time:float
     rotation:float
     left_distance:float
-    fornt_distance:float
+    front_distance:float
     right_distance:float
     score:float=0
 
