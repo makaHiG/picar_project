@@ -185,9 +185,9 @@ def OrientationSpin(state=state):
             if reading.left_distance > 0 and reading.right_distance > 0:
                 if lowestAdded == None or reading.right_distance+reading.left_distance<lowestAdded.right_distance+lowestAdded.left_distance:
                     lowestAdded = reading
-            singleReadings.append([reading.rotation-90, reading.right_distance])
-            singleReadings.append([reading.rotation, reading.fornt_distance])
-            singleReadings.append([reading.rotation+90, reading.left_distance])
+            singleReadings.append([(reading.rotation - 90) % 360, reading.right_distance])
+            singleReadings.append([reading.rotation % 360, reading.front_distance])
+            singleReadings.append([(reading.rotation + 90) % 360, reading.left_distance])   
             sock.sendto(json.dumps(singleReadings).encode(), (IP, PORT))
             
         ## ADD a Check values against curves to check if it is likely to be valid.
