@@ -13,6 +13,7 @@ class RobotState:
         self.mode = Mode.IDLE
         self.targetAngle = 0
         self.corridorAngle=0
+        self.readings = []
         self.right_distance = 100
         self.left_distance = 100
         self.front_distance = 100

@@ -171,7 +171,9 @@ def ReadSensors():
         state.right_distance=right
         state.front_distance=front
         state.scan.readings.append(SensorReading(time.time(),state.rotation,left,front,right))
-
+        state.readings.append(SensorReading(time.time(),state.rotation,left,front,right))
+        if len(state.readings)>10:
+            state.readings.pop(0)
         if(debug["sensors"]):
             print(left, "|",front,"|",right)
 def ReadGyro():
