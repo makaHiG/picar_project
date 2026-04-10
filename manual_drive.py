@@ -122,7 +122,7 @@ def SpinnTest(state):
         spinn.targetRotation = state.rotation+ 360/spinn.maxSteps
     error = spinn.targetRotation-state.rotation
 
-    if abs(error<1):
+    if abs(error<0.5):
         wheels.stop()
         time.sleep(1)
         if(spinn.stepCount<spinn.maxSteps):
