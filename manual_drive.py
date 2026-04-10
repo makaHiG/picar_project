@@ -164,9 +164,9 @@ def OrientationSpin(state=state):
         scan.active = True
     
     
-    lowestLeft=0
-    lowestRight=0
-    lowestAdded=0
+    lowestLeft=None
+    lowestRight=None
+    lowestAdded=None
     if(state.rotation>scan.startRotation+360):
         singleReadings=[]
         for reading in scan.readings:
@@ -183,6 +183,7 @@ def OrientationSpin(state=state):
             
         ## ADD a Check values against curves to check if it is likely to be valid.
         ## ADD Check that front is clear
+        if lowestAdded!=None:
             state.corridorAngle = lowestAdded.rotation
         if(debug["navigation"]):
             print("coordiorAngelApriximated at ",lowestAdded.rotation)
