@@ -127,7 +127,7 @@ def SpinnTest(state):
         time.sleep(1)
         if(spinn.stepCount<spinn.maxSteps):
             spinn.stepCount += 1
-            spinn.targetRotation += 360/spinn.maxSteps
+            spinn.targetRotation = spinn.startRotation + 360/spinn.maxSteps * spinn.stepCount+1
         else: 
             spinn.active=False
             
