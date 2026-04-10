@@ -510,3 +510,7 @@ try:
 except KeyboardInterrupt:
     wheels.stop()
     camera_servo.turn_straight()
+finally:
+    wheels.stop()
+    wheels.speed=0
+    camera_servo.turn_straight()
