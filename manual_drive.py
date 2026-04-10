@@ -437,6 +437,9 @@ def veer(error):
     wheels.forward()
     steer = (error + 180) % 360 - 180
     steer = steer/180
+    v = Travel_Speed*(wheels.speedL + wheels.speedR)/2
+    state.x += v * math.cos(state.rotation) * dt
+    state.y += v * math.sin(state.rotation) * dt
     if(debug["navigation"]):
         print("Error: ",error, " steer: ", steer)
 
@@ -477,8 +480,9 @@ def ManualDrive(state):
     
     key = get_key_nonblocking()
     if key == 'w':       # forward
-        wheels.forward()
-        wheels.speed=SPEED
+        veer(0)
+        # wheels.forward()
+        # wheels.speed=SPEED
     elif key == 's':     # backward
         wheels.backward()
         wheels.speed=SPEED
