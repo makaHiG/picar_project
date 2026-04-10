@@ -493,7 +493,7 @@ def ManualDrive(state):
     elif key =="2": #test Navigation
         state.mode = Mode.ORIENTING
     elif key =="3": #testPhoto
-        state.mode = SPINNING
+        state.mode = Mode.SPINNING
         #TakePhoto()
     elif key =="e":
         state.mode = Mode.DIRECTIONAL_MOVE
