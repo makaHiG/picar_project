@@ -47,9 +47,9 @@ UA_L = UA4.Ultrasonic_Avoidance('D13', 'D10')
 UA_R = UA4.Ultrasonic_Avoidance('D14', 'D12')
 US_Manager =UltrasonicManager(UA_F, UA_L, UA_R,sensor_queue)
 
-
+## SocketSetup
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
+sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 PORT = 5005
 # Gyro setup
 bus = smbus.SMBus(1)
