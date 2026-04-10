@@ -457,7 +457,7 @@ def ManualDrive(state):
     elif key =="1": #try turning servo
         CaptureTest()
     elif key =="2": #test Navigation
-        Roam()
+        state.mode = Mode.ORIENTING
     elif key =="3": #testPhoto
         TakePhoto()
     elif key =="e":
