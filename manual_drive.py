@@ -172,13 +172,13 @@ def OrientationSpin(state=state):
         for reading in scan.readings:
             reading:SensorReading
             if reading.left_distance > 0:
-                 if lowestLeft == None or reading.left_distance<lowestLeft:
+                 if lowestLeft == None or reading.left_distance<lowestLeft.left_distance:
                     lowestLeft = reading
             if reading.right_distance > 0: 
-                if(lowestRight == None or reading.right_distance<lowestRight):
+                if(lowestRight == None or reading.right_distance<lowestRight.right_distance):
                     lowestRight = reading
             if reading.left_distance > 0 and reading.right_distance > 0:
-                if lowestAdded == None or reading.right_distance+reading.left_distance<lowestAdded:
+                if lowestAdded == None or reading.right_distance+reading.left_distance<lowestAdded.right_distance+lowestAdded.left_distance:
                     lowestAdded = reading
             singleReadings.append([reading.rotation-90, reading.right_distance])
             singleReadings.append([reading.rotation, reading.fornt_distance])
