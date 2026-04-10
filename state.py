@@ -3,6 +3,7 @@ class Mode:
     MANUAL ="manual"
     DIRECTIONAL_MOVE="directional move"
     ORIENTING = "orienting"
+    SPINNING = "spinning"
 
 class RobotState:
     def __init__(self):
@@ -16,9 +17,18 @@ class RobotState:
         self.left_distance = 100
         self.front_distance = 100
         self.scan = ScanState()
+        self.spinn = SpinnState()
 class ScanState:
     def __init__(self):
         self.readings=[]
         self.active = False
+        self.startRotation = 0
+
+class SpinnState:
+    def __init__(self):
+        self.targetRotation = 0
+        self.active = False
+        self.stepCount = 0
+        self.maxSteps = 12
         self.startRotation = 0
         

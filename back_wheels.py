@@ -76,12 +76,12 @@ class Back_Wheels(object):
 		self.right_wheel.backward()
 		self._debug_('Running backward')
 
-	def spin_right(self):
+	def spinn_right(self):
 		self.left_wheel.forward()
 		self.right_wheel.backward()
 		self._debug_('Turning right')
 
-	def spin_left(self):
+	def spinn_left(self):
 		self.left_wheel.backward()
 		self.right_wheel.forward()
 		self._debug_('Turning left')

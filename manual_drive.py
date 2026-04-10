@@ -17,7 +17,7 @@ from datetime import datetime
 from .ultrasonic_manager import UltrasonicManager
 from . import ultrasonic_module as UA4
 from .ultrasonic_avoidance_3pin import Ultrasonic_Avoidance2 as UA2
-from .state import RobotState,Mode,ScanState
+from .state import RobotState,Mode,ScanState,SpinnState
 
 import subprocess
 import os
@@ -112,17 +112,39 @@ def UpDownTest():
     TakePhoto()
     time.sleep(1)
     camera_servo.turn_straight()
-def SpinTest():
-    
-    wheels.speed = TURN_SPEED
-    wheels.spin_right()
-    time.sleep(TURN_TIME)
-    wheels.stop()
+def SpinnTest(state):
+    spinn = state.spinn
+    spinn: SpinnState
+    if(spinn.active == False):
+        spinn.stepCount = 0
+        spinn.startRotation = state.rotation
+        spinn.active = True
+        spinn.targetRotation = state.rotation+ 360/spinn.maxSteps
+    error = spinn.targetRotation-state.rotation
+
+    if math.abs(error<1):
+        time.sleep(1)
+        if(spinn.stepCount<spinn.maxSteps):
+            spinn.stepCount += 1
+            spinn.targetRotation += 360/spinn.maxSteps
+        else: 
+            state.mode = IDLE
+    else:
+        if error<0 :
+            wheels.spinn_right()
+        else:
+            wheels.spinn_left()
+                
+
+    # wheels.speed = TURN_SPEED
+    # wheels.spinn_right()
+    # time.sleep(TURN_TIME)
+    # wheels.stop()
 def CaptureTest():
     turns=0
     while (turns<12):
         UpDownTest()
-        SpinTest()
+        SpinnTest()
         turns+=1
 
 @dataclass
@@ -158,11 +180,11 @@ def ReadGyro():
     if debug["gryo"]:
         print(f"Rate: {gyro_z:6.2f} deg/s | Angle: {state.rotation:7.2f} deg")
 
-def OrientationSpin(state=state):
+def OrientationSpinn(state=state):
     scan=state.scan
     scan:ScanState
     if(scan.active == False):
-        wheels.spin_left()
+        wheels.spinn_left()
         wheels.speed = TURN_SPEED
         scan.startRotation=state.rotation
         scan.readings.clear()
@@ -205,12 +227,8 @@ def OrientationSpin(state=state):
         
         wheels.stop()    
         state.mode=Mode.DIRECTIONAL_MOVE
+                   
         
-            
-        
-
-
-
 def SteerCenter():
     tolerance = 0.1
     # if(state.right_distance>0 and state.left_distance>0):
@@ -377,7 +395,7 @@ def Roam():
 
                 
             # elif(25<=distance<=40):
-            #     wheels.spin_right()
+            #     wheels.spinn_right()
             #     wheels.speed = TURN_SPEED
             
             elif(obstructed == 1):
@@ -461,10 +479,10 @@ def ManualDrive(state):
         wheels.backward()
         wheels.speed=SPEED
     elif key == 'a':     # turn left
-        wheels.spin_left()
+        wheels.spinn_left()
         wheels.speed = TURN_SPEED
     elif key == 'd':     # turn right
-        wheels.spin_right()
+        wheels.spinn_right()
         wheels.speed = TURN_SPEED
     elif key == ' ':     # stop
         wheels.stop()
@@ -475,7 +493,8 @@ def ManualDrive(state):
     elif key =="2": #test Navigation
         state.mode = Mode.ORIENTING
     elif key =="3": #testPhoto
-        TakePhoto()
+        SpinnTest()
+        #TakePhoto()
     elif key =="e":
         state.mode = Mode.DIRECTIONAL_MOVE
         state.targetAngle = state.rotation
@@ -506,7 +525,9 @@ try:
         if(state.mode == Mode.DIRECTIONAL_MOVE):
             SteerCenter()
         if(state.mode == Mode.ORIENTING):
-            OrientationSpin(state)
+            OrientationSpinn(state)
+        if(state.mode == Mode.SPINNING):
+            SpinnTest()
 except KeyboardInterrupt:
     wheels.stop()
     camera_servo.turn_straight()
