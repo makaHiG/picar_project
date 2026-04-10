@@ -50,6 +50,7 @@ US_Manager =UltrasonicManager(UA_F, UA_L, UA_R,sensor_queue)
 ## SocketSetup
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+IP = "255.255.255.255"
 PORT = 5005
 # Gyro setup
 bus = smbus.SMBus(1)
@@ -187,6 +188,7 @@ def OrientationSpin(state=state):
             singleReadings.append([reading.rotation-90, reading.right_distance])
             singleReadings.append([reading.rotation, reading.fornt_distance])
             singleReadings.append([reading.rotation+90, reading.left_distance])
+            sock.sendto(json.dumps(singleReadings).encode, (IP, PORT))
             
         ## ADD a Check values against curves to check if it is likely to be valid.
         ## ADD Check that front is clear
@@ -491,7 +493,7 @@ US_Manager.start()
 state.mode=Mode.MANUAL
 try:
     while True:
-        sock.sendto(b"Hello", ("255.255.255.255", 5005))
+        #sock.sendto(b"Hello", ("255.255.255.255", 5005))
         # if(get_key_nonblocking()=="m"):
         #     state.mode = Mode.MANUAL
         now = time.time()
