@@ -123,6 +123,7 @@ def SpinnTest(state):
     error = spinn.targetRotation-state.rotation
 
     if abs(error<1):
+        wheels.stop()
         time.sleep(1)
         if(spinn.stepCount<spinn.maxSteps):
             spinn.stepCount += 1
@@ -132,6 +133,7 @@ def SpinnTest(state):
             
             state.mode = IDLE
     else:
+        wheels.speed = TURN_SPEED
         if error<0 :
             wheels.spinn_right()
         else:
