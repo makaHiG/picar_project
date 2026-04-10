@@ -187,7 +187,13 @@ def OrientationSpin(state=state):
         ## ADD a Check values against curves to check if it is likely to be valid.
         ## ADD Check that front is clear
         if lowestAdded!=None:
-            state.corridorAngle = lowestAdded.rotation
+            if state.corridoorAngle - lowestAdded.rotation>90:
+                state.corridorAngle = lowestAdded.rotation-180
+            elif state.corridoorAngle - lowestAdded.rotation<-90:
+                state.corridorAngle = lowestAdded.rotation+180
+            else:
+                state.corridorAngle = lowestAdded.rotation
+            
         if(debug["navigation"]):
             print("coordiorAngelApriximated at ",lowestAdded.rotation)
         
