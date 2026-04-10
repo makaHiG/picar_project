@@ -4,6 +4,9 @@ import tty
 import termios
 import time
 import math
+import socket
+
+import json
 from queue import Queue
 from dataclasses import dataclass
 import random
@@ -150,7 +153,7 @@ def ReadGyro():
     if debug["gryo"]:
         print(f"Rate: {gyro_z:6.2f} deg/s | Angle: {state.rotation:7.2f} deg")
 
-def OrientationSpin(state):
+def OrientationSpin(state=state):
     scan=state.scan
     scan:ScanState
     if(scan.active == False):
@@ -180,12 +183,12 @@ def OrientationSpin(state):
             
         ## ADD a Check values against curves to check if it is likely to be valid.
         ## ADD Check that front is clear
-            
+            state.corridorAngle = lowestAdded.rotation
         if(debug["navigation"]):
             print("coordiorAngelApriximated at ",lowestAdded.rotation)
         
         wheels.stop()    
-        state.mode=Mode.IDLE
+        state.mode=Mode.DIRECTIONAL_MOVE
         
             
         
@@ -209,13 +212,13 @@ def SteerCenter():
     else:
         state.targetAngle = state.corridorAngle
     veer((state.targetAngle-state.rotation))
+    state.y+=Travel_Speed*dt
     
-
     if(0<state.front_distance<50):
         wheels.backward()
         wheels.speed = TURN_SPEED
         time.sleep(1)
-    
+
 
 def Roam():
     
