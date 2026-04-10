@@ -133,7 +133,8 @@ def SpinnTest(state):
             
             state.mode = Mode.IDLE
     else:
-        wheels.speed = TURN_SPEED
+        mod = error / 30
+        wheels.speed = min(1,TURN_SPEED*mod)
         if error<0 :
             wheels.spinn_right()
         else:
