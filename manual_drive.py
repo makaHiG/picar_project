@@ -131,7 +131,7 @@ def SpinnTest(state):
         else: 
             spinn.active=False
             
-            state.mode = IDLE
+            state.mode = Mode.IDLE
     else:
         wheels.speed = TURN_SPEED
         if error<0 :
