@@ -222,11 +222,11 @@ def OrientationSpinn(state=state):
             
         ## ADD a Check values against curves to check if it is likely to be valid.
         ## ADD Check that front is clear
-        if lowestAdded!=None:
-            if state.corridorAngle - lowestAdded.rotation>90:
-                state.corridorAngle = lowestAdded.rotation-180
-            elif state.corridorAngle - lowestAdded.rotation<-90:
-                state.corridorAngle = lowestAdded.rotation+180
+        if lowestAdded is not None:
+            diff = (state.corridorAngle - lowestAdded.rotation + 180) % 360 - 180
+
+            if abs(diff) > 90:
+                state.corridorAngle = (lowestAdded.rotation + 180) % 360
             else:
                 state.corridorAngle = lowestAdded.rotation
             
