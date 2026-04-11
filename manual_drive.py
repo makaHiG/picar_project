@@ -449,8 +449,8 @@ def TakePhoto():
 def EstimateDistance(state):
         if 0<dt<1:
             v = Travel_Speed/100*(wheels.speedL + wheels.speedR)/2
-            state.x += v * math.cos(state.rotation) * dt
-            state.y += v * math.sin(state.rotation) * dt
+            state.x += v * math.cos(math.radians(state.rotation)) * dt
+            state.y += v * math.sin(math.radians(state.rotation)) * dt
             
             print("Position: X: ", state.x, "Y: ",state.y)
 
