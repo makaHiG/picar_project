@@ -187,6 +187,14 @@ def ReadGyro():
 
     if debug["gryo"]:
         print(f"Rate: {gyro_z:6.2f} deg/s | Angle: {state.rotation:7.2f} deg")
+def EstimateDistance(state):
+        if 0<dt<1:
+            v = Travel_Speed/100*(wheels.speedL + wheels.speedR)/2
+            state.x += v * math.cos(math.radians(state.rotation)) * dt
+            state.y += v * math.sin(math.radians(state.rotation)) * dt
+            
+            print("Position: X: ", state.x, "Y: ",state.y)
+            sock.sendto(json.dumps(state.x,state.y).encode(), (IP, PORT))
 
 def OrientationSpinn(state=state):
     scan=state.scan
@@ -446,13 +454,6 @@ def TakePhoto():
     
 
     print("Saved:", filename)
-def EstimateDistance(state):
-        if 0<dt<1:
-            v = Travel_Speed/100*(wheels.speedL + wheels.speedR)/2
-            state.x += v * math.cos(math.radians(state.rotation)) * dt
-            state.y += v * math.sin(math.radians(state.rotation)) * dt
-            
-            print("Position: X: ", state.x, "Y: ",state.y)
 
 def veer(error):
     wheels.forward()
