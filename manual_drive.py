@@ -244,7 +244,7 @@ def SteerCenter(state:RobotState):
     align_error = max(-1,min(1,(state.corridorAngle -state.rotation)/90)) 
     k2=0
     if(state.right_distance>0 and state.left_distance>0):
-        center_error = -(state.right_distance - state.left_distance)/(state.left_distance+state.right_distance)
+        center_error = (state.left_distance - state.right_distance)/(state.left_distance+state.right_distance)
         k=1
         k2=0
     else:
@@ -263,10 +263,11 @@ def SteerCenter(state:RobotState):
     #veer((state.targetAngle-state.rotation))
     #state.y+=Travel_Speed*dt
     
-    if(0<state.front_distance<50):
+    if(0<state.front_distance<20):
         wheels.backward()
         wheels.speed = TURN_SPEED
         time.sleep(1)
+        state.mode = Mode.ORIENTING
 
 
 def Roam():
