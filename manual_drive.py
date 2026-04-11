@@ -238,22 +238,22 @@ def OrientationSpinn(state=state):
         
 def SteerCenter():
     tolerance = 0.1
-    # if(state.right_distance>0 and state.left_distance>0):
-    #     offset = (state.right_distance - state.left_distance)/(state.left_distance+state.right_distance)
-        
-    #     veer(state.rotation-state.targetAngle)
-    #     print("Offset= ", offset)
-    # else:
+    center_error =0
     if(state.right_distance>0 and state.left_distance>0):
-        offset = (state.right_distance-state.left_distance)/(state.right_distance+state.left_distance)
-        if(abs(offset)> tolerance):
-            state.targetAngle = state.corridorAngle-90*offset
-        else:
-            state.targetAngle = state.corridorAngle
-    else:
-        state.targetAngle = state.corridorAngle
-    veer((state.targetAngle-state.rotation))
-    state.y+=Travel_Speed*dt
+        center_error = (state.right_distance - state.left_distance)/(state.left_distance+state.right_distance)
+        
+
+    veer(state.rotation-state.targetAngle)
+    # if(state.right_distance>0 and state.left_distance>0):
+    #     offset = (state.right_distance-state.left_distance)/(state.right_distance+state.left_distance)
+    #     if(abs(offset)> tolerance):
+    #         state.targetAngle = state.corridorAngle-90*offset
+    #     else:
+    #         state.targetAngle = state.corridorAngle
+    # else:
+    #     state.targetAngle = state.corridorAngle
+    #veer((state.targetAngle-state.rotation))
+    #state.y+=Travel_Speed*dt
     
     if(0<state.front_distance<50):
         wheels.backward()
@@ -435,17 +435,21 @@ def TakePhoto():
     
 
     print("Saved:", filename)
+def EstimateDistance(state):
+        v = Travel_Speed*(wheels.speedL + wheels.speedR)/2
+        state.x += v * math.cos(state.rotation) * dt
+        state.y += v * math.sin(state.rotation) * dt
+        
+        print("Position: X: ", state.x, "Y: ",state.y)
 
 def veer(error):
     wheels.forward()
-    steer = (error + 180) % 360 - 180
-    steer = steer/180
-    #v = Travel_Speed*(wheels.speedL + wheels.speedR)/2
-    #state.x += v * math.cos(state.rotation) * dt
-    #state.y += v * math.sin(state.rotation) * dt
+    # steer = (error + 180) % 360 - 180
+    # steer = steer/180
+    steer = error
     if(debug["navigation"]):
-        #print("Error: ",error, " steer: ", steer)
-        print("Position: X: ", state.x, "Y: ",state.y)
+        print("Error: ",error, " steer: ", steer)
+        
     if(1<steer or steer<-1):
         print("Veer got",steer, "expected -1 to 1")
         steer = max(-1,min(steer,1))
