@@ -447,11 +447,12 @@ def TakePhoto():
 
     print("Saved:", filename)
 def EstimateDistance(state):
-        v = Travel_Speed*(wheels.speedL + wheels.speedR)/2
-        state.x += v * math.cos(state.rotation) * dt
-        state.y += v * math.sin(state.rotation) * dt
-        
-        print("Position: X: ", state.x, "Y: ",state.y)
+        if 0<dt<1:
+            v = Travel_Speed*(wheels.speedL + wheels.speedR)/2
+            state.x += v * math.cos(state.rotation) * dt
+            state.y += v * math.sin(state.rotation) * dt
+            
+            print("Position: X: ", state.x, "Y: ",state.y)
 
 def veer(error):
     wheels.forward()
