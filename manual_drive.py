@@ -244,7 +244,7 @@ def SteerCenter(state:RobotState):
     align_error = max(-1,min(1,(state.corridorAngle -state.rotation)/90)) 
     k2=0
     if(state.right_distance>0 and state.left_distance>0):
-        center_error = (state.right_distance - state.left_distance)/(state.left_distance+state.right_distance)
+        center_error = -(state.right_distance - state.left_distance)/(state.left_distance+state.right_distance)
         k=1
         k2=0
     else:
