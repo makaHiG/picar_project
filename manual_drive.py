@@ -447,8 +447,8 @@ def TakePhoto():
 
     print("Saved:", filename)
 def EstimateDistance(state):
-        if 0<dt<1:
-            v = Travel_Speed*(wheels.speedL + wheels.speedR)/2
+        if 0<dt<1 and :
+            v = Travel_Speed/100*(wheels.speedL + wheels.speedR)/2
             state.x += v * math.cos(state.rotation) * dt
             state.y += v * math.sin(state.rotation) * dt
             
@@ -513,6 +513,8 @@ def ManualDrive(state):
         wheels.speed = TURN_SPEED
     elif key == ' ':     # stop
         wheels.stop()
+        wheels.speedR=0
+        wheels.speedL=0
         wheels.ready()
         camera_servo.turn_straight()
     elif key =="1": #try turning servo
