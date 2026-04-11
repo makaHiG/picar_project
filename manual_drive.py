@@ -88,7 +88,7 @@ debug = {
     "camera": False,
     "sensors": True,
     "gryo": False,
-    "navigation": True
+    "navigation": False
 }
 #print("Tracking rotation...")
 
@@ -546,6 +546,7 @@ try:
         prev_time = now
         ReadGyro()
         ReadSensors()
+        EstimateDistance(state)
         if(state.mode == Mode.MANUAL):
             ManualDrive(state)
         if(state.mode == Mode.DIRECTIONAL_MOVE):
