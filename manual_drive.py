@@ -232,6 +232,7 @@ def OrientationSpinn(state=state):
             
         if(debug["navigation"]):
             print("coordiorAngelApriximated at ",lowestAdded.rotation)
+            scan.active=False
         
         wheels.stop()    
         state.mode=Mode.DIRECTIONAL_MOVE
