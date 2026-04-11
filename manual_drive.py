@@ -238,6 +238,7 @@ def OrientationSpinn(state=state):
                    
         
 def SteerCenter(state:RobotState):
+    
     tolerance = 0.1
     center_error =0
     k=0
@@ -264,10 +265,10 @@ def SteerCenter(state:RobotState):
     #state.y+=Travel_Speed*dt
     
     if(0<state.front_distance<20):
-        wheels.backward()
-        wheels.speed = TURN_SPEED
-        time.sleep(1)
-        state.mode = Mode.ORIENTING
+        # wheels.backward()
+        # wheels.speed = TURN_SPEED
+        # time.sleep(1)
+         state.mode = Mode.ORIENTING
 
 
 def Roam():
