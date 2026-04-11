@@ -195,6 +195,7 @@ def EstimateDistance(state):
             
             print("Position: X: ", state.x, "Y: ",state.y)
             sock.sendto(json.dumps([state.x,state.y]).encode(), (IP, PORT))
+            time.sleep(0.05)
 
 def OrientationSpinn(state=state):
     scan=state.scan
