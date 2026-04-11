@@ -243,7 +243,8 @@ def SteerCenter():
         center_error = (state.right_distance - state.left_distance)/(state.left_distance+state.right_distance)
         
 
-    veer(state.rotation-state.targetAngle)
+    veer(center_error)
+    
     # if(state.right_distance>0 and state.left_distance>0):
     #     offset = (state.right_distance-state.left_distance)/(state.right_distance+state.left_distance)
     #     if(abs(offset)> tolerance):
