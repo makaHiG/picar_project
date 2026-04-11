@@ -17,6 +17,7 @@ from datetime import datetime
 from .ultrasonic_manager import UltrasonicManager
 from . import ultrasonic_module as UA4
 from .ultrasonic_avoidance_3pin import Ultrasonic_Avoidance2 as UA2
+
 from .state import RobotState,Mode,ScanState,SpinnState
 
 import subprocess
@@ -112,7 +113,7 @@ def UpDownTest():
     TakePhoto()
     time.sleep(1)
     camera_servo.turn_straight()
-def SpinnTest(state):
+def SpinnTest(state:state):
     spinn = state.spinn
     spinn: SpinnState
     if(spinn.active == False):
@@ -236,14 +237,20 @@ def OrientationSpinn(state=state):
         state.mode=Mode.DIRECTIONAL_MOVE
                    
         
-def SteerCenter():
+def SteerCenter(state:RobotState):
     tolerance = 0.1
     center_error =0
+    k=0
+    align_error = max(-1,min(1,(state.corridorAngle -state.rotation)/90)) 
+    k2=0
     if(state.right_distance>0 and state.left_distance>0):
         center_error = (state.right_distance - state.left_distance)/(state.left_distance+state.right_distance)
-        
-
-    veer(center_error)
+        k=1
+        k2=0
+    else:
+        k=0
+        k2=1
+    veer(center_error*k+align_error*k2)
     
     # if(state.right_distance>0 and state.left_distance>0):
     #     offset = (state.right_distance-state.left_distance)/(state.right_distance+state.left_distance)
@@ -539,7 +546,7 @@ try:
         if(state.mode == Mode.MANUAL):
             ManualDrive(state)
         if(state.mode == Mode.DIRECTIONAL_MOVE):
-            SteerCenter()
+            SteerCenter(state)
         if(state.mode == Mode.ORIENTING):
             OrientationSpinn(state)
         if(state.mode == Mode.SPINNING):
