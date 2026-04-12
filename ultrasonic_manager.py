@@ -58,7 +58,7 @@ class UltrasonicManager:
         while True:
             a = time.time()
             
-            self.front_distance = self.front.get_distance()
+            #self.front_distance = self.front.get_distance()
             print("a",time.time()-a)
             time.sleep(0.01)
             self.HandleUltrasonicData(self.left.distance(),self.left_values)
