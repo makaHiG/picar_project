@@ -182,7 +182,7 @@ def ReadSensors():
             "right_distance":right,
             "front_distance":front
         }
-        sock.sendto(json.dumps(data).encode(), (IP, PORT))
+        #sock.sendto(json.dumps(data).encode(), (IP, PORT))
         if len(state.readings)>10:
             state.readings.pop(0)
         if(debug["sensors"]):
