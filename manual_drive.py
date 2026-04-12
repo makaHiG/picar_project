@@ -547,7 +547,7 @@ def ManualDrive(state):
         camera_servo.turn_straight()
 dt=0
 prev_time=time.time()
-US_Manager.start()
+#US_Manager.start()
 state.mode=Mode.MANUAL
 try:
     while True:
@@ -575,3 +575,4 @@ finally:
     wheels.stop()
     wheels.speed=0
     camera_servo.turn_straight()
+    GPIO.cleanup()
