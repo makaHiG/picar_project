@@ -559,7 +559,7 @@ try:
         dt = now - prev_time
         prev_time = now
         ReadGyro()
-        ReadSensors()
+        #ReadSensors()
         EstimateDistance(state)
         if(state.mode == Mode.MANUAL):
             ManualDrive(state)
