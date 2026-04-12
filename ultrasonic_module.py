@@ -223,16 +223,19 @@ class Ultrasonic_Avoidance(object):
         timeout_start = time.perf_counter() #time.time()
         #print("Check1 ", self.echo.value())
         while self.echo.value()==0:
-            pulse_start = time.perf_counter()#time.time()
-            if pulse_start - timeout_start > timeout:
+            #pulse_start = time.perf_counter()#time.time()
+            #if pulse_start - timeout_start > timeout:
+            if time.perf_counter()-timeout_start > timeout:
                 return -1
-        
+        pulse_start = time.perf_counter()
         #print("Check2 ", self.echo.value())
 
         while self.echo.value()==1:
-            pulse_end = time.perf_counter()#time.time()
-            if pulse_end - timeout_start > timeout:
+            #pulse_end = time.perf_counter()#time.time()
+            if time.perf_counter() - timeout_start > timeout: ## Tried to change so that first echo is the one that counts
+            #if pulse_end - timeout_start > timeout:  
                 return -2
+        pulse_end = time.perf_counter()
         during = pulse_end - pulse_start
         ##Added by me---
         # if pulse_start == 0 or pulse_end == 0: 
