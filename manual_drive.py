@@ -507,7 +507,7 @@ def get_key_nonblocking():
 def ManualDrive(state):
     ##print("Manual drive mode. Use WASD to drive, Q to quit.")
     
-    key = " "#get_key_nonblocking()
+    key = get_key_nonblocking()
     if key == 'w':       # forward
         veer(0)
         # wheels.forward()
