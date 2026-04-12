@@ -538,6 +538,7 @@ def ManualDrive(state):
         state.mode = Mode.DIRECTIONAL_MOVE
         state.targetAngle = state.rotation
         state.cooridorAngle = state.rotation
+        
     elif key == 'q':     # quit
         wheels.stop()
         camera_servo.turn_straight()
