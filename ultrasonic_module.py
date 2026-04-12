@@ -220,17 +220,17 @@ class Ultrasonic_Avoidance(object):
         self.trig.low()
         pulse_end = 0
         pulse_start = 0
-        timeout_start = time.time()
+        timeout_start = time.perf_counter() #time.time()
         #print("Check1 ", self.echo.value())
         while self.echo.value()==0:
-            pulse_start = time.time()
+            pulse_start = time.perf_counter()#time.time()
             if pulse_start - timeout_start > timeout:
                 return -1
         
         #print("Check2 ", self.echo.value())
 
         while self.echo.value()==1:
-            pulse_end = time.time()
+            pulse_end = time.perf_counter()#time.time()
             if pulse_end - timeout_start > timeout:
                 return -2
         during = pulse_end - pulse_start
