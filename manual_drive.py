@@ -11,6 +11,8 @@ from queue import Queue
 from dataclasses import dataclass
 import random
 from datetime import datetime
+
+import numpy as np
 # from . import ultrasonic_manager
 # from ultrasonic_manager import UltrasonicManager
 # import ultrasonic_module as UA4
@@ -260,16 +262,24 @@ def SteerCenter(state:RobotState):
     tolerance = 0.1
     center_error =0
     k=0
-    align_error = max(-1,min(1,(state.corridorAngle -state.rotation)/90)) 
+    align_error = max(-1,min(1,(state.corridorAngle -state.rotation)/90))
+    state.align_errors.append(align_error)
+    if len(state.align_errors)>0:
+        state.align_errors.pop(0)
     k2=0
     if(state.right_distance>0 and state.left_distance>0):
         center_error = (state.left_distance - state.right_distance)/(state.left_distance+state.right_distance)
+        state.center_errors.append(align_error)
+        if len(state.center_errors)>0:
+            state.center_errors.pop(0)
         k=1
         k2=0
     else:
         k=0
         k2=1
-    veer(center_error*k+align_error*k2)
+        trend = sum(state.center_errors)/len(state.center_errors) if len(state.center_errors)>0 else 0 
+
+    veer(trend*k+align_error*k2)
     
     # if(state.right_distance>0 and state.left_distance>0):
     #     offset = (state.right_distance-state.left_distance)/(state.right_distance+state.left_distance)

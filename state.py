@@ -13,6 +13,8 @@ class RobotState:
         self.mode = Mode.IDLE
         self.targetAngle = 0
         self.corridorAngle=0
+        self.center_errors =[]
+        self.align_errors = []
         self.readings = []
         self.right_distance = 100
         self.left_distance = 100
@@ -32,4 +34,5 @@ class SpinnState:
         self.stepCount = 0
         self.maxSteps = 12
         self.startRotation = 0
+
         
