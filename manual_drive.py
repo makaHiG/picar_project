@@ -173,6 +173,16 @@ def ReadSensors():
         state.front_distance=front
         state.scan.readings.append(SensorReading(time.time(),state.rotation,left,front,right))
         state.readings.append(SensorReading(time.time(),state.rotation,left,front,right))
+        data = {
+            "time": time.time(),
+            "x":state.x,
+            "y":state.y,
+            "rotation":state.rotation,
+            "left_distance":left,
+            "right_distance":right,
+            "front_distance":front
+        }
+        sock.sendto(json.dumps(data).encode(), (IP, PORT))
         if len(state.readings)>10:
             state.readings.pop(0)
         if(debug["sensors"]):
@@ -194,7 +204,7 @@ def EstimateDistance(state):
             state.y += v * math.sin(math.radians(state.rotation)) * dt
             
             print("Position: X: ", state.x, "Y: ",state.y)
-            sock.sendto(json.dumps([state.x,state.y]).encode(), (IP, PORT))
+            #sock.sendto(json.dumps([state.x,state.y]).encode(), (IP, PORT))
             #time.sleep(0.05)
 
 def OrientationSpinn(state=state):
