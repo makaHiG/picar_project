@@ -190,13 +190,11 @@ def ReadSensors():
 def ReadGyro():
     raw = read_gyro_z()
     gyro_z = (raw - offset) / 131.0  # deg/sec
-
-    
-
     state.rotation += gyro_z * dt
 
     if debug["gryo"]:
         print(f"Rate: {gyro_z:6.2f} deg/s | Angle: {state.rotation:7.2f} deg")
+
 def EstimateDistance(state):
         if 0<dt<1:
             v = Travel_Speed/100*(wheels.speedL + wheels.speedR)/2
