@@ -201,7 +201,7 @@ def EstimateDistance(state):
             state.x += v * math.cos(math.radians(state.rotation)) * dt
             state.y += v * math.sin(math.radians(state.rotation)) * dt
             
-            print("Position: X: ", state.x, "Y: ",state.y)
+            #print("Position: X: ", state.x, "Y: ",state.y)
             #sock.sendto(json.dumps([state.x,state.y]).encode(), (IP, PORT))
             #time.sleep(0.05)
 
