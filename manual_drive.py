@@ -551,7 +551,7 @@ prev_time=time.time()
 state.mode=Mode.MANUAL
 try:
     while True:
-        print(UA_F.distance())
+        print(UA_R.distance())
         #sock.sendto(b"Hello", ("255.255.255.255", 5005))
         # if(get_key_nonblocking()=="m"):
         #     state.mode = Mode.MANUAL
@@ -576,4 +576,3 @@ finally:
     wheels.stop()
     wheels.speed=0
     camera_servo.turn_straight()
-    GPIO.cleanup()
