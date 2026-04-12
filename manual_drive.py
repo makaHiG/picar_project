@@ -549,7 +549,7 @@ def ManualDrive(state):
 dt=0
 prev_time=time.time()
 US_Manager.start()
-state.mode=Mode.MANUAL
+state.mode=Mode.IDLE
 try:
     while True:
         #print(UA_L.distance())
