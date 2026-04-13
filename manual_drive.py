@@ -88,7 +88,7 @@ offset = sum(samples) / len(samples)
 debug = {
     "wheels": False,
     "camera": False,
-    "sensors": True,
+    "sensors": False,
     "gryo": False,
     "navigation": False
 }
