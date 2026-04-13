@@ -46,8 +46,8 @@ print(picar.back_wheels.__file__)
 # Initialize ultrasonic sensors
 sensor_queue = Queue()
 UA_F = UA2(20)
-UA_L = UA4.Ultrasonic_4pin('D13', 'D10')
-UA_R = UA4.Ultrasonic_4pin('D14', 'D12')
+UA_L = UA4('D13', 'D10')
+UA_R = UA4('D14', 'D12')
 US_Manager =UltrasonicManager(UA_F, UA_L, UA_R,sensor_queue)
 
 ## SocketSetup
