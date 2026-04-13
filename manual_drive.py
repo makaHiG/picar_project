@@ -7,7 +7,7 @@ import math
 import socket
 
 import json
-from queue import Queue
+from multiprocessing import Queue
 from dataclasses import dataclass
 import random
 from datetime import datetime
@@ -18,8 +18,6 @@ import numpy as np
 # import ultrasonic_module as UA4
 from .ultrasonic_manager import UltrasonicManager
 #from . import ultrasonic_module as UA4
-from .ultrasonic_avoidance_3pin import Ultrasonic_Avoidance2 as UA2
-from .new_ultrasonic_4pin import Ultrasonic_4pin as UA4
 from .state import RobotState,Mode,ScanState,SpinnState
 
 import subprocess
@@ -45,10 +43,7 @@ print(picar.back_wheels.__file__)
 
 # Initialize ultrasonic sensors
 sensor_queue = Queue()
-UA_F = UA2(20)
-UA_L = UA4(16,12)
-UA_R = UA4(26, 19)
-US_Manager =UltrasonicManager(UA_F, UA_L, UA_R,sensor_queue)
+US_Manager = UltrasonicManager(20, (16,12), (26,19), sensor_queue)
 
 ## SocketSetup
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
