@@ -573,20 +573,21 @@ try:
         #sock.sendto(b"Hello", ("255.255.255.255", 5005))
         # if(get_key_nonblocking()=="m"):
         #     state.mode = Mode.MANUAL
-        now = time.time()
-        dt = now - prev_time
-        prev_time = now
-        ReadGyro()
-        ReadSensors()
-        EstimateDistance(state)
-        if(state.mode == Mode.MANUAL):
-            ManualDrive(state)
-        if(state.mode == Mode.DIRECTIONAL_MOVE):
-            SteerCenter(state)
-        if(state.mode == Mode.ORIENTING):
-            OrientationSpinn(state)
-        if(state.mode == Mode.SPINNING):
-            SpinnTest(state)
+        
+        # now = time.time()
+        # dt = now - prev_time
+        # prev_time = now
+        # ReadGyro()
+        # ReadSensors()
+        # EstimateDistance(state)
+        # if(state.mode == Mode.MANUAL):
+        #     ManualDrive(state)
+        # if(state.mode == Mode.DIRECTIONAL_MOVE):
+        #     SteerCenter(state)
+        # if(state.mode == Mode.ORIENTING):
+        #     OrientationSpinn(state)
+        # if(state.mode == Mode.SPINNING):
+        #     SpinnTest(state)
 except KeyboardInterrupt:
     wheels.stop()
     camera_servo.turn_straight()
