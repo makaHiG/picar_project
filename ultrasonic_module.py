@@ -214,7 +214,7 @@ class Ultrasonic_Avoidance(object):
         timeout=0.03
         
         self.trig.low()
-        time.sleep(0.01)
+        time.sleep(0.00001)
         self.trig.high()
         time.sleep(0.000015)
         self.trig.low()
