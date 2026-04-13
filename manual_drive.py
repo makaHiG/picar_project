@@ -569,6 +569,7 @@ try:
     while True:
 
         print(UA_L.distance())
+        time.sleep(0.5)
         #sock.sendto(b"Hello", ("255.255.255.255", 5005))
         # if(get_key_nonblocking()=="m"):
         #     state.mode = Mode.MANUAL
