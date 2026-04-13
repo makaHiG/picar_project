@@ -13,7 +13,7 @@ GPIO_ECHO = 12
 GPIO.setup(GPIO_TRIGGER, GPIO.OUT)
 GPIO.setup(GPIO_ECHO, GPIO.IN)
  
-def distance():
+def get_distance():
     # set trigger to HIGH
     GPIO.output(GPIO_TRIGGER, True)
  
@@ -43,7 +43,7 @@ def distance():
 if __name__ == '__main__':
     try:
         while True:
-            distance = distance()
+            distance = get_distance()
             print ("Measured distance = %.1f cm" % distance)
             time.sleep(1)
  
