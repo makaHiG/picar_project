@@ -560,33 +560,32 @@ dt=0
 prev_time=time.time()
 #US_Manager.start()
 state.mode=Mode.MANUAL
-#try:
-while True:
+try:
+    while True:
 
-    print(UA_L.distance())
-    time.sleep(0.5)
-    #sock.sendto(b"Hello", ("255.255.255.255", 5005))
-    # if(get_key_nonblocking()=="m"):
-        #     state.mode = Mode.MANUAL
-        
-        # now = time.time()
-        # dt = now - prev_time
-        # prev_time = now
-        # ReadGyro()
-        # ReadSensors()
-        # EstimateDistance(state)
-        # if(state.mode == Mode.MANUAL):
-        #     ManualDrive(state)
-        # if(state.mode == Mode.DIRECTIONAL_MOVE):
-        #     SteerCenter(state)
-        # if(state.mode == Mode.ORIENTING):
-        #     OrientationSpinn(state)
-        # if(state.mode == Mode.SPINNING):
-        #     SpinnTest(state)
-# except KeyboardInterrupt:
-#     wheels.stop()
-#     camera_servo.turn_straight()
-# finally:
-#     wheels.stop()
-#     wheels.speed=0
-#     camera_servo.turn_straight()
+        time.sleep(0.5)
+        #sock.sendto(b"Hello", ("255.255.255.255", 5005))
+        # if(get_key_nonblocking()=="m"):
+            #     state.mode = Mode.MANUAL
+            
+        now = time.time()
+        dt = now - prev_time
+        prev_time = now
+        ReadGyro()
+        ReadSensors()
+        EstimateDistance(state)
+        if(state.mode == Mode.MANUAL):
+            ManualDrive(state)
+        if(state.mode == Mode.DIRECTIONAL_MOVE):
+            SteerCenter(state)
+        if(state.mode == Mode.ORIENTING):
+            OrientationSpinn(state)
+        if(state.mode == Mode.SPINNING):
+            SpinnTest(state)
+except KeyboardInterrupt:
+    wheels.stop()
+    camera_servo.turn_straight()
+finally:
+    wheels.stop()
+    wheels.speed=0
+    camera_servo.turn_straight()
