@@ -48,7 +48,7 @@ sensor_queue = Queue()
 UA_F = UA2(20)
 UA_L = UA4(16,12)
 UA_R = UA4(26, 19)
-US_Manager =UltrasonicManager(UA_F, UA_L, UA_R,sensor_queue)
+#US_Manager =UltrasonicManager(UA_F, UA_L, UA_R,sensor_queue)
 
 ## SocketSetup
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -563,7 +563,7 @@ def ManualDrive(state:RobotState):
         #camera_servo.turn_straight()
 dt=0
 prev_time=time.time()
-US_Manager.start()
+#US_Manager.start()
 state.mode=Mode.MANUAL
 #try:
 while True:
