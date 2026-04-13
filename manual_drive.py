@@ -179,6 +179,7 @@ def ReadSensors():
             "right_distance":right,
             "front_distance":front
         }
+        
         sock.sendto(json.dumps(data).encode(), (IP, PORT))
         if len(state.readings)>10:
             state.readings.pop(0)
@@ -563,7 +564,6 @@ state.mode=Mode.MANUAL
 try:
     while True:
 
-        time.sleep(0.5)
         #sock.sendto(b"Hello", ("255.255.255.255", 5005))
         # if(get_key_nonblocking()=="m"):
             #     state.mode = Mode.MANUAL
