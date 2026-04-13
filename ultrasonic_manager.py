@@ -62,7 +62,7 @@ class UltrasonicManager:
         while self.running.value:
             a = time.time()
             
-            self.front_distance = self.front.get_distance()
+            self.front_distance = self.front.distance()
             time.sleep(0.01)
             self.HandleUltrasonicData(self.left.distance(),self.left_values)
             self.left_distance = (sorted(self.left_values)[len(self.left_values)//2]) if self.left_values else 0
