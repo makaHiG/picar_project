@@ -518,7 +518,7 @@ def get_key_nonblocking():
     if dr:
         return sys.stdin.read(1)
     return None
-def ManualDrive(state):
+def ManualDrive(state:RobotState):
     ##print("Manual drive mode. Use WASD to drive, Q to quit.")
     
     key = get_key_nonblocking()
@@ -551,7 +551,8 @@ def ManualDrive(state):
     elif key =="e":
         state.mode = Mode.DIRECTIONAL_MOVE
         state.targetAngle = state.rotation
-        state.cooridorAngle = state.rotation
+        
+        state.corridorAngle = state.rotation
         
     elif key == 'q':     # quit
         wheels.stop()
