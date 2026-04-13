@@ -278,8 +278,7 @@ def SteerCenter(state:RobotState):
     else:
         k=0
         k2=1
-    k=0
-    k2=1
+    
     
     trend = sum(state.center_errors)/len(state.center_errors) if len(state.center_errors)>0 else 0 
     #print("trend",trend)
