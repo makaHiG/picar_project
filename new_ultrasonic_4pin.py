@@ -15,7 +15,7 @@ class Ultrasonic_4pin():
         GPIO.setup(self.TRIG, GPIO.OUT)
         GPIO.setup(self.ECHO, GPIO.IN)
 
-    def get_distance(self):
+    def distance(self):
         # set trigger to HIGH
         GPIO.output(self.TRIG, True)
     
@@ -51,7 +51,7 @@ if __name__ == '__main__':
     ultrasonic = Ultrasonic_4pin(GPIO_TRIGGER, GPIO_ECHO)
     try:
         while True:
-            distance = ultrasonic.get_distance()
+            distance = ultrasonic.distance()
             print ("Measured distance = %.1f cm" % distance)
             time.sleep(0.06)
  

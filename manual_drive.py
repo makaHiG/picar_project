@@ -17,9 +17,9 @@ import numpy as np
 # from ultrasonic_manager import UltrasonicManager
 # import ultrasonic_module as UA4
 from .ultrasonic_manager import UltrasonicManager
-from . import ultrasonic_module as UA4
+#from . import ultrasonic_module as UA4
 from .ultrasonic_avoidance_3pin import Ultrasonic_Avoidance2 as UA2
-
+from .new_ultrasonic_4pin import Ultrasonic_4pin as UA4
 from .state import RobotState,Mode,ScanState,SpinnState
 
 import subprocess
