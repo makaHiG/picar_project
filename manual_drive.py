@@ -270,23 +270,21 @@ def SteerCenter(state:RobotState):
     state.align_errors.append(align_error)
     if len(state.align_errors)>5:
         state.align_errors.pop(0)
-    k2=0
+    
     if(state.right_distance>0 and state.left_distance>0):
         width = state.left_distance+state.right_distance
         center_error = (state.left_distance - state.right_distance)/(state.left_distance+state.right_distance)
         state.center_errors.append(center_error)
         if len(state.center_errors)>5:
             state.center_errors.pop(0)
-        k=1
-        k2=0
+        
         veer((state.center_errors[-1]*p+trend*intCoeff +derivative*d)) 
     else:
         veer((state.align_errors[-1]/90))
-        k=0
-        k2=1
+        
     #print("trend",trend)
     #+align_error*k2
-    print("align_error",align_error, "center_error", state.center_errors[-1] if len(state.center_errors)>0 else 0, "derivative", derivative)
+    #print("align_error",align_error, "center_error", state.center_errors[-1] if len(state.center_errors)>0 else 0, "derivative", derivative)
     
     # if(state.right_distance>0 and state.left_distance>0):
     #     offset = (state.right_distance-state.left_distance)/(state.right_distance+state.left_distance)
