@@ -264,8 +264,9 @@ def SteerCenter(state:RobotState):
     center_error =0
     p=1
     intCoeff=0.0
-    d=0.1
+    d=1
     kp_align=0.1
+    derivative = 0
     leftNoise,leftalign = state.Sensors.get_leftWallAngle() or (None,None)
     rightNoise,rightalign = state.Sensors.get_rightWallAngle() or (None,None)
     if(leftalign is not None and rightalign is not None):
@@ -273,7 +274,6 @@ def SteerCenter(state:RobotState):
             #state.corridorAngle = (leftalign - rightalign)/2
             print("corridor angle set to ", state.corridorAngle, " left noise ", leftNoise, " right noise ", rightNoise)
     align_error = ( state.corridorAngle-state.rotation) /90
-    derivative = 0
     if len(state.center_errors) >= 2:
         derivative = state.center_errors[-1] - state.center_errors[-2]
     else:
