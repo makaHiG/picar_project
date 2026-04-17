@@ -276,7 +276,8 @@ def SteerCenter(state:RobotState):
         if(abs(leftalign-rightalign)<5) and abs(leftNoise)<0.1 and abs(rightNoise)<0.1:
             #state.corridorAngle = (leftalign - rightalign)/2
             print("corridor angle set to ", state.corridorAngle, " left noise ", leftNoise, " right noise ", rightNoise)
-    align_error = ( state.corridorAngle-state.rotation) /90
+    diff = (state.corridorAngle - state.rotation + 180) % 360 - 180
+    align_error  = diff / 90 
     if len(state.center_errors) >= 2:
         derivative = (state.center_errors[-1] - state.center_errors[-2])/dt
     else:
