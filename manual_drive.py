@@ -261,12 +261,11 @@ def OrientationSpinn(state=state):
         
 def SteerCenter(state:RobotState):
     
-    tolerance = 0.1
     center_error =0
-    k=0
     p=1
     intCoeff=0.0
-    d=-1
+    d=0
+    kp_align=0.1
     leftNoise,leftalign = state.Sensors.get_leftWallAngle() or (None,None)
     rightNoise,rightalign = state.Sensors.get_rightWallAngle() or (None,None)
     if(leftalign is not None and rightalign is not None):
@@ -275,9 +274,11 @@ def SteerCenter(state:RobotState):
             print("corridor angle set to ", state.corridorAngle, " left noise ", leftNoise, " right noise ", rightNoise)
     align_error = ( state.corridorAngle-state.rotation) /90
     derivative = 0
-    for i in range(1, len(state.center_errors)):
-        derivative += state.center_errors[i] - state.center_errors[i-1]
-    derivative = derivative/len(state.center_errors) if len(state.center_errors)>0 else 0
+    if len(state.center_errors) >= 2:
+        derivative = state.center_errors[-1] - state.center_errors[-2]
+    else:
+        derivative = 0
+
     trend = sum(state.center_errors)/len(state.center_errors) if len(state.center_errors)>0 else 0 
     state.align_errors.append(align_error)
     if len(state.align_errors)>5:
@@ -290,7 +291,7 @@ def SteerCenter(state:RobotState):
         if len(state.center_errors)>5:
             state.center_errors.pop(0)
         
-        veer((state.center_errors[-1]*p+trend*intCoeff +derivative*d)) 
+        veer((state.center_errors[-1]*p+trend*intCoeff +derivative*d+ align_error*kp_align)) 
     else:
         veer((state.align_errors[-1]))
         
