@@ -262,7 +262,7 @@ def OrientationSpinn(state=state):
 def SteerCenter(state:RobotState):
     photointerval = 200
     if(state.lastPhotoSpot[0]-state.x)**2 + (state.lastPhotoSpot[1]-state.y)**2 > photointerval**2:
-        TakePhoto()
+        state.mode = Mode.SPINNING
         state.lastPhotoSpot=(state.x,state.y)
     center_error =0
     p=1
@@ -279,7 +279,6 @@ def SteerCenter(state:RobotState):
     align_error = ( state.corridorAngle-state.rotation) /90
     if len(state.center_errors) >= 2:
         derivative = (state.center_errors[-1] - state.center_errors[-2])/dt
-        print("derivative", derivative*d)
     else:
         derivative = 0
 
