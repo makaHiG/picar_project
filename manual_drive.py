@@ -266,7 +266,7 @@ def SteerCenter(state:RobotState):
     k=0
     p=1
     intCoeff=0.0
-    d=1
+    d=-1
     leftNoise,leftalign = state.Sensors.get_leftWallAngle() or (None,None)
     rightNoise,rightalign = state.Sensors.get_rightWallAngle() or (None,None)
     if(leftalign is not None and rightalign is not None):
