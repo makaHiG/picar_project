@@ -283,7 +283,7 @@ def SteerCenter(state:RobotState):
     if len(state.align_errors)>5:
         state.align_errors.pop(0)
     
-    if(state.right_distance>0 and state.left_distance>0):
+    if(state.right_distance>0 and state.left_distance>0 and False):
         width = state.left_distance+state.right_distance
         center_error = (state.left_distance - state.right_distance)/(state.left_distance+state.right_distance)
         state.center_errors.append(center_error)
