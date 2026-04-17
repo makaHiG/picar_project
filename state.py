@@ -21,6 +21,7 @@ class RobotState:
         self.front_distance = 100
         self.scan = ScanState()
         self.spinn = SpinnState()
+        self.lastPhotoSpot = (0,0)
 class ScanState:
     def __init__(self):
         self.readings=[]

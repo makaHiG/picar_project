@@ -110,7 +110,7 @@ def UpDownTest():
     TakePhoto()
     time.sleep(1)
     camera_servo.turn_straight()
-def SpinnTest(state:state):
+def SpinnTest(state:RobotState):
     spinn = state.spinn
     spinn: SpinnState
     if(spinn.active == False):
@@ -258,6 +258,9 @@ def SteerCenter(state:RobotState):
     tolerance = 0.1
     center_error =0
     k=0
+    p=1
+    i=1
+    d=1.00
     align_error = max(-1,min(1,(state.corridorAngle -state.rotation)/90))
     state.align_errors.append(align_error)
     if len(state.align_errors)>5:
@@ -274,11 +277,13 @@ def SteerCenter(state:RobotState):
     else:
         k=0
         k2=1
-    
-    
+    derivative = 0
+    for i in range(1, len(state.center_errors)):
+        derivative += state.center_errors[i] - state.center_errors[i-1]
     trend = sum(state.center_errors)/len(state.center_errors) if len(state.center_errors)>0 else 0 
     #print("trend",trend)
-    veer(trend*k+align_error*k2)
+    veer(center_error*k+trend*i +derivative*d)
+    #+align_error*k2
     
     # if(state.right_distance>0 and state.left_distance>0):
     #     offset = (state.right_distance-state.left_distance)/(state.right_distance+state.left_distance)
