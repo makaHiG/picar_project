@@ -128,7 +128,7 @@ def SpinnTest(state:RobotState):
         else: 
             spinn.active=False
             
-            state.mode = Mode.IDLE
+            state.mode = Mode.DIRECTIONAL_MOVE
     else:
         mod = error /3
         wheels.speed = int(min(100,max(25,TURN_SPEED*mod)))
@@ -260,7 +260,10 @@ def OrientationSpinn(state=state):
                    
         
 def SteerCenter(state:RobotState):
-    
+    photointerval = 200
+    if(state.lastPhotoSpot-(state.x,state.y)).__abs__()>photointerval:
+        TakePhoto()
+        state.lastPhotoSpot=(state.x,state.y)
     center_error =0
     p=1
     intCoeff=.1
