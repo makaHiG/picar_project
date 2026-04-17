@@ -42,7 +42,7 @@ class Ultrasonic_4pin():
         # and divide by 2, there and back again
         distance = (timeElapsed * 34300) / 2
     
-        return distance
+        return round(distance,2)
  
 # assign GPIO Pins
 GPIO_TRIGGER = 16

@@ -267,7 +267,13 @@ def SteerCenter(state:RobotState):
     p=1
     intCoeff=0
     d=0
-    align_error = max(-1,min(1,(state.corridorAngle -state.rotation)/90))
+    leftNoise,leftalign = (state.SensorState.fit_line_and_error(state.SensorState.left_points) or 0)
+    rightNoise,rightalign = (state.SensorState.fit_line_and_error(state.SensorState.right_points) or 0) 
+    if(leftalign is not None and rightalign is not None):
+        if(abs(leftalign-rightalign)<10) and abs(leftNoise)<0.2 and abs(rightNoise)<0.2:
+            state.corridorAngle = (leftalign - rightalign)/2
+            print("corridor angle set to ", state.corridorAngle, " left noise ", leftNoise, " right noise ", rightNoise)
+    align_error = state.rotation - state.corridorAngle
     derivative = 0
     for i in range(1, len(state.center_errors)):
         derivative += state.center_errors[i] - state.center_errors[i-1]
@@ -290,7 +296,7 @@ def SteerCenter(state:RobotState):
         
     #print("trend",trend)
     #+align_error*k2
-    print("align_error",align_error, "center_error", state.center_errors[-1] if len(state.center_errors)>0 else 0, "derivative", derivative)
+    #print("align_error",align_error, "center_error", state.center_errors[-1] if len(state.center_errors)>0 else 0, "derivative", derivative)
     
     # if(state.right_distance>0 and state.left_distance>0):
     #     offset = (state.right_distance-state.left_distance)/(state.right_distance+state.left_distance)
