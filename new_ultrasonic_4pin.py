@@ -33,6 +33,8 @@ class Ultrasonic_4pin():
         # store arrivalTime
         while GPIO.input(self.ECHO) == 1:
             arrivalTime = time.perf_counter()
+            if arrivalTime - startTime > timeout:
+                return -2  # Timeout occurred, no object detected
     
         # Time difference between start and arrival
         timeElapsed = arrivalTime - startTime
