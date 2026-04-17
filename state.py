@@ -64,12 +64,12 @@ class SensorState:
         if len(self.left_points)<2:
             return None
         else:
-            return self.fit_line_and_error(self.left_points)[0]
+            return self.fit_line_and_error(self.left_points)
     def get_rightWallAngle(self):
         if len(self.right_points)<2:
             return None
         else:
-            return self.fit_line_and_error(self.right_points)[0]
+            return self.fit_line_and_error(self.right_points)
     def fit_line_and_error(self, points):
         if len(points) < 2:
             return None, None
