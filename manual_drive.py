@@ -125,8 +125,8 @@ def SpinnTest(state:RobotState):
         spinn.stepCount = 0
         spinn.startRotation = state.rotation
         spinn.active = True
-        spinn.targetRotation = spinn.startRotation+ 360/spinn.maxSteps
-        UpDownTest(state)
+        spinn.targetRotation = spinn.startRotation
+        #UpDownTest(state)
     error = spinn.targetRotation-state.rotation
 
     if abs(error<0.5):
