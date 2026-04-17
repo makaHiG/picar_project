@@ -267,8 +267,8 @@ def SteerCenter(state:RobotState):
     p=1
     intCoeff=.1
     d=.1
-    leftNoise,leftalign = (state.SensorState.fit_line_and_error(state.SensorState.left_points) or 0)
-    rightNoise,rightalign = (state.SensorState.fit_line_and_error(state.SensorState.right_points) or 0) 
+    leftNoise,leftalign = (state.Sensors.fit_line_and_error(state.Sensors.left_points) or 0)
+    rightNoise,rightalign = (state.Sensors.fit_line_and_error(state.Sensors.right_points) or 0) 
     if(leftalign is not None and rightalign is not None):
         if(abs(leftalign-rightalign)<10) and abs(leftNoise)<0.2 and abs(rightNoise)<0.2:
             state.corridorAngle = (leftalign - rightalign)/2
