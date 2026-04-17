@@ -274,7 +274,9 @@ def SteerCenter(state:RobotState):
             state.center_errors.pop(0)
         k=1
         k2=0
+        veer(k*(state.center_errors[-1]*p+trend*i +derivative*d)) 
     else:
+        veer(k*(state.align_errors[-1]/90))
         k=0
         k2=1
     derivative = 0
@@ -283,7 +285,6 @@ def SteerCenter(state:RobotState):
     derivative = derivative/len(state.center_errors) if len(state.center_errors)>0 else 0
     trend = sum(state.center_errors)/len(state.center_errors) if len(state.center_errors)>0 else 0 
     #print("trend",trend)
-    veer(k*(state.center_errors[-1]*p+trend*i +derivative*d)+k2*align_error) 
     #+align_error*k2
     
     # if(state.right_distance>0 and state.left_distance>0):
