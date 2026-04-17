@@ -161,17 +161,17 @@ class SensorReading():
 
 
 
-def ReadSensors():
+def ReadSensors(state:RobotState=state):
     while not sensor_queue.empty():
         left,front,right = sensor_queue.get()
         state.left_distance=left
         state.right_distance=right
         state.front_distance=front
-        if(left>0): state.add_reading("left", left, state.x, state.y, state.rotation)
+        if(left>0): state.SensorState.add_reading("left", left, state.x, state.y, state.rotation)
 
-        if(front>0): state.add_reading("front", front, state.x, state.y, state.rotation)
+        if(front>0): state.SensorState.add_reading("front", front, state.x, state.y, state.rotation)
 
-        if(right>0): state.add_reading("right", right, state.x, state.y, state.rotation)
+        if(right>0): state.SensorState.add_reading("right", right, state.x, state.y, state.rotation)
 
         state.scan.readings.append(SensorReading(time.time(),state.rotation,left,front,right))
         state.readings.append(SensorReading(time.time(),state.rotation,left,front,right))
