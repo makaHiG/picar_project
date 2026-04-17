@@ -265,7 +265,7 @@ def SteerCenter(state:RobotState):
     center_error =0
     k=0
     p=1
-    intCoeff=0
+    intCoeff=.1
     d=0
     leftNoise,leftalign = (state.SensorState.fit_line_and_error(state.SensorState.left_points) or 0)
     rightNoise,rightalign = (state.SensorState.fit_line_and_error(state.SensorState.right_points) or 0) 
