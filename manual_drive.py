@@ -301,6 +301,8 @@ def SteerCenter(state:RobotState):
     if(state.lastPhotoSpot[0]-state.x)**2 + (state.lastPhotoSpot[1]-state.y)**2 > photointerval**2:
         state.mode = Mode.SPINNING
         state.lastPhotoSpot=(state.x,state.y)
+        wheels.stop()
+        return
     center_error =0
     p=1
     intCoeff=.1
