@@ -13,7 +13,7 @@ class Ultrasonic_4pin():
         
         # Set direction of GPIO pins (IN --> Input / OUT --> Output)
         GPIO.setup(self.TRIG, GPIO.OUT)
-        GPIO.setup(self.ECHO, GPIO.IN)
+        GPIO.setup(self.ECHO, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
     def distance(self):
         # set trigger to HIGH
@@ -23,16 +23,16 @@ class Ultrasonic_4pin():
         time.sleep(0.00001)
         GPIO.output(self.TRIG, False)
     
-        startTime = time.time()
-        arrivalTime = time.time()
-    
+        startTime = time.perf_counter()
+        arrivalTime = time.perf_counter()
+        timeout = 0.03  # 30 ms timeout for no response
         # store startTime
         while GPIO.input(self.ECHO) == 0:
-            startTime = time.time()
+            startTime = time.perf_counter()
     
         # store arrivalTime
         while GPIO.input(self.ECHO) == 1:
-            arrivalTime = time.time()
+            arrivalTime = time.perf_counter()
     
         # Time difference between start and arrival
         timeElapsed = arrivalTime - startTime
