@@ -258,9 +258,9 @@ def SteerCenter(state:RobotState):
     tolerance = 0.1
     center_error =0
     k=0
-    p=0.5
-    i=0.05
-    d=0.1
+    p=0.1
+    i=0.00
+    d=0.01
     align_error = max(-1,min(1,(state.corridorAngle -state.rotation)/90))
     state.align_errors.append(align_error)
     if len(state.align_errors)>5:
