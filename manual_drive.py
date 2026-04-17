@@ -89,7 +89,6 @@ debug = {
 }
 #print("Tracking rotation...")
 
-
 # Steering & speed parameters
 STEER_ANGLE = 30  # degrees left/right
 SPEED = 100       # speed 0-100 default 50
@@ -258,9 +257,9 @@ def SteerCenter(state:RobotState):
     tolerance = 0.1
     center_error =0
     k=0
-    p=0.5
-    intCoeff=0.01
-    d=0.01
+    p=1
+    intCoeff=0
+    d=0
     align_error = max(-1,min(1,(state.corridorAngle -state.rotation)/90))
     derivative = 0
     for i in range(1, len(state.center_errors)):
@@ -284,7 +283,7 @@ def SteerCenter(state:RobotState):
         
     #print("trend",trend)
     #+align_error*k2
-    #print("align_error",align_error, "center_error", state.center_errors[-1] if len(state.center_errors)>0 else 0, "derivative", derivative)
+    print("align_error",align_error, "center_error", state.center_errors[-1] if len(state.center_errors)>0 else 0, "derivative", derivative)
     
     # if(state.right_distance>0 and state.left_distance>0):
     #     offset = (state.right_distance-state.left_distance)/(state.right_distance+state.left_distance)
