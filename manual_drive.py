@@ -53,7 +53,7 @@ PORT = 5005
 # Gyro setup
 bus = smbus.SMBus(1)
 MPU6050_ADDR = 0x68
-readWheels = False
+direction = False
 PWR_MGMT_1 = 0x6B
 GYRO_ZOUT_H = 0x47
 
@@ -196,8 +196,8 @@ def ReadGyro():
 def EstimateDistance(state):
         if 0<dt<1:
             v = Travel_Speed/100*(wheels.speedL + wheels.speedR)/2
-            state.x += v * math.cos(math.radians(state.rotation)) * dt*readWheels
-            state.y += v * math.sin(math.radians(state.rotation)) * dt*readWheels
+            state.x += v * math.cos(math.radians(state.rotation)) * dt*state.direction
+            state.y += v * math.sin(math.radians(state.rotation)) * dt*state.direction
             
             #print("Position: X: ", state.x, "Y: ",state.y)
             #sock.sendto(json.dumps([state.x,state.y]).encode(), (IP, PORT))
@@ -481,7 +481,8 @@ def TakePhoto():
 
 def veer(error):
     wheels.forward()
-    readWheels = 1
+    
+    state.direction = 1
     # steer = (error + 180) % 360 - 180
     # steer = steer/180
     steer = error
@@ -530,15 +531,16 @@ def ManualDrive(state:RobotState):
         # wheels.speed=SPEED
     elif key == 's':     # backward
         wheels.backward()
-        readWheels = -1
+        
+        state.direction = -1
         wheels.speed=SPEED
     elif key == 'a':     # turn left
         wheels.spinn_left()
-        readWheels = 0
+        state.direction = 0
         wheels.speed = TURN_SPEED
     elif key == 'd':     # turn right
         wheels.spinn_right()
-        readWheels = 0
+        state.direction = 0
         wheels.speed = TURN_SPEED
     elif key == ' ':     # stop
         wheels.stop()
