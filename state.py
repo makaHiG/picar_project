@@ -29,11 +29,13 @@ class RobotState:
         self.scan = ScanState()
         self.spinn = SpinnState()
         self.lastPhotoSpot = (0,0)
+        self.realRun = False
 class ScanState:
     def __init__(self):
         self.readings=[]
         self.active = False
         self.startRotation = 0
+
 class SensorState:
     def __init__(self):
         self.right_points = []
@@ -107,6 +109,9 @@ class SensorState:
         return angle, rmse
 class SpinnState:
     def __init__(self):
+        self.batchfolder = "batch"
+        self.panoramafolder = "panorama"
+        self.panoramacounter = 0
         self.targetRotation = 0
         self.active = False
         self.stepCount = 0

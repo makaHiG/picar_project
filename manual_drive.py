@@ -41,6 +41,8 @@ wheels.ready()
 state = RobotState()
 print(picar.back_wheels.__file__)
 
+base_folder = os.path.expanduser("~/photos")
+os.makedirs(base_folder, exist_ok=True)
 # Initialize ultrasonic sensors
 sensor_queue = Queue()
 US_Manager = UltrasonicManager(20, (16,12), (26,19), sensor_queue)
@@ -98,21 +100,28 @@ TURN_SPEED = 100#default 30
 Travel_Speed = 44*3.14/15 #Speed from test,cm/s
 
 
-def UpDownTest():
+def UpDownTest(state:RobotState=state):
     camera_servo.turn_right()
-    TakePhoto()
+    if(state.realRun):
+        TakePhoto()
     time.sleep(1)
     camera_servo.turn_straight()
-    TakePhoto()
+    if(state.realRun):
+        TakePhoto()
     time.sleep(1)
     camera_servo.turn_left()
-    TakePhoto()
+    if(state.realRun):
+        TakePhoto()
     time.sleep(1)
     camera_servo.turn_straight()
+
+
 def SpinnTest(state:RobotState):
     spinn = state.spinn
     spinn: SpinnState
     if(spinn.active == False):
+        folder = os.path.expanduser("~/photos")
+        os.makedirs(folder, exist_ok=True)
         spinn.stepCount = 0
         spinn.startRotation = state.rotation
         spinn.active = True
@@ -124,6 +133,7 @@ def SpinnTest(state:RobotState):
         time.sleep(1)
         if(spinn.stepCount<spinn.maxSteps):
             spinn.stepCount += 1
+            UpDownTest(state)
             spinn.targetRotation = spinn.startRotation + 360/spinn.maxSteps * spinn.stepCount+1
         else: 
             spinn.active=False
@@ -142,6 +152,27 @@ def SpinnTest(state:RobotState):
     # wheels.spinn_right()
     # time.sleep(TURN_TIME)
     # wheels.stop()
+      
+def TakePhoto():
+    folder = os.path.expanduser("~/photos")
+    os.makedirs(folder, exist_ok=True)
+
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    filename = f"{folder}/photo_{timestamp}.jpg"
+
+    subprocess.run([
+        "fswebcam",
+        "-r", "1920x1080",   # resolution
+        "--frames", "10",    # warm-up frames for exposure
+        "--no-banner",
+        filename
+    ])
+    
+
+    print("Saved:", filename)
+
+
+
 def CaptureTest():
     turns=0
     while (turns<12):
@@ -160,7 +191,11 @@ class SensorReading():
 
 
 
-
+def RealRun(state:RobotState):
+    run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
+    run_folder = os.path.join(base_folder, f"run_{run_id}")
+    state.spinn.batchfolder = run_folder
+    state.realRun = True
 def ReadSensors(state:RobotState=state):
     while not sensor_queue.empty():
         left,front,right = sensor_queue.get()
@@ -258,7 +293,7 @@ def OrientationSpinn(state=state):
         wheels.stop()    
         state.mode=Mode.DIRECTIONAL_MOVE
                    
-        
+
 def SteerCenter(state:RobotState):
     photointerval = 200
     if(state.lastPhotoSpot[0]-state.x)**2 + (state.lastPhotoSpot[1]-state.y)**2 > photointerval**2:
@@ -478,25 +513,7 @@ def Roam():
         wheels.stop()
         camera_servo.turn_straight()
         raise
-            
-def TakePhoto():
-    folder = os.path.expanduser("~/photos")
-    os.makedirs(folder, exist_ok=True)
-
-    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    filename = f"{folder}/photo_{timestamp}.jpg"
-
-    subprocess.run([
-        "fswebcam",
-        "-r", "1920x1080",   # resolution
-        "--frames", "10",    # warm-up frames for exposure
-        "--no-banner",
-        filename
-    ])
-    
-
-    print("Saved:", filename)
-
+      
 def veer(error):
     wheels.forward()
     
