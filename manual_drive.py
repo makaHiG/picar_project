@@ -261,7 +261,7 @@ def OrientationSpinn(state=state):
         
 def SteerCenter(state:RobotState):
     photointerval = 200
-    if(state.lastPhotoSpot-(state.x,state.y)).__abs__()>photointerval:
+    if(state.lastPhotoSpot[0]-state.x)**2 + (state.lastPhotoSpot[1]-state.y)**2 > photointerval**2:
         TakePhoto()
         state.lastPhotoSpot=(state.x,state.y)
     center_error =0
