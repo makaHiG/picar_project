@@ -144,7 +144,7 @@ def SpinnTest(state:RobotState):
             spinn.targetRotation = spinn.startRotation + 360/spinn.maxSteps * spinn.stepCount
         else: 
             spinn.active=False
-            
+            state.spinn.panoramacounter+=1
             state.mode = Mode.DIRECTIONAL_MOVE
     else:
         mod = error /3
@@ -165,7 +165,7 @@ def TakePhoto(state:RobotState):
     # os.makedirs(folder, exist_ok=True)
 
     #timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    filename = "c"+str(state.spinn.stepcount)+"r"+str(state.spinn.row)+".jpg"
+    filename = "c"+str(state.spinn.stepCount)+"r"+str(state.spinn.row)+".jpg"
     filepath = os.path.join(state.spinn.panoramafolder,filename)
         #f"{state.spinn.panoramafolder}/photo_{timestamp}.jpg"
     subprocess.run([
