@@ -241,6 +241,13 @@ def RealRun(state:RobotState):
     "-c", "exposure_auto=1",
     "-c", "gain=0"
     ])
+    
+    subprocess.run([
+        "v4l2-ctl",
+        "-d", "/dev/video0",
+        "--set-fmt-video=width=1920,height=1080,pixelformat=MJPG",
+        "-c", "exposure_auto=1"
+    ], check=True)
 
 def ReadSensors(state:RobotState=state):
     while not sensor_queue.empty():
