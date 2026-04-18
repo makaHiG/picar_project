@@ -204,6 +204,7 @@ def RealRun(state:RobotState):
     run_folder = os.path.join(base_folder, f"run_{run_id}")
     state.spinn.batchfolder = run_folder
     state.realRun = True
+    state.spinn.lastPhotoSpot=(state.x,state.y)
 def ReadSensors(state:RobotState=state):
     while not sensor_queue.empty():
         left,front,right = sensor_queue.get()
