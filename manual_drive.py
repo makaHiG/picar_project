@@ -159,7 +159,9 @@ def SpinnTest(state:RobotState):
     # wheels.spinn_right()
     # time.sleep(TURN_TIME)
     # wheels.stop()
-      
+def Spinn(state:RobotState):
+     
+     
 def TakePhoto(state:RobotState):
     # folder = os.path.expanduser("~/photos")
     # os.makedirs(folder, exist_ok=True)
@@ -305,7 +307,7 @@ def OrientationSpinn(state=state):
 
 def SteerCenter(state:RobotState):
     photointerval = 200
-    if(state.lastPhotoSpot[0]-state.x)**2 + (state.lastPhotoSpot[1]-state.y)**2 > photointerval**2:
+    if(state.realRun and (state.lastPhotoSpot[0]-state.x)**2 + (state.lastPhotoSpot[1]-state.y)**2 > photointerval**2):
         state.mode = Mode.SPINNING
         state.lastPhotoSpot=(state.x,state.y)
         wheels.stop()
