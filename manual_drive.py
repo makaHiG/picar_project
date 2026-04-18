@@ -238,7 +238,7 @@ def RealRun(state:RobotState):
     state.spinn.lastPhotoSpot=(state.x,state.y)
     subprocess.run([
     "v4l2-ctl", "-d", "/dev/video0",
-    "--set-fmt-video=width=1920,height=1080,pixelformat=MJPG",
+    "--set-fmt-video=width=1920,height=1080,pixelformat=YUYV",
     "-c", "auto_exposure=1",
     "-c", "exposure_time_absolute=120",
     "-c", "gain=0"
