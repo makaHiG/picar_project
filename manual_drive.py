@@ -170,19 +170,19 @@ def TakePhoto(state:RobotState):
     filepath = os.path.join(state.spinn.panoramafolder, filename)
 
     # Warm-up (important for exposure)
-    for _ in range(5):
-        subprocess.run([
-            "fswebcam",
-            "-r", "1920x1080",
-            "--no-banner",
-            "/dev/null"
-        ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    # for _ in range(5):
+    #     subprocess.run([
+    #         "fswebcam",
+    #         "-r", "1920x1080",
+    #         "--no-banner",
+    #         "/dev/null"
+    #     ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     # Final capture
     subprocess.run([
         "fswebcam",
         "-r", "1920x1080",
-        "--frames", "10",   # real improvement here
+        "--frames", "1",   # real improvement here
         "--no-banner",
         filepath
     ])
