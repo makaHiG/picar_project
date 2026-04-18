@@ -101,7 +101,7 @@ Travel_Speed = 44*3.14/15 #Speed from test,cm/s
 
 
 def UpDownTest(state:RobotState=state):
-    camera_servo.turn_right()
+    camera_servo.turn_left()
     state.spinn.row=1
     time.sleep(1)
     if(state.realRun):
@@ -111,7 +111,7 @@ def UpDownTest(state:RobotState=state):
     time.sleep(1)
     if(state.realRun):
         TakePhoto(state)
-    camera_servo.turn_left()
+    camera_servo.turn_right()
     state.spinn.row=3
     time.sleep(2)
     if(state.realRun):
@@ -169,20 +169,21 @@ def TakePhoto(state:RobotState):
     filename = f"c{state.spinn.stepCount}r{state.spinn.row}.jpg"
     filepath = os.path.join(state.spinn.panoramafolder, filename)
 
-    # Warm-up (important for exposure)
-    # for _ in range(5):
-    #     subprocess.run([
-    #         "fswebcam",
-    #         "-r", "1920x1080",
-    #         "--no-banner",
-    #         "/dev/null"
-    #     ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    #Warm-up (important for exposure)
+    for _ in range(5):
+        subprocess.run([
+            "fswebcam",
+            "-r", "1920x1080",
+            "--frames", "1"
+            "--no-banner",
+            "/dev/null"
+        ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     # Final capture
     subprocess.run([
         "fswebcam",
         "-r", "1920x1080",
-        "--frames", "1",   # real improvement here
+        "--frames", "10",   # real improvement here
         "--no-banner",
         filepath
     ])
