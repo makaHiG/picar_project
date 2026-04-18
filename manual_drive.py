@@ -165,24 +165,50 @@ def SpinnTest(state:RobotState):
      
      
 def TakePhoto(state:RobotState):
-    # folder = os.path.expanduser("~/photos")
-    # os.makedirs(folder, exist_ok=True)
+    
+    filename = f"c{state.spinn.stepCount}r{state.spinn.row}.jpg"
+    filepath = os.path.join(state.spinn.panoramafolder, filename)
 
-    #timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    filename = "c"+str(state.spinn.stepCount)+"r"+str(state.spinn.row)+".jpg"
-    filepath = os.path.join(state.spinn.panoramafolder,filename)
-        #f"{state.spinn.panoramafolder}/photo_{timestamp}.jpg"
-    time.sleep(0.5)  # Allow camera to adjust
+    # Warm-up (important for exposure)
+    for _ in range(5):
+        subprocess.run([
+            "fswebcam",
+            "-r", "1920x1080",
+            "--no-banner",
+            "/dev/null"
+        ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+    # Final capture
     subprocess.run([
         "fswebcam",
-        "-r", "1920x1080",   # resolution
-        "--frames", "1",    # warm-up frames for exposure
+        "-r", "1920x1080",
+        "--frames", "10",   # real improvement here
         "--no-banner",
         filepath
     ])
-    time.sleep(0.5)
 
     print("Saved:", filename)
+    
+    
+    
+    # # folder = os.path.expanduser("~/photos")
+    # # os.makedirs(folder, exist_ok=True)
+
+    # #timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    # filename = "c"+str(state.spinn.stepCount)+"r"+str(state.spinn.row)+".jpg"
+    # filepath = os.path.join(state.spinn.panoramafolder,filename)
+    #     #f"{state.spinn.panoramafolder}/photo_{timestamp}.jpg"
+    # time.sleep(0.5)  # Allow camera to adjust
+    # subprocess.run([
+    #     "fswebcam",
+    #     "-r", "1920x1080",   # resolution
+    #     "--frames", "1",    # warm-up frames for exposure
+    #     "--no-banner",
+    #     filepath
+    # ])
+    # time.sleep(0.5)
+
+    # print("Saved:", filename)
 
 
 
@@ -210,6 +236,12 @@ def RealRun(state:RobotState):
     state.spinn.batchfolder = run_folder
     state.realRun = True
     state.spinn.lastPhotoSpot=(state.x,state.y)
+    subprocess.run([
+    "v4l2-ctl", "-d", "/dev/video0",
+    "-c", "exposure_auto=1",
+    "-c", "gain=0"
+    ])
+
 def ReadSensors(state:RobotState=state):
     while not sensor_queue.empty():
         left,front,right = sensor_queue.get()
