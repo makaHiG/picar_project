@@ -114,6 +114,7 @@ class SpinnState:
         self.panoramacounter = 0
         self.targetRotation = 0
         self.active = False
+        self.row = 1
         self.stepCount = 0
         self.maxSteps = 12
         self.startRotation = 0

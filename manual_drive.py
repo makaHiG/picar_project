@@ -102,16 +102,19 @@ Travel_Speed = 44*3.14/15 #Speed from test,cm/s
 
 def UpDownTest(state:RobotState=state):
     camera_servo.turn_right()
+    state.spinn.row=1
     if(state.realRun):
-        TakePhoto()
+        TakePhoto(state)
     time.sleep(1)
     camera_servo.turn_straight()
+    state.spinn.row=2
     if(state.realRun):
-        TakePhoto()
+        TakePhoto(state)
     time.sleep(1)
     camera_servo.turn_left()
+    state.spinn.row=3
     if(state.realRun):
-        TakePhoto()
+        TakePhoto(state)
     time.sleep(1)
     camera_servo.turn_straight()
 
@@ -120,8 +123,10 @@ def SpinnTest(state:RobotState):
     spinn = state.spinn
     spinn: SpinnState
     if(spinn.active == False):
-        folder = os.path.expanduser("~/photos")
-        os.makedirs(folder, exist_ok=True)
+        if(state.realRun == True):
+            spinn.panoramafolder = os.path.join(spinn.batchfolder, "panorama"+str(spinn.panoramacounter))
+            # os.path.expanduser("~/photos")
+            os.makedirs(spinn.panoramafolder, exist_ok=True)
         spinn.stepCount = 0
         spinn.startRotation = state.rotation
         spinn.active = True
@@ -155,19 +160,20 @@ def SpinnTest(state:RobotState):
     # time.sleep(TURN_TIME)
     # wheels.stop()
       
-def TakePhoto():
-    folder = os.path.expanduser("~/photos")
-    os.makedirs(folder, exist_ok=True)
+def TakePhoto(state:RobotState):
+    # folder = os.path.expanduser("~/photos")
+    # os.makedirs(folder, exist_ok=True)
 
-    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    filename = f"{folder}/photo_{timestamp}.jpg"
-
+    #timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    filename = "c"+str(state.spinn.stepcount)+"r"+str(state.spinn.row)+".jpg"
+    filepath = os.path.join(state.spinn.panoramafolder,filename)
+        #f"{state.spinn.panoramafolder}/photo_{timestamp}.jpg"
     subprocess.run([
         "fswebcam",
         "-r", "1920x1080",   # resolution
         "--frames", "10",    # warm-up frames for exposure
         "--no-banner",
-        filename
+        filepath
     ])
     
 
@@ -593,6 +599,7 @@ def ManualDrive(state:RobotState):
         state.mode = Mode.ORIENTING
     elif key =="3": #testPhoto
         state.mode = Mode.SPINNING
+        RealRun(state)
         #TakePhoto()
     elif key =="e":
         state.mode = Mode.DIRECTIONAL_MOVE
