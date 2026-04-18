@@ -183,11 +183,12 @@ def TakePhoto(state:RobotState):
     subprocess.run([
         "fswebcam",
         "-r", "1920x1080",
-        "--frames", "1",   # real improvement here
+        "--frames", "10",   # real improvement here
+        "--skip", "5",
         "--no-banner",
         filepath
     ])
-
+    
     print("Saved:", filename)
     
     
