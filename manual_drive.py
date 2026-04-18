@@ -159,7 +159,7 @@ def SpinnTest(state:RobotState):
     # wheels.spinn_right()
     # time.sleep(TURN_TIME)
     # wheels.stop()
-def Spinn(state:RobotState):
+#def Spinn(state:RobotState):
      
      
 def TakePhoto(state:RobotState):
