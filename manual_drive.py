@@ -486,10 +486,10 @@ def ManualDrive(state:RobotState):
         RealRun(state)
         #TakePhoto()
     elif key =="e":
-        state.mode = Mode.DIRECTIONAL_MOVE
         state.targetAngle = state.rotation
         
         state.corridorAngle = state.rotation
+        return SteerCenter
         
     elif key == 'q':     # quit
         wheels.stop()
