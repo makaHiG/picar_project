@@ -106,7 +106,7 @@ class SensorState:
         # RMSE (noise metric)
         rmse = np.sqrt(np.mean(distances**2))
 
-        return angle, rmse
+        return math.degrees(angle), rmse
 class SpinnState:
     def __init__(self):
         self.batchfolder = "batch"

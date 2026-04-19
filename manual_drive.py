@@ -193,25 +193,7 @@ def TakePhoto(state:RobotState):
     
     
     
-    # # folder = os.path.expanduser("~/photos")
-    # # os.makedirs(folder, exist_ok=True)
-
-    # #timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    # filename = "c"+str(state.spinn.stepCount)+"r"+str(state.spinn.row)+".jpg"
-    # filepath = os.path.join(state.spinn.panoramafolder,filename)
-    #     #f"{state.spinn.panoramafolder}/photo_{timestamp}.jpg"
-    # time.sleep(0.5)  # Allow camera to adjust
-    # subprocess.run([
-    #     "fswebcam",
-    #     "-r", "1920x1080",   # resolution
-    #     "--frames", "1",    # warm-up frames for exposure
-    #     "--no-banner",
-    #     filepath
-    # ])
-    # time.sleep(0.5)
-
-    # print("Saved:", filename)
-
+    
 
 
 def CaptureTest():
@@ -360,7 +342,7 @@ def SteerCenter(state:RobotState):
         return
     center_error =0
     p=1
-    intCoeff=.1
+    intCoeff=0.1
     d=0.1
     kp_align=0.2
     derivative = 0
@@ -370,7 +352,7 @@ def SteerCenter(state:RobotState):
         if(abs(leftalign-rightalign)<5) and abs(leftNoise)<0.1 and abs(rightNoise)<0.1:
              newCorridorAngle = (leftalign - rightalign)/2
             # newCorridorAngle =
-            # print("corridor angle set to ", newCorridorAngle,"old was ", state.corridorAngle, " left noise ", leftNoise, " right noise ", rightNoise)
+             print("corridor angle set to ", newCorridorAngle,"old was ", state.corridorAngle, " left noise ", leftNoise, " right noise ", rightNoise)
             # state.corridorAngle = newCorridorAngle
     diff = (state.corridorAngle - state.rotation + 180) % 360 - 180
     align_error  = diff / 90 
@@ -417,170 +399,12 @@ def SteerCenter(state:RobotState):
         time.sleep(1)
         #state.mode = Mode.ORIENTING
 
-
-def Roam():
-    
-    
-    
-    threshold = 10
-    cor_angle = 0
-    distR=[]
-    confidence_R =1.0
-    distL=[]
-    confidence_L =1.0
-    obstructed = 0
-    obs_distance = 0
-    clear_angle = 0
-    front_clearance = 30 #distance considered clear in front of the car
-    side_clearance = 20 #clearance needed sideways
-    k = 1
-    i=0.0000
-    d=0.00
-    angle = 0.0
-    target_angle = 0.0
-    prev_time = time.time() ##
-    distance_x=0
-    distance_y=0
-    def DriveStraight():
-        veer(angle-cor_angle)
-    def EstimateDistance(angle): ##Not functional 
-        # now = time.time()
-        # dt = now - prev_time
-        prev_time = now
-        distance_x+= math.sin(angle)*Travel_Speed*dt*SPEED
-        distance_y+= math.cos(angle)*Travel_Speed*dt*SPEED 
-        if debug["cordinates"]:
-            print("X:",distance_x,"Y:",distance_y) 
-
-    try:
-        while True:
-            time.sleep(0.01)
-            raw = read_gyro_z()
-            gyro_z = (raw - offset) / 131.0  # deg/sec
-
-            now = time.time()
-            dt = now - prev_time
-            prev_time = now
-
-            angle += gyro_z * dt
-
-            if debug["gryo"]:
-                print(f"Rate: {gyro_z:6.2f} deg/s | Angle: {angle:7.2f} deg")
-
-            time.sleep(0.001)
-
-
-            # key = getch().lower()
-            # if key == 'q':       # forward
-            #     break
-            distance_L =US_Manager.left_distance
-            # if(distance_L>0 and distance_L<1000):
-            #     distL.append(distance_L)
-            # if(len(distL)>5):
-            #     distL.pop(0)
-            #time.sleep(0.05)
-            distance_F = US_Manager.front_distance
-            #time.sleep(0.05)
-            distance_R = US_Manager.right_distance
-
-
-            errors = []
-            
-            #print("distance_F",distance)
-            # trendL = 0
-            # for i in range(1, len(distL)):
-            #     trendL += distL[i]-distL[i-1]
-
-            # trendR = 0
-            # for i in range(1, len(distR)):
-            #     trendR += distR[i]-distR[i-1]
-
-            #print("trend", trendL - trendR)    
-
-            # if distance_F != -1:
-            #     print('distance_F', distance_F, 'cm')
-            #     time.sleep(0.2)
-            # else:
-            #     print(False)
-            # if status == 1:
-            #     print("Less than %d" % threshold)
-            # elif status == 0:
-            #     print("Over %d" % threshold)
-            # else:
-            #     print("Read distance error2.")
-            # print(status)
-            if(distance_F != -1 and distance_F < front_clearance):
-                obstructed = 1
-            else:
-                obstructed = 0  
-
-            if(obstructed == 0):
-                wheels.forward()
-                wheels.speed = SPEED
-                d_R = distance_R
-                d_L = distance_L
-                
-                    
-                if d_R == -3:
-                    confidence_R = 0
-                else: confidence_R = 1
-                #else:confidence_R = 1-distR.count (-3)/len(distR) if distR else 0
-                if(d_L == -3):
-                    confidence_L = 0
-                else: confidence_L = 1
-                #else:confidence_L = 1-distL.count (-3)/len(distL) if distL else 0
-                target_angle = cor_angle
-                steer = 0
-                if(confidence_L>0 and confidence_R>0):
-                    target_angle =  (d_L - d_R) / (d_R + d_L) if (d_R + d_L) != 0 else 0
-                    error = (target_angle*90-angle)/90
-                    errors.append(error)
-                    integral = sum(errors)
-                    if(len(errors)>5):
-                        errors.pop(0)
-                    derivative = 0
-                    for i in range(1, len(errors)):
-                        derivative += errors[i] - errors[i-1]
-
-                    #steer =(trendL-trendR)/100 
-                    steer = k*(error) +i*integral + d*derivative #- (gyro_z)*i
-                    if debug["navigation"]:
-                        print("Center_Offset ", target_angle)
-                        print("steer ", steer)
-                    steer = max(-1,min(steer,1))
-                    #print("filterd ", steer)
-                else:
-                    steer = (target_angle-angle)/90
-                    steer = max(-1,min(steer,1))
-                veer(-steer)
-                
-                #else:veer(-1)
-
-
-                
-            # elif(25<=distance<=40):
-            #     wheels.spinn_right()
-            #     wheels.speed = TURN_SPEED
-            
-            elif(obstructed == 1):
-                obs_distance = distance_F
-                if (distance_F > front_clearance):
-                    print("free")
-                wheels.backward()
-                wheels.speed = TURN_SPEED
-                time.sleep(1)
-
-    except Exception:
-        wheels.stop()
-        camera_servo.turn_straight()
-        raise
       
 def veer(error):
     wheels.forward()
     
     state.direction = 1
-    # steer = (error + 180) % 360 - 180
-    # steer = steer/180
+    
     steer = error
     if(debug["navigation"]):
         print("Error: ",error, " steer: ", steer)
