@@ -223,7 +223,7 @@ def RealRun(state:RobotState):
     subprocess.run([
     "v4l2-ctl", "-d", "/dev/video0",
     "--set-fmt-video=width=1920,height=1080,pixelformat=YUYV",
-    "-c", "auto_exposure=1",
+    "-c", "auto_exposure=3",
     "-c", "exposure_time_absolute=120",
     "-c", "gain=0"
     ])
