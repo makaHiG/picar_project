@@ -468,11 +468,12 @@ def ManualDrive(state:RobotState):
         camera_servo.turn_straight()
     elif key =="1": #try turning servo
         CaptureTest()
-    elif key =="2": #test Navigation
-        state.mode = Mode.ORIENTING
+    #elif key =="2": #test Navigation
+        #state.mode = Mode.ORIENTING
     elif key =="3": #testPhoto
-        state.mode = Mode.SPINNING
+        #state.mode = Mode.SPINNING
         RealRun(state)
+        return SpinnTest
         #TakePhoto()
     elif key =="e":
         state.targetAngle = state.rotation
