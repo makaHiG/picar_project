@@ -341,7 +341,7 @@ def SteerCenter(state:RobotState):
         wheels.stop()
         return
     center_error =0
-    p=10
+    p=5
     intCoeff=1
     d=1
     kp_align=0.0
