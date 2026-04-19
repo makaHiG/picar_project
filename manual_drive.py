@@ -117,7 +117,15 @@ def UpDownTest(state:RobotState=state):
     if(state.realRun):
         TakePhoto(state)
     camera_servo.turn_straight()
-
+def MoveTo(state:RobotState,x,y):
+        target_angle = math.degrees(math.atan2(y-state.y, x-state.x))
+        error = (target_angle - state.rotation + 180) % 360 - 180
+        
+        resonableTurn = error*0.5
+        # if(abs(error)>resonableTurn):
+        #     #Spinn to target angle 
+        # else:
+        #     #Go Forward)
 
 def SpinnTest(state:RobotState):
     spinn = state.spinn
@@ -487,6 +495,7 @@ def ManualDrive(state:RobotState):
         wheels.stop()
         camera_servo.turn_straight()
         state.mode = Mode.IDLE
+    return ManualDrive
     #else:
         
         ##wheels.stop()
@@ -494,10 +503,10 @@ def ManualDrive(state:RobotState):
 dt=0
 prev_time=time.time()
 US_Manager.start()
-state.mode=Mode.MANUAL
+state.behaviour=ManualDrive
 try:
     while True:
-
+        state.behaviour = state.behaviour(state)
         #sock.sendto(b"Hello", ("255.255.255.255", 5005))
         # if(get_key_nonblocking()=="m"):
             #     state.mode = Mode.MANUAL
@@ -508,14 +517,15 @@ try:
         ReadGyro()
         ReadSensors()
         EstimateDistance(state)
-        if(state.mode == Mode.MANUAL):
-            ManualDrive(state)
-        if(state.mode == Mode.DIRECTIONAL_MOVE):
-            SteerCenter(state)
-        if(state.mode == Mode.ORIENTING):
-            OrientationSpinn(state)
-        if(state.mode == Mode.SPINNING):
-            SpinnTest(state)
+        
+        # if(state.mode == Mode.MANUAL):
+        #     ManualDrive(state)
+        # if(state.mode == Mode.DIRECTIONAL_MOVE):
+        #     SteerCenter(state)
+        # if(state.mode == Mode.ORIENTING):
+        #     OrientationSpinn(state)
+        # if(state.mode == Mode.SPINNING):
+        #     SpinnTest(state)
 except KeyboardInterrupt:
     wheels.stop()
     camera_servo.turn_straight()
