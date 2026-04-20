@@ -14,6 +14,7 @@ class RobotState:
     def __init__(self):
         self.behaviour = None
         self.lastbehaviour = None
+        self.bashedHead = 0
         self.x = 0
         self.y = 0
         self.Sensors = SensorState()

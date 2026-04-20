@@ -86,7 +86,7 @@ debug = {
     "wheels": False,
     "camera": False,
     "sensors": True,
-    "gryo": False,
+    "gryo": True,
     "navigation": False
 }
 #print("Tracking rotation...")
@@ -391,14 +391,15 @@ def SteerCenter(state:RobotState):
         veer((state.align_errors[-1]))
         print("Using align error", state.align_errors[-1])
         
-    return SteerCenter
     
     if(0<state.front_distance<20):
+        state.bashedHead+=1
         wheels.backward()
         wheels.speed = TURN_SPEED
         time.sleep(1)
         #state.mode = Mode.ORIENTING
 
+    return SteerCenter
       
 def veer(error):
     wheels.forward()
