@@ -13,6 +13,7 @@ class Mode:
 class RobotState:
     def __init__(self):
         self.behaviour = None
+        self.lastbehaviour = None
         self.x = 0
         self.y = 0
         self.Sensors = SensorState()
