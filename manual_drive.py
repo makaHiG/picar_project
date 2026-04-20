@@ -351,7 +351,7 @@ def SteerCenter(state:RobotState):
         #state.mode = Mode.SPINNING
         return SpinnTest
     center_error =0
-    p=5
+    p=2
     intCoeff=1
     d=1
     kp_align=0.0
@@ -383,8 +383,10 @@ def SteerCenter(state:RobotState):
             state.center_errors.append(center_error)
         if len(state.center_errors)>5:
             state.center_errors.pop(0)
-        
-        veer((state.center_errors[-1]*p+trend*intCoeff +derivative*d+ align_error*kp_align)) 
+        diff = state.center_errors[-1]*p+trend*intCoeff +derivative*d+ align_error*kp_align
+        if(abs(diff)>1):
+            print("Center error: ", center_error, " align error: ", align_error, " derivative: ", derivative, " trend: ", trend)
+        veer(diff) 
     else:
         veer((state.align_errors[-1]))
         print("Using align error", state.align_errors[-1])
