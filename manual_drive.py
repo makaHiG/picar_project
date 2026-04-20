@@ -193,8 +193,8 @@ def TakePhoto(state:RobotState):
     subprocess.run([
         "fswebcam",
         "-r", "1920x1080",
-        "--frames", "10",   # real improvement here
-        "--skip", "5",
+        "--frames", "1",   # real improvement here
+        "--skip", "10",
         "--no-banner",
         filepath
     ])
@@ -235,7 +235,7 @@ def RealRun(state:RobotState):
     "--set-fmt-video=width=1920,height=1080,pixelformat=MJPG",
     "-c", "auto_exposure=3",
     #"-c", "exposure_time_absolute=120",
-    "-c", "gain=57343"
+    "-c", "gain=0"
     ])
     
     # subprocess.run([
