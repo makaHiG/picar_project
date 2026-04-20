@@ -367,7 +367,7 @@ def SteerCenter(state:RobotState):
     diff = (state.corridorAngle - state.rotation + 180) % 360 - 180
     align_error  = diff / 90 
     if len(state.center_errors) >= 2:
-        derivative = (state.center_errors[-1] - state.center_errors[-2])/dt
+        derivative = (state.center_errors[-1] - state.center_errors[-2])
     else:
         derivative = 0
 
