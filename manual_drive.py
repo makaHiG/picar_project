@@ -128,6 +128,7 @@ def PhotoCollumn(state:RobotState=state):
         if(state.realRun):
             TakePhoto(state)
     if(state.spinn.stepCount == 0):
+        state.spinn.row="zenith"
         camera_servo.turn(180)
         time.sleep(1)
         if(state.realRun):
