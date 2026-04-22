@@ -117,6 +117,21 @@ def UpDownTest(state:RobotState=state):
     if(state.realRun):
         TakePhoto(state)
     camera_servo.turn_straight()
+
+#Take Photos, angles defined in state    
+def PhotoCollumn(state:RobotState=state):
+    for i in range(len(state.rowAngles)):
+        angle = state.rowAngles[i]
+        camera_servo.turn(angle)
+        time.sleep(1)
+        state.spinn.row=i
+        if(state.realRun):
+            TakePhoto(state)
+    if(state.spinn.stepCount == 0):
+        camera_servo.turn(180)
+        time.sleep(1)
+        if(state.realRun):
+            TakePhoto(state)
 def MoveTo(state:RobotState,x,y):
         target_angle = math.degrees(math.atan2(y-state.y, x-state.x))
         error = (target_angle - state.rotation + 180) % 360 - 180
@@ -147,7 +162,7 @@ def SpinnTest(state:RobotState):
         time.sleep(1)
         if(spinn.stepCount<spinn.maxSteps):
             
-            UpDownTest(state)
+            PhotoCollumn(state)
             spinn.stepCount += 1
             spinn.targetRotation = spinn.startRotation + 360/spinn.maxSteps * spinn.stepCount
         else: 
@@ -505,7 +520,7 @@ try:
             #     state.mode = Mode.MANUAL
             
         now = time.time()
-        dt = now - prev_time
+        dt = now - prev_time if now - prev_time < 0.5 else 0.01
         prev_time = now
         ReadGyro()
         ReadSensors()

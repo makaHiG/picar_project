@@ -57,12 +57,13 @@ class Front_Wheels(object):
 		self.wheel.write(self._angle["right"])
 
 	def turn(self, angle):
-		''' Turn the front wheels to the giving angle '''
-		self._debug_("Turn to %s " % angle)
-		if angle < self._angle["left"]:
-			angle = self._angle["left"]
-		if angle > self._angle["right"]:
-			angle = self._angle["right"]
+		# ''' Turn the front wheels to the giving angle '''
+		# self._debug_("Turn to %s " % angle)
+		# if angle < self._angle["left"]:
+		# 	angle = self._angle["left"]
+		# if angle > self._angle["right"]:
+		# 	angle = self._angle["right"]
+		angle = min(180,max(0,angle))
 		self.wheel.write(angle)
 
 	@property

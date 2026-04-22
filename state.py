@@ -17,6 +17,7 @@ class RobotState:
         self.bashedHead = 0
         self.x = 0
         self.y = 0
+        self.rowAngles = [30,60,90,120,150]
         self.Sensors = SensorState()
         self.direction = 0
         self.rotation = 0
