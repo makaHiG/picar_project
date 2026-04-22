@@ -168,7 +168,8 @@ def SpinnTest(state:RobotState):
         else: 
             spinn.active=False
             state.spinn.panoramacounter+=1
-            #state.mode = Mode.DIRECTIONAL_MOVE
+            #Adding 360 since we spun a circle
+            state.corridorAngle = state.corridorAngle + 360
             return SteerCenter
     else:
         mod = error /3
@@ -191,7 +192,7 @@ def SpinnTest(state:RobotState):
      
 def TakePhoto(state:RobotState):
     
-    filename = f"c{state.spinn.stepCount}r{state.spinn.row}.jpg"
+    filename = f"r{state.spinn.row}c{state.spinn.stepCount}.jpg"
     filepath = os.path.join(state.spinn.panoramafolder, filename)
 
     #Warm-up (important for exposure)
@@ -283,8 +284,12 @@ def ReadSensors(state:RobotState=state):
             "right_distance":right,
             "front_distance":front
         }
-        
-        sock.sendto(json.dumps(data).encode(), (IP, PORT))
+        try:
+            sock.sendto(json.dumps(data).encode(), (IP, PORT))
+    
+        except OSError as e:
+            print(f"Network error: {e}")
+
         if len(state.readings)>10:
             state.readings.pop(0)
         if(debug["sensors"]):
