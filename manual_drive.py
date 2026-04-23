@@ -373,9 +373,12 @@ def SteerCenter(state:RobotState):
         wheels.stop()
         #state.mode = Mode.SPINNING
         return SpinnTest
+    
+    if(state.bashedHead>3):
+        return Idle
     center_error =0
     p=1.0
-    intCoeff=0.1
+    intCoeff=1.0
     d=0.5
     kp_align=0.0
     derivative = 0
@@ -465,6 +468,11 @@ def get_key_nonblocking():
     if dr:
         return sys.stdin.read(1)
     return None
+
+def Idle(state:RobotState):
+    wheels.stop()
+    camera_servo.turn_straight()
+    return Idle
 def ManualDrive(state:RobotState):
     ##print("Manual drive mode. Use WASD to drive, Q to quit.")
     
