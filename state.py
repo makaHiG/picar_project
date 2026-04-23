@@ -33,6 +33,7 @@ class RobotState:
         self.scan = ScanState()
         self.spinn = SpinnState()
         self.lastPhotoSpot = (0,0)
+        self.photoInterval = 300
         self.realRun = False
 class ScanState:
     def __init__(self):

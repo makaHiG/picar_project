@@ -135,13 +135,15 @@ def PhotoCollumn(state:RobotState=state):
             TakePhoto(state)
 def MoveTo(state:RobotState,x,y):
         target_angle = math.degrees(math.atan2(y-state.y, x-state.x))
-        error = (target_angle - state.rotation + 180) % 360 - 180
-        
-        resonableTurn = error*0.5
-        # if(abs(error)>resonableTurn):
-        #     #Spinn to target angle 
-        # else:
-        #     #Go Forward)
+        align_error = (target_angle - state.rotation + 180) % 360 - 180
+        position_error = math.sqrt((x-state.x)**2 + (y-state.y)**2)
+        resonableTurn = 0.5  # How many degrees of misalignment per unit of distance.
+        if(abs(align_error)/position_error>resonableTurn):
+            #Spinn to target angle 
+            pass
+        else:
+            #Go Forward)
+            pass
 
 def SpinnTest(state:RobotState):
     spinn = state.spinn
@@ -365,16 +367,16 @@ def OrientationSpinn(state=state):
                    
 
 def SteerCenter(state:RobotState):
-    photointerval = 200
-    if(state.realRun and (state.lastPhotoSpot[0]-state.x)**2 + (state.lastPhotoSpot[1]-state.y)**2 > photointerval**2):
+    
+    if(state.realRun and ((state.lastPhotoSpot[0]-state.x)**2 + (state.lastPhotoSpot[1]-state.y)**2) > state.photoInterval**2):
         state.lastPhotoSpot=(state.x,state.y)
         wheels.stop()
         #state.mode = Mode.SPINNING
         return SpinnTest
     center_error =0
-    p=2
-    intCoeff=1
-    d=1
+    p=1.0
+    intCoeff=0.1
+    d=0.5
     kp_align=0.0
     derivative = 0
     leftNoise,leftalign = state.Sensors.get_leftWallAngle() or (None,None)
