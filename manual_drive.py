@@ -377,9 +377,9 @@ def SteerCenter(state:RobotState):
     if(state.bashedHead>3):
         return Idle
     center_error =0
-    p=1.0
-    intCoeff=1.0
-    d=0.5
+    p=3
+    intCoeff=0
+    d=1
     kp_align=0.0
     derivative = 0
     leftNoise,leftalign = state.Sensors.get_leftWallAngle() or (None,None)
