@@ -377,8 +377,8 @@ def SteerCenter(state:RobotState):
     if(state.bashedHead>3):
         return Idle
     center_error =0
-    p=3
-    intCoeff=0
+    p=.5
+    intCoeff=2
     d=1
     kp_align=0.0
     derivative = 0
