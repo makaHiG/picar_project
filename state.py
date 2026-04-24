@@ -127,7 +127,7 @@ class SensorState:
     #     rmse = np.sqrt(np.mean(distances**2))
 
     #     return math.degrees(angle), rmse
-    def fit_line_and_error(points):
+    def fit_line_and_error(self,points):
         if len(points) < 2:
             return None, None, None, None
 
