@@ -280,7 +280,7 @@ def ReadSensors(state:RobotState=state):
 
         #state.scan.readings.append(SensorReading(time.time(),state.rotation,left,front,right))
         state.readings.append(SensorReading(time.time(),state.rotation,left,front,right))
-        ransac_lines = state.Sensors.ransac_line(state.Sensors.right_points+state.Sensors.left_points) if len(state.Sensors.right_points)+len(state.Sensors.left_points)>10 else None
+        #ransac_lines = state.Sensors.ransac_line(state.Sensors.right_points+state.Sensors.left_points) if len(state.Sensors.right_points)+len(state.Sensors.left_points)>10 else None
         data = {
             "time": time.time(),
             "x":state.x,
@@ -291,7 +291,7 @@ def ReadSensors(state:RobotState=state):
             "front_distance":front,
             "centerDirection": state.world.centerDirection.tolist(),
             "centerMean": state.world.centerMean.tolist(),
-            "ransacLines": ransac_lines.tolist() if ransac_lines is not None else None 
+            #"ransacLines": ransac_lines.tolist() if ransac_lines is not None else None 
         }
         try:
             sock.sendto(json.dumps(data).encode(), (IP, PORT))
@@ -391,16 +391,30 @@ def SteerCenter(state:RobotState):
     integral = 0
     
 
-
+    def weight(rmse):
+        return 1.0 / (rmse + 1e-6)
     l_angle, l_rmse, l_mean, l_direction = state.Sensors.get_leftWallAngle() or (None,None,None,None)
     r_angle, r_rmse, r_mean, r_direction = state.Sensors.get_rightWallAngle() or (None,None,None,None)
     if l_mean is not None and r_mean is not None:
         print("rsme left ", l_rmse, " rmse right ", r_rmse)
         if(l_rmse<4 and r_rmse<4):
-            new_center_mean = (l_mean + r_mean) / 2
-            new_center_dir = (l_direction + r_direction) / 2
+            
+            w_l = weight(l_rmse)
+            w_r = weight(r_rmse)
+            
+            # fix flipping
+            if np.dot(l_direction, r_direction) < 0:
+                r_direction = -r_direction
+
+            new_center_dir = w_l * l_direction + w_r * r_direction
             new_center_dir /= np.linalg.norm(new_center_dir)
-            #Flip direction if it points the wrong way
+            
+            new_center_mean = (l_mean + r_mean) / 2
+
+
+            # new_center_dir = (l_direction + r_direction) / 2
+            # new_center_dir /= np.linalg.norm(new_center_dir)
+            # #Flip direction if it points the wrong way
             if np.dot(new_center_dir, state.world.centerDirection) < 0:
                 new_center_dir = -new_center_dir
             alpha = 0.2  # 0 = very stable, 1 = very reactive
