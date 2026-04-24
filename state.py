@@ -1,4 +1,5 @@
 import math
+import random
 
 import numpy as np
 
@@ -127,6 +128,33 @@ class SensorState:
     #     rmse = np.sqrt(np.mean(distances**2))
 
     #     return math.degrees(angle), rmse
+
+    def ransac_line(points, iterations=100, threshold=5):
+        best_line = None
+        best_inliers = []
+
+        if len(points) < 2:
+            return None, []
+
+        pts = np.array(points)
+
+        for _ in range(iterations):
+            i1, i2 = random.sample(range(len(pts)), 2)
+            p1, p2 = pts[i1], pts[i2]
+
+            direction = p2 - p1
+            direction = direction / np.linalg.norm(direction)
+
+            normal = np.array([-direction[1], direction[0]])
+
+            distances = np.abs((pts - p1) @ normal)
+            inliers = pts[distances < threshold]
+
+            if len(inliers) > len(best_inliers):
+                best_inliers = inliers
+                best_line = (p1, direction)
+
+        return best_line, best_inliers
     def fit_line_and_error(self,points):
         if len(points) < 2:
             return None, None, None, None

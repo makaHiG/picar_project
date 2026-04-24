@@ -290,6 +290,7 @@ def ReadSensors(state:RobotState=state):
             "front_distance":front,
             "centerDirection": state.world.centerDirection.tolist(),
             "centerMean": state.world.centerMean.tolist(),
+            "ransacLines": state.Sensors.ransac_line(state.right_points+state.left_points)
         }
         try:
             sock.sendto(json.dumps(data).encode(), (IP, PORT))
@@ -371,7 +372,7 @@ def OrientationSpinn(state=state):
                    
 
 def SteerCenter(state:RobotState):
-    
+
     if(state.realRun and ((state.lastPhotoSpot[0]-state.x)**2 + (state.lastPhotoSpot[1]-state.y)**2) > state.photoInterval**2):
         state.lastPhotoSpot=(state.x,state.y)
         wheels.stop()
