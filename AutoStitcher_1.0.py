@@ -3,7 +3,7 @@ import subprocess
 import glob
 import os
 
-IMAGE_FOLDER = r"C:\Users\Never\Desktop\photos\run_20260412_151136_Fail_5-35\panorama0"
+IMAGE_FOLDER = r"C:\Users\25caol04\Downloads\panorama0\panorama0"
 PROJECT_FILE = "project.pto"
 parts = IMAGE_FOLDER.split(os.sep)
 OUTPUT_PREFIX = "_".join(parts[-2:])
@@ -24,14 +24,42 @@ run(["pto_gen",
     "--fov=75",
     "--projection=2",
     "-o", PROJECT_FILE] + images)
+
+# --- Define your angle pattern ---
+pitches = [30, 60, 90, 120, 150]
+yaw_step = 30
+yaw_offset = -30  # counterclockwise
+
+angles = [
+    {"yaw": (yaw + yaw_offset) % 360, "pitch": pitch}
+    for pitch in pitches
+    for yaw in range(0, 360, yaw_step)
+]
+
+# Safety check
+assert len(angles) == len(images), "Mismatch between angles and images!"
+
+# 2️⃣--- Apply angles to PTO project ---
+for i, ang in enumerate(angles):
+    run([
+        "pto_var",
+        "--set", f"y{i}={ang['yaw']}",
+        "--set", f"p{i}={ang['pitch']}",
+        PROJECT_FILE
+    ])
+
 #run(["pto_var", "--set", "f=28", "--set", "v=70", PROJECT_FILE])
 #run(["pto_var", "--opt", "y,p,v,a,b,c", PROJECT_FILE])
-# 2️⃣ Find control points (multi-row pano, more conservative)
+# 3️⃣ Find control points (multi-row pano, more conservative)
 
-run(["cpfind", "--multirow", "-o", PROJECT_FILE, PROJECT_FILE])
+run(["cpfind", 
+    "--prealigned", 
+    "--multirow", 
+    "-o", PROJECT_FILE, 
+    PROJECT_FILE])
 # run(["linefind", "-o", PROJECT_FILE, PROJECT_FILE])
 
-# 3️⃣ Remove bad control points
+# 3.5 Remove bad control points
 # run(["cpclean",
 #      "--check-line-cp",
 #       "-o", PROJECT_FILE, PROJECT_FILE])
@@ -71,16 +99,23 @@ run(["cpfind", "--multirow", "-o", PROJECT_FILE, PROJECT_FILE])
 # ])
 #run(["pano_modify", "--straighten", "--canvas=AUTO", "--crop=AUTO", "-o", PROJECT_FILE, PROJECT_FILE])
 
-# 6️⃣ Stitch panorama
-
 run([
-    "hugin_executor",
-    "--assistant",
-    #"--dry-run",
-    #"--stitching",
-    "--prefix=" + OUTPUT_PREFIX,
+    "autooptimiser",
+    "-p",        # no lens changes
+    "-o", PROJECT_FILE,
     PROJECT_FILE
 ])
+
+# 6️⃣ Stitch panorama
+
+#run([
+#    "hugin_executor",
+#    "--assistant",
+#    #"--dry-run",
+#    #"--stitching",
+#    "--prefix=" + OUTPUT_PREFIX,
+#    PROJECT_FILE
+#])
 
 # 5️⃣ Set projection and canvas for 360° panorama
 run([
@@ -91,7 +126,7 @@ run([
     "--canvas=8000x4000",
     "--ldr-compression=90",
     #"--crop=AUTO",
-    "--crop= 0,8000,0,4000",
+    "--crop=0,8000,0,4000",
     "-o", PROJECT_FILE,
     PROJECT_FILE
 ])
