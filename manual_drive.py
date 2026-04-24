@@ -408,7 +408,7 @@ def SteerCenter(state:RobotState):
     def furtherPoint():
         p = np.array([state.x, state.y])
         c0 = state.world.centerMean
-        d = state.world.centerLineDirection
+        d = state.world.centerDirection
         d = d / np.linalg.norm(d)
 
         robot_dir = np.array([
