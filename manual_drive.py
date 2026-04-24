@@ -386,8 +386,8 @@ def SteerCenter(state:RobotState):
     derivative = 0
     integral = 0
     
-    l_angle, l_rmse, l_mean, l_direction = state.Sensors.get_leftWallAngle() or (None,None)
-    r_angle, r_rmse, r_mean, r_direction = state.Sensors.get_rightWallAngle() or (None,None)
+    l_angle, l_rmse, l_mean, l_direction = state.Sensors.get_leftWallAngle() or (None,None,None,None)
+    r_angle, r_rmse, r_mean, r_direction = state.Sensors.get_rightWallAngle() or (None,None,None,None)
     if l_mean is not None and r_mean is not None:
         if(l_rmse<0.1 and r_rmse<0.1):
             new_center_mean = (l_mean + r_mean) / 2
