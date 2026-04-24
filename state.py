@@ -17,6 +17,7 @@ class RobotState:
         self.bashedHead = 0
         self.x = 0
         self.y = 0
+        self.world = WorldState()
         self.rowAngles = [30,60,90,120,150]
         self.Sensors = SensorState()
         self.direction = 0
@@ -40,7 +41,21 @@ class ScanState:
         self.readings=[]
         self.active = False
         self.startRotation = 0
-
+class WorldState:
+    def __init__(self):
+        self.corridorWidth = 200
+        self.centerLine = (0,0)
+        self.centerLineDirection = (1,0)
+        self.centerMean = (0,0)
+        self.centerNormal = (0,1)
+        
+        self.rightWallMean = (0,0)
+        self.rightWallDirection = (1,0)
+        
+        self.rightWallAngle = 0
+        self.leftWallAngle = 0
+        self.leftWallMean = (0,0)
+        self.leftWallDirection = (1,0)
 class SensorState:
     def __init__(self):
         self.right_points = []
@@ -77,41 +92,63 @@ class SensorState:
             return None
         else:
             return self.fit_line_and_error(self.right_points)
-    def fit_line_and_error(self, points):
+    # def fit_line_and_error(self, points):
+    #     if len(points) < 2:
+    #         return None, None
+
+    #     pts = np.array(points[-10:])  # last 10 points
+
+    #     # --- compute mean ---
+    #     mean = np.mean(pts, axis=0)
+
+    #     # --- center data ---
+    #     centered = pts - mean
+
+    #     # --- covariance ---
+    #     cov = np.cov(centered.T)
+
+    #     # --- eigen decomposition ---
+    #     eigenvalues, eigenvectors = np.linalg.eig(cov)
+
+    #     # largest eigenvector = line direction
+    #     idx = np.argmax(eigenvalues)
+    #     direction = eigenvectors[:, idx]
+
+    #     # --- angle of line ---
+    #     angle = math.atan2(direction[1], direction[0])
+
+    #     # --- compute perpendicular distances (error) ---
+    #     # normal vector to the line
+    #     normal = np.array([-direction[1], direction[0]])
+
+    #     distances = np.abs(centered @ normal)
+
+    #     # RMSE (noise metric)
+    #     rmse = np.sqrt(np.mean(distances**2))
+
+    #     return math.degrees(angle), rmse
+    def fit_line_and_error(points):
         if len(points) < 2:
-            return None, None
+            return None, None, None, None
 
-        pts = np.array(points[-10:])  # last 10 points
+        pts = np.array(points[-40:])
 
-        # --- compute mean ---
         mean = np.mean(pts, axis=0)
-
-        # --- center data ---
         centered = pts - mean
 
-        # --- covariance ---
         cov = np.cov(centered.T)
-
-        # --- eigen decomposition ---
         eigenvalues, eigenvectors = np.linalg.eig(cov)
 
-        # largest eigenvector = line direction
         idx = np.argmax(eigenvalues)
         direction = eigenvectors[:, idx]
 
-        # --- angle of line ---
         angle = math.atan2(direction[1], direction[0])
 
-        # --- compute perpendicular distances (error) ---
-        # normal vector to the line
         normal = np.array([-direction[1], direction[0]])
-
         distances = np.abs(centered @ normal)
-
-        # RMSE (noise metric)
         rmse = np.sqrt(np.mean(distances**2))
 
-        return math.degrees(angle), rmse
+        return math.degrees(angle), rmse, mean, direction
 class SpinnState:
     def __init__(self):
         self.batchfolder = "batch"

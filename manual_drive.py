@@ -1,3 +1,4 @@
+from operator import pos
 import select
 import sys
 import tty
@@ -10,6 +11,7 @@ import json
 from multiprocessing import Queue
 from dataclasses import dataclass
 import random
+from turtle import pos
 from datetime import datetime
 
 import numpy as np
@@ -276,7 +278,7 @@ def ReadSensors(state:RobotState=state):
 
         if(right>0): state.Sensors.add_reading("right", right, state.x, state.y, state.rotation)
 
-        state.scan.readings.append(SensorReading(time.time(),state.rotation,left,front,right))
+        #state.scan.readings.append(SensorReading(time.time(),state.rotation,left,front,right))
         state.readings.append(SensorReading(time.time(),state.rotation,left,front,right))
         data = {
             "time": time.time(),
@@ -382,40 +384,70 @@ def SteerCenter(state:RobotState):
     d=.2
     kp_align=0.3
     derivative = 0
-    leftNoise,leftalign = state.Sensors.get_leftWallAngle() or (None,None)
-    rightNoise,rightalign = state.Sensors.get_rightWallAngle() or (None,None)
-    if(leftalign is not None and rightalign is not None):
-        if(abs(leftalign-rightalign)<5) and abs(leftNoise)<0.1 and abs(rightNoise)<0.1:
-             newCorridorAngle = (leftalign + rightalign) / 2
-             #newCorridorAngle = 
-             print("corridor angle set to ", newCorridorAngle,"old was ", state.corridorAngle, " left noise ", leftNoise, " right noise ", rightNoise)
-            # state.corridorAngle = newCorridorAngle
-    diff = (state.corridorAngle - state.rotation + 180) % 360 - 180
-    align_error  = diff / 90 
+    integral = 0
+    
+    l_angle, l_rmse, l_mean, l_direction = state.Sensors.get_leftWallAngle() or (None,None)
+    r_angle, r_rmse, r_mean, r_direction = state.Sensors.get_rightWallAngle() or (None,None)
+    if l_mean is not None and r_mean is not None:
+        if(l_rmse<0.1 and r_rmse<0.1):
+            new_center_mean = (l_mean + r_mean) / 2
+            new_center_dir = (l_direction + r_direction) / 2
+            new_center_dir /= np.linalg.norm(new_center_dir)
+            
+            alpha = 0.2  # 0 = very stable, 1 = very reactive
+
+            state.world.centerMean= alpha * new_center_mean + (1 - alpha) * state.world.centerMean
+            state.world.centerLineDirection = alpha * new_center_dir  + (1 - alpha) * state.world.centerLineDirection
+
+            # IMPORTANT: re-normalize direction
+            state.world.centerLineDirection = state.world.centerLineDirection / np.linalg.norm(state.world.centerLineDirection)
+            state.world.corridorNormal = np.array([-state.world.centerLineDirection[1], state.world.centerLineDirection[0]])  # perpendicular to line
+    pos = np.array([state.x, state.y])
+    delta = pos - new_center_mean
+    error = delta @ state.world.centerNormal
+    state.center_errors.append(error)
+    if len(state.center_errors)>5:
+        state.center_errors.pop(0)
+    
+    integral = sum(state.center_errors)/len(state.center_errors) if len(state.center_errors)>0 else 0    
     if len(state.center_errors) >= 2:
         derivative = (state.center_errors[-1] - state.center_errors[-2])
     else:
         derivative = 0
 
-    trend = sum(state.center_errors)/len(state.center_errors) if len(state.center_errors)>0 else 0 
-    state.align_errors.append(align_error)
-    if len(state.align_errors)>5:
-        state.align_errors.pop(0)
+    veer(error*p+derivative*d+integral*intCoeff)
+    # if(l_angle is not None and r_angle is not None):
+    #     if(abs(l_angle-r_angle)<5) and abs(l_rmse)<0.1 and abs(r_rmse)<0.1:
+    #          newCorridorAngle = (l_angle + r_angle) / 2
+    #          #newCorridorAngle = 
+    #          print("corridor angle set to ", newCorridorAngle,"old was ", state.corridorAngle, " left noise ", leftNoise, " right noise ", rightNoise)
+    #         # state.corridorAngle = newCorridorAngle
+    # diff = (state.corridorAngle - state.rotation + 180) % 360 - 180
+    # align_error  = diff / 90 
+    # if len(state.center_errors) >= 2:
+    #     derivative = (state.center_errors[-1] - state.center_errors[-2])
+    # else:
+    #     derivative = 0
+
+    # trend = sum(state.center_errors)/len(state.center_errors) if len(state.center_errors)>0 else 0 
+    # state.align_errors.append(align_error)
+    # if len(state.align_errors)>5:
+    #     state.align_errors.pop(0)
     
-    if(state.right_distance>0 and state.left_distance>0):
-        width = state.left_distance+state.right_distance
-        center_error = (state.left_distance - state.right_distance)/(state.left_distance+state.right_distance)
-        if(len(state.center_errors)==0 or state.center_errors[-1] !=center_error):
-            state.center_errors.append(center_error)
-        if len(state.center_errors)>5:
-            state.center_errors.pop(0)
-        diff = state.center_errors[-1]*p+trend*intCoeff +derivative*d+ align_error*kp_align
-        if(abs(diff)>1):
-            print("Center error: ", center_error, " align error: ", align_error, " derivative: ", derivative, " trend: ", trend)
-        veer(diff) 
-    else:
-        veer((state.align_errors[-1]))
-        print("Using align error", state.align_errors[-1])
+    # if(state.right_distance>0 and state.left_distance>0):
+    #     width = state.left_distance+state.right_distance
+    #     center_error = (state.left_distance - state.right_distance)/(state.left_distance+state.right_distance)
+    #     if(len(state.center_errors)==0 or state.center_errors[-1] !=center_error):
+    #         state.center_errors.append(center_error)
+    #     if len(state.center_errors)>5:
+    #         state.center_errors.pop(0)
+    #     diff = state.center_errors[-1]*p+trend*intCoeff +derivative*d+ align_error*kp_align
+    #     if(abs(diff)>1):
+    #         print("Center error: ", center_error, " align error: ", align_error, " derivative: ", derivative, " trend: ", trend)
+    #     veer(diff) 
+    # else:
+    #     veer((state.align_errors[-1]))
+    #     print("Using align error", state.align_errors[-1])
         
     
     if(0<state.front_distance<20):
@@ -449,7 +481,18 @@ def veer(error):
     if(steer == 0):
         wheels.speedL = SPEED
         wheels.speedR = SPEED
-    
+def startWait(state:RobotState,waitTime:float):
+    state.waitEndTime = time.time() + waitTime
+    return Wait
+
+def Wait(state:RobotState):
+    if(time.time()<state.waitEndTime):
+        wheels.stop()
+        camera_servo.turn_straight()
+        return Wait
+    else:
+        return state.lastbehaviour
+
 def getch():
     """Read a single key press from the terminal"""
     fd = sys.stdin.fileno()
