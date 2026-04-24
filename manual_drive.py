@@ -280,6 +280,7 @@ def ReadSensors(state:RobotState=state):
 
         #state.scan.readings.append(SensorReading(time.time(),state.rotation,left,front,right))
         state.readings.append(SensorReading(time.time(),state.rotation,left,front,right))
+        ransac_lines = state.Sensors.ransac_line(state.Sensors.right_points+state.Sensors.left_points) if len(state.Sensors.right_points)+len(state.Sensors.left_points)>10 else None
         data = {
             "time": time.time(),
             "x":state.x,
@@ -290,7 +291,7 @@ def ReadSensors(state:RobotState=state):
             "front_distance":front,
             "centerDirection": state.world.centerDirection.tolist(),
             "centerMean": state.world.centerMean.tolist(),
-            "ransacLines": state.Sensors.ransac_line(state.Sensors.right_points+state.Sensors.left_points)
+            "ransacLines": ransac_lines.tolist() if ransac_lines is not None else None 
         }
         try:
             sock.sendto(json.dumps(data).encode(), (IP, PORT))
