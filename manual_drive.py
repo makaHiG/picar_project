@@ -403,7 +403,7 @@ def SteerCenter(state:RobotState):
             state.world.centerLineDirection = state.world.centerLineDirection / np.linalg.norm(state.world.centerLineDirection)
             state.world.corridorNormal = np.array([-state.world.centerLineDirection[1], state.world.centerLineDirection[0]])  # perpendicular to line
     pos = np.array([state.x, state.y])
-    delta = pos - new_center_mean
+    delta = pos - state.world.centerMean
     error = delta @ state.world.centerNormal
     state.center_errors.append(error)
     if len(state.center_errors)>5:
