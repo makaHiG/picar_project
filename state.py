@@ -45,8 +45,8 @@ class WorldState:
     def __init__(self):
 
         self.corridorWidth = 200
-        self.centerLine = np.array([0.0, 0.0])
-        self.centerLineDirection = np.array([1.0, 0.0])
+        #self.centerLine = np.array([0.0, 0.0])
+        self.centerDirection = np.array([1.0, 0.0])
         self.centerMean = np.array([0.0, 0.0])
         self.centerNormal = np.array([0.0, 1.0])
 

@@ -288,7 +288,7 @@ def ReadSensors(state:RobotState=state):
             "left_distance":left,
             "right_distance":right,
             "front_distance":front,
-            "centerLineDirection": state.world.centerLineDirection.tolist(),
+            "centerDirection": state.world.centerDirection.tolist(),
             "centerMean": state.world.centerMean.tolist(),
         }
         try:
@@ -388,23 +388,27 @@ def SteerCenter(state:RobotState):
     derivative = 0
     integral = 0
     
+
+
     l_angle, l_rmse, l_mean, l_direction = state.Sensors.get_leftWallAngle() or (None,None,None,None)
     r_angle, r_rmse, r_mean, r_direction = state.Sensors.get_rightWallAngle() or (None,None,None,None)
     if l_mean is not None and r_mean is not None:
         print("rsme left ", l_rmse, " rmse right ", r_rmse)
-        if(l_rmse<20 and r_rmse<20):
+        if(l_rmse<4 and r_rmse<4):
             new_center_mean = (l_mean + r_mean) / 2
             new_center_dir = (l_direction + r_direction) / 2
             new_center_dir /= np.linalg.norm(new_center_dir)
-            
+            #Flip direction if it points the wrong way
+            if np.dot(new_center_dir, state.world.centerDirection) < 0:
+                new_center_dir = -new_center_dir
             alpha = 0.2  # 0 = very stable, 1 = very reactive
 
             state.world.centerMean= alpha * new_center_mean + (1 - alpha) * state.world.centerMean
-            state.world.centerLineDirection = alpha * new_center_dir  + (1 - alpha) * state.world.centerLineDirection
+            state.world.centerDirection = alpha * new_center_dir  + (1 - alpha) * state.world.centerDirection
 
             # IMPORTANT: re-normalize direction
-            state.world.centerLineDirection = state.world.centerLineDirection / np.linalg.norm(state.world.centerLineDirection)
-            state.world.centerNormal = np.array([-state.world.centerLineDirection[1], state.world.centerLineDirection[0]])  # perpendicular to line
+            state.world.centerDirection = state.world.centerDirection / np.linalg.norm(state.world.centerDirection)
+            state.world.centerNormal = np.array([-state.world.centerDirection[1], state.world.centerDirection[0]])  # perpendicular to line
     pos = np.array([state.x, state.y])
     delta = pos - state.world.centerMean
     error = delta @ state.world.centerNormal
