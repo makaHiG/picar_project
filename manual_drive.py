@@ -135,17 +135,33 @@ def PhotoCollumn(state:RobotState=state):
         time.sleep(1)
         if(state.realRun):
             TakePhoto(state)
-def MoveTo(state:RobotState,x,y):
-        target_angle = math.degrees(math.atan2(y-state.y, x-state.x))
-        align_error = (target_angle - state.rotation + 180) % 360 - 180
-        position_error = math.sqrt((x-state.x)**2 + (y-state.y)**2)
-        resonableTurn = 0.5  # How many degrees of misalignment per unit of distance.
-        if(abs(align_error)/position_error>resonableTurn):
-            #Spinn to target angle 
-            pass
-        else:
-            #Go Forward)
-            pass
+def MoveTo(state: RobotState, point: np.ndarray):
+
+    px, py = point[0], point[1]
+
+    dx = px - state.x
+    dy = py - state.y
+
+    target_angle = math.degrees(math.atan2(dy, dx))
+
+    align_error = (target_angle - state.rotation + 180) % 360 - 180
+
+    position_error = math.sqrt(dx**2 + dy**2)
+
+    # avoid division by zero
+    if position_error < 1:
+        return
+
+    resonableTurn = 0.5  # deg per unit distance (your tuning param)
+
+    # steering logic
+    if abs(align_error) > resonableTurn * position_error:
+        # too misaligned → just turn
+        veer(align_error / 90)
+    else:
+        # aligned enough → move forward with correction
+        veer(align_error / 90)
+
 
 def SpinnTest(state:RobotState):
     spinn = state.spinn
@@ -389,7 +405,22 @@ def SteerCenter(state:RobotState):
     kp_align=0.3
     derivative = 0
     integral = 0
-    
+    def furtherPoint():
+        p = np.array([state.x, state.y])
+        c0 = state.world.centerMean
+        d = state.world.centerLineDirection
+        d = d / np.linalg.norm(d)
+
+        robot_dir = np.array([
+            math.cos(math.radians(state.rotation)),
+            math.sin(math.radians(state.rotation))
+        ])
+
+        if np.dot(d, robot_dir) < 0:
+            d = -d
+
+        proj = c0 + np.dot(p - c0, d) * d
+        return proj + 100 * d
 
     def weight(rmse):
         return 1.0 / (rmse + 1e-6)
@@ -437,8 +468,8 @@ def SteerCenter(state:RobotState):
         derivative = (state.center_errors[-1] - state.center_errors[-2])
     else:
         derivative = 0
-
-    veer(error/100)
+    MoveTo(state,furtherPoint())
+    #veer(error/100)
     # if(l_angle is not None and r_angle is not None):
     #     if(abs(l_angle-r_angle)<5) and abs(l_rmse)<0.1 and abs(r_rmse)<0.1:
     #          newCorridorAngle = (l_angle + r_angle) / 2
