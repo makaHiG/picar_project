@@ -391,7 +391,8 @@ def SteerCenter(state:RobotState):
     l_angle, l_rmse, l_mean, l_direction = state.Sensors.get_leftWallAngle() or (None,None,None,None)
     r_angle, r_rmse, r_mean, r_direction = state.Sensors.get_rightWallAngle() or (None,None,None,None)
     if l_mean is not None and r_mean is not None:
-        if(l_rmse<0.1 and r_rmse<0.1):
+        print("rsme left ", l_rmse, " rmse right ", r_rmse)
+        if(l_rmse<20 and r_rmse<20):
             new_center_mean = (l_mean + r_mean) / 2
             new_center_dir = (l_direction + r_direction) / 2
             new_center_dir /= np.linalg.norm(new_center_dir)
