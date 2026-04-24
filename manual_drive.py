@@ -399,21 +399,21 @@ def SteerCenter(state:RobotState):
         print("rsme left ", l_rmse, " rmse right ", r_rmse)
         if(l_rmse<4 and r_rmse<4):
             
-            w_l = weight(l_rmse)
-            w_r = weight(r_rmse)
+            # w_l = weight(l_rmse)
+            # w_r = weight(r_rmse)
             
-            # fix flipping
-            if np.dot(l_direction, r_direction) < 0:
-                r_direction = -r_direction
+            # # fix flipping
+            # if np.dot(l_direction, r_direction) < 0:
+            #     r_direction = -r_direction
 
-            new_center_dir = w_l * l_direction + w_r * r_direction
-            new_center_dir /= np.linalg.norm(new_center_dir)
+            # new_center_dir = w_l * l_direction + w_r * r_direction
+            # new_center_dir /= np.linalg.norm(new_center_dir)
             
             new_center_mean = (l_mean + r_mean) / 2
 
 
-            # new_center_dir = (l_direction + r_direction) / 2
-            # new_center_dir /= np.linalg.norm(new_center_dir)
+            new_center_dir = (l_direction + r_direction) / 2
+            new_center_dir /= np.linalg.norm(new_center_dir)
             # #Flip direction if it points the wrong way
             if np.dot(new_center_dir, state.world.centerDirection) < 0:
                 new_center_dir = -new_center_dir
