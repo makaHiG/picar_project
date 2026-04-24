@@ -415,7 +415,7 @@ def SteerCenter(state:RobotState):
     else:
         derivative = 0
 
-    veer(error*p+derivative*d+integral*intCoeff)
+    veer((error*p+derivative*d+integral*intCoeff)/100)
     # if(l_angle is not None and r_angle is not None):
     #     if(abs(l_angle-r_angle)<5) and abs(l_rmse)<0.1 and abs(r_rmse)<0.1:
     #          newCorridorAngle = (l_angle + r_angle) / 2
