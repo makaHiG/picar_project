@@ -287,7 +287,9 @@ def ReadSensors(state:RobotState=state):
             "rotation":state.rotation,
             "left_distance":left,
             "right_distance":right,
-            "front_distance":front
+            "front_distance":front,
+            "centerLineDirection": state.world.centerLineDirection,
+            "centerMean": state.world.centerMean,
         }
         try:
             sock.sendto(json.dumps(data).encode(), (IP, PORT))
