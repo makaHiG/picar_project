@@ -152,7 +152,7 @@ def MoveTo(state: RobotState, point: np.ndarray):
     if position_error < 1:
         return
 
-    resonableTurn = 0.5  # deg per unit distance (your tuning param)
+    resonableTurn = 0.2  # deg per unit distance (your tuning param)
 
     # steering logic
     if abs(align_error) > resonableTurn * position_error:
@@ -234,16 +234,7 @@ def TakePhoto(state:RobotState):
     filename = f"r{state.spinn.row}c{state.spinn.stepCount}.jpg"
     filepath = os.path.join(state.spinn.panoramafolder, filename)
 
-    #Warm-up (important for exposure)
-    # for _ in range(5):
-    #     subprocess.run([
-    #         "fswebcam",
-    #         "-r", "1920x1080",
-    #         "--frames", "1"
-    #         "--no-banner",
-    #         "/dev/null"
-    #     ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-
+    
     # Final capture
     subprocess.run([
         "fswebcam",
@@ -279,7 +270,7 @@ class SensorReading():
 
 
 
-def RealRun(state:RobotState):
+def RealRun(state:RobotState): #Setup for real run, create folders and set camera settings
     run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
     run_folder = os.path.join(base_folder, f"run_{run_id}")
     state.spinn.batchfolder = run_folder
@@ -356,7 +347,7 @@ def EstimateDistance(state):
             #sock.sendto(json.dumps([state.x,state.y]).encode(), (IP, PORT))
             #time.sleep(0.05)
 
-def OrientationSpinn(state=state):
+def OrientationSpinn(state=state): ## Deprecated, not used anymore
     scan=state.scan
     scan:ScanState
     if(scan.active == False):
@@ -487,40 +478,6 @@ def SteerCenter(state:RobotState):
     else:
         derivative = 0
     MoveTo(state,furtherPoint())
-    #veer(error/100)
-    # if(l_angle is not None and r_angle is not None):
-    #     if(abs(l_angle-r_angle)<5) and abs(l_rmse)<0.1 and abs(r_rmse)<0.1:
-    #          newCorridorAngle = (l_angle + r_angle) / 2
-    #          #newCorridorAngle = 
-    #          print("corridor angle set to ", newCorridorAngle,"old was ", state.corridorAngle, " left noise ", leftNoise, " right noise ", rightNoise)
-    #         # state.corridorAngle = newCorridorAngle
-    # diff = (state.corridorAngle - state.rotation + 180) % 360 - 180
-    # align_error  = diff / 90 
-    # if len(state.center_errors) >= 2:
-    #     derivative = (state.center_errors[-1] - state.center_errors[-2])
-    # else:
-    #     derivative = 0
-
-    # trend = sum(state.center_errors)/len(state.center_errors) if len(state.center_errors)>0 else 0 
-    # state.align_errors.append(align_error)
-    # if len(state.align_errors)>5:
-    #     state.align_errors.pop(0)
-    
-    # if(state.right_distance>0 and state.left_distance>0):
-    #     width = state.left_distance+state.right_distance
-    #     center_error = (state.left_distance - state.right_distance)/(state.left_distance+state.right_distance)
-    #     if(len(state.center_errors)==0 or state.center_errors[-1] !=center_error):
-    #         state.center_errors.append(center_error)
-    #     if len(state.center_errors)>5:
-    #         state.center_errors.pop(0)
-    #     diff = state.center_errors[-1]*p+trend*intCoeff +derivative*d+ align_error*kp_align
-    #     if(abs(diff)>1):
-    #         print("Center error: ", center_error, " align error: ", align_error, " derivative: ", derivative, " trend: ", trend)
-    #     veer(diff) 
-    # else:
-    #     veer((state.align_errors[-1]))
-    #     print("Using align error", state.align_errors[-1])
-        
     
     if(0<state.front_distance<20):
         state.bashedHead+=1
