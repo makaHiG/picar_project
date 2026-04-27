@@ -157,7 +157,7 @@ def MoveTo(state: RobotState, point: np.ndarray):
     # steering logic
     if abs(align_error) > resonableTurn * position_error:
         # too misaligned → just turn
-        veer(align_error / 90)
+        SpinnTo(state, target_angle)
     else:
         # aligned enough → move forward with correction
         veer(align_error / 90)
@@ -208,8 +208,26 @@ def SpinnTest(state:RobotState):
     # wheels.spinn_right()
     # time.sleep(TURN_TIME)
     # wheels.stop()
-#def Spinn(state:RobotState):
-     
+def SpinnTo(state:RobotState, target_angle=None):
+    state.targetAngle = target_angle
+    state.lastbehaviour = state.behaviour
+    return Realign
+def Realign(state:RobotState):
+    error = state.targetAngle-state.rotation
+    if abs(error<0.5):
+        wheels.stop()
+        return state.lastbehaviour
+    else:
+    
+        mod = error /3
+        wheels.speed = int(min(100,max(25,TURN_SPEED*mod)))
+        if error<0 :
+            wheels.spinn_right()
+            state.direction = 0
+        else:
+            wheels.spinn_left()
+            state.direction = 0
+    return Realign(state)
      
 def TakePhoto(state:RobotState):
     
