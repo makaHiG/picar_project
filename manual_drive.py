@@ -446,7 +446,7 @@ def SteerCenter(state:RobotState):
     r_angle, r_rmse, r_mean, r_direction = state.Sensors.get_rightWallAngle() or (None,None,None,None)
     if l_mean is not None and r_mean is not None:
         print("rsme left ", l_rmse, " rmse right ", r_rmse)
-        if(l_rmse<4 and r_rmse<4):
+        if(l_rmse<1 and r_rmse<1):
             
             w_l = weight(l_rmse)
             w_r = weight(r_rmse)
