@@ -616,7 +616,7 @@ def ManualDrive(state:RobotState):
         wheels.ready()
         camera_servo.turn_straight()
     elif key =="1": #try turning servo
-        CaptureTest()
+        SpinnTo(state, (state.rotation + 90) % 360)
     #elif key =="2": #test Navigation
         #state.mode = Mode.ORIENTING
     elif key =="3": #testPhoto
