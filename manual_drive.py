@@ -227,7 +227,7 @@ def Realign(state:RobotState):
         else:
             wheels.spinn_left()
             state.direction = 0
-        return Realign(state)
+        return Realign
      
 def TakePhoto(state:RobotState):
     
