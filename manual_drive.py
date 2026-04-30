@@ -232,7 +232,7 @@ def Realign(state:RobotState):
      
 def TakePhoto(state:RobotState):
     
-    filename = f"r{state.spinn.row:02d}c{state.spinn.stepCount:02d}.jpg"
+    filename = f"r{state.spinn.row}c{state.spinn.stepCount}.jpg"
     filepath = os.path.join(state.spinn.panoramafolder, filename)
 
     
