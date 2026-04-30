@@ -232,7 +232,7 @@ def Realign(state:RobotState):
      
 def TakePhoto(state:RobotState):
     
-    filename = f"r{state.spinn.row}c{state.spinn.stepCount}.jpg"
+    filename = f"r{state.spinn.row:02d}c{state.spinn.stepCount:02d}.jpg"
     filepath = os.path.join(state.spinn.panoramafolder, filename)
 
     
@@ -584,7 +584,7 @@ def ManualDrive(state:RobotState):
         #state.mode = Mode.SPINNING
         RealRun(state)
         return SpinnTest
-        #TakePhoto()
+        
     elif key =="e":
         state.targetAngle = state.rotation
         
