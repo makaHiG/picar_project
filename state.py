@@ -160,7 +160,7 @@ class SensorState:
                 best_line = (p1, direction)
 
         return best_line, best_inliers
-    def fit_line_and_error(self,points,range=100):
+    def fit_line_and_error(self,points,range=40):
         if len(points) < 2:
             return None, None, None, None
 
