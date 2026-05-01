@@ -167,10 +167,11 @@ def MoveTo(state: RobotState, point: np.ndarray):
 def MoveToPoint(state:RobotState, point=None):
     destination = point
     nextBehavior = state.behaviour
-    
+    print("next behavior ", nextBehavior)
     def moveToPoint(state:RobotState):
         nonlocal nextBehavior
         nonlocal destination
+        
         if(np.linalg.norm(destination - state.position) < 1):
             return nextBehavior
         else:
