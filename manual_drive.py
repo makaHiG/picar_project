@@ -175,7 +175,7 @@ def MoveToPoint(state:RobotState, point=None):
         else:
             MoveTo(state, state.destination)
             return MoveToPoint
-    return MoveToPoint
+    return moveToPoint
 
 def CapturePanorama(state:RobotState):
     spinn = state.spinn
