@@ -165,15 +165,15 @@ def MoveTo(state: RobotState, point: np.ndarray):
         veer(align_error / 90)
 
 def MoveToPoint(state:RobotState, point=None):
-    state.destination = point
+    destination = point
     nextBehavior = state.behaviour
     def moveToPoint(state:RobotState):
         nonlocal nextBehavior
-        nonlocal point
-        if(np.linalg.norm(point - state.position) < 10):
+        nonlocal destination
+        if(np.linalg.norm(destination - state.position) < 10):
             return nextBehavior
         else:
-            MoveTo(state, state.destination)
+            MoveTo(state, destination)
             return MoveToPoint
     return moveToPoint
 
