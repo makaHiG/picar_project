@@ -439,7 +439,7 @@ def SteerCenter(state:RobotState):
     r_angle, r_rmse, r_mean, r_direction = state.Sensors.get_rightWallAngle() or (None,None,None,None)
     if l_mean is not None and r_mean is not None:
         print("rsme left ", l_rmse, " rmse right ", r_rmse)
-        if(l_rmse<1 and r_rmse<1):
+        if(l_rmse<1 or r_rmse<1):
             
             w_l = weight(l_rmse)
             w_r = weight(r_rmse)
@@ -459,7 +459,7 @@ def SteerCenter(state:RobotState):
             # #Flip direction if it points the wrong way
             if np.dot(new_center_dir, state.world.centerDirection) < 0:
                 new_center_dir = -new_center_dir
-            alpha = 0.2  # 0 = very stable, 1 = very reactive
+            alpha = 0.1  # 0 = very stable, 1 = very reactive
 
             state.world.centerMean= alpha * new_center_mean + (1 - alpha) * state.world.centerMean
             state.world.centerDirection = alpha * new_center_dir  + (1 - alpha) * state.world.centerDirection
@@ -587,7 +587,7 @@ def ManualDrive(state:RobotState):
         
     elif key =="e":
         state.targetAngle = state.rotation
-        
+        state.world.centerDirection = np.array([math.cos(math.radians(state.rotation)), math.sin(math.radians(state.rotation))])
         state.corridorAngle = state.rotation
         return SteerCenter
         
