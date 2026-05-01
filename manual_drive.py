@@ -501,9 +501,21 @@ def SteerCenter(state:RobotState):
         derivative = (state.center_errors[-1] - state.center_errors[-2])
     else:
         derivative = 0
-    MoveTo(state,furtherPoint())
+    targetPos = furtherPoint()
+    angle = math.degrees(np.arctan2(to_target[1], to_target[0]))
+    angle_error = (state.rotation - angle  + 180) % 360 - 180
+    if abs(angle_error)<45:
+        MoveTo(state, targetPos)
+        
+    else:
+        return(SpinnTo(state, angle))
+
+    
+    
     
     if(0<state.front_distance<20):
+        return MoveToPoint(state, (state.world.centerMean + state.world.l_mean)/2 if l_rmse<r_rmse else (state.world.centerMean + state.world.r_mean)/2)
+        
         state.bashedHead+=1
         wheels.backward()
         wheels.speed = TURN_SPEED
