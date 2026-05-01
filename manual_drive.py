@@ -164,11 +164,20 @@ def MoveTo(state: RobotState, point: np.ndarray):
         # aligned enough → move forward with correction
         veer(align_error / 90)
 
-def MoveToPoint(state:RobotState):
-    np_point = np.array([state.x, state.y])
-    if(  state.destination:
-        MoveTo(state, state.destination)
-def SpinnTest(state:RobotState):
+def MoveToPoint(state:RobotState, point=None):
+    state.destination = point
+    nextBehavior = state.behaviour
+    def moveToPoint(state:RobotState):
+        nonlocal nextBehavior
+        nonlocal point
+        if(np.linalg.norm(point - state.position) < 10):
+            return nextBehavior
+        else:
+            MoveTo(state, state.destination)
+            return MoveToPoint
+    return MoveToPoint
+
+def CapturePanorama(state:RobotState):
     spinn = state.spinn
     spinn: SpinnState
     if(spinn.active == False):
@@ -206,7 +215,7 @@ def SpinnTest(state:RobotState):
         else:
             wheels.spinn_left()
             state.direction = 0
-    return SpinnTest
+    return CapturePanorama
                 
 
     # wheels.speed = TURN_SPEED
@@ -261,7 +270,7 @@ def CaptureTest():
     turns=0
     while (turns<12):
         UpDownTest()
-        SpinnTest(state)
+        CapturePanorama(state)
         turns+=1
 
 @dataclass
@@ -409,7 +418,7 @@ def SteerCenter(state:RobotState):
         state.lastPhotoSpot=(state.x,state.y)
         wheels.stop()
         #state.mode = Mode.SPINNING
-        return SpinnTest
+        return CapturePanorama
     
     if(state.bashedHead>3):
         return Idle
@@ -579,15 +588,16 @@ def ManualDrive(state:RobotState):
         wheels.ready()
         camera_servo.turn_straight()
     elif key =="1": #try turning servo
-        state.targetAngle = (state.rotation + 90)
+        #state.targetAngle = (state.rotation + 90)
         #state.lastbehaviour = state.behaviour
-        return SpinnTo(state, state.targetAngle)
+
+        return MoveToPoint(state, np.array([state.x+random.uniform(-50,50)*math.cos(math.radians(state.rotation)), state.y+random.uniform(-50,50)*math.sin(math.radians(state.rotation))]))
     #elif key =="2": #test Navigation
         #state.mode = Mode.ORIENTING
     elif key =="3": #testPhoto
         #state.mode = Mode.SPINNING
         RealRun(state)
-        return SpinnTest
+        return CapturePanorama
         
     elif key =="e":
         state.targetAngle = state.rotation
@@ -630,7 +640,7 @@ try:
         # if(state.mode == Mode.ORIENTING):
         #     OrientationSpinn(state)
         # if(state.mode == Mode.SPINNING):
-        #     SpinnTest(state)
+        #     CapturePanorama(state)
 except KeyboardInterrupt:
     wheels.stop()
     camera_servo.turn_straight()

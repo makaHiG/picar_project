@@ -21,6 +21,7 @@ class RobotState:
         self.x = 0
         self.y = 0
         self.position = np.array([0.0, 0.0])
+        self.destination = np.array([0.0, 0.0])
         self.world = WorldState()
         self.rowAngles = [30,60,90,120,150]
         self.Sensors = SensorState()
@@ -65,6 +66,7 @@ class SensorState:
         self.right_points = []
         self.left_points = []
         self.front_points = []
+        self.default_range =100
         self.sideways_offset = 20
     def add_reading(self, sensor, distance, x, y, rotation):
         angle_rad = math.radians(rotation)
@@ -158,11 +160,11 @@ class SensorState:
                 best_line = (p1, direction)
 
         return best_line, best_inliers
-    def fit_line_and_error(self,points):
+    def fit_line_and_error(self,points,range=100):
         if len(points) < 2:
             return None, None, None, None
 
-        pts = np.array(points[-40:])
+        pts = np.array(points[-range:])
 
         mean = np.mean(pts, axis=0)
         centered = pts - mean
