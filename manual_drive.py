@@ -167,6 +167,7 @@ def MoveTo(state: RobotState, point: np.ndarray):
 def MoveToPoint(state:RobotState, point=None):
     destination = point
     nextBehavior = state.behaviour
+    
     def moveToPoint(state:RobotState):
         nonlocal nextBehavior
         nonlocal destination
@@ -178,9 +179,9 @@ def MoveToPoint(state:RobotState, point=None):
             angle_error = (state.rotation - angle  + 180) % 360 - 180
             if abs(angle_error)<45:
                 MoveTo(state, destination)
+                return moveToPoint
             else:
                 return(SpinnTo(state, angle))
-            return moveToPoint
     return moveToPoint
 
 def CapturePanorama(state:RobotState):
@@ -597,7 +598,7 @@ def ManualDrive(state:RobotState):
         #state.targetAngle = (state.rotation + 90)
         #state.lastbehaviour = state.behaviour
 
-        return MoveToPoint(state, np.array([state.x+random.uniform(-50,50)*math.cos(math.radians(state.rotation)), state.y+random.uniform(-50,50)*math.sin(math.radians(state.rotation))]))
+        return MoveToPoint(state, np.array([state.x+random.uniform(-50,50), state.y+random.uniform(-50,50)]))
     #elif key =="2": #test Navigation
         #state.mode = Mode.ORIENTING
     elif key =="3": #testPhoto
