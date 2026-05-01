@@ -502,6 +502,7 @@ def SteerCenter(state:RobotState):
     else:
         derivative = 0
     targetPos = furtherPoint()
+    to_target = targetPos - pos
     angle = math.degrees(np.arctan2(to_target[1], to_target[0]))
     angle_error = (state.rotation - angle  + 180) % 360 - 180
     if abs(angle_error)<45:
