@@ -91,6 +91,7 @@ debug = {
     "gryo": False,
     "navigation": False
 }
+
 #print("Tracking rotation...")
 
 # Steering & speed parameters
@@ -163,7 +164,10 @@ def MoveTo(state: RobotState, point: np.ndarray):
         # aligned enough → move forward with correction
         veer(align_error / 90)
 
-
+def MoveToPoint(state:RobotState):
+    np_point = np.array([state.x, state.y])
+    if(  state.destination:
+        MoveTo(state, state.destination)
 def SpinnTest(state:RobotState):
     spinn = state.spinn
     spinn: SpinnState
@@ -342,9 +346,9 @@ def ReadGyro():
 def EstimateDistance(state):
         if 0<dt<1:
             v = Travel_Speed/100*(wheels.speedL + wheels.speedR)/2
-            state.x += v * math.cos(math.radians(state.rotation)) * dt*state.direction
-            state.y += v * math.sin(math.radians(state.rotation)) * dt*state.direction
-            
+            state.position[0] += v * math.cos(math.radians(state.rotation)) * dt*state.direction
+            state.position[1] += v * math.sin(math.radians(state.rotation)) * dt*state.direction
+            state.x, state.y = state.position[0], state.position[1]
             #print("Position: X: ", state.x, "Y: ",state.y)
             #sock.sendto(json.dumps([state.x,state.y]).encode(), (IP, PORT))
             #time.sleep(0.05)
@@ -438,7 +442,7 @@ def SteerCenter(state:RobotState):
     l_angle, l_rmse, l_mean, l_direction = state.Sensors.get_leftWallAngle() or (None,None,None,None)
     r_angle, r_rmse, r_mean, r_direction = state.Sensors.get_rightWallAngle() or (None,None,None,None)
     if l_mean is not None and r_mean is not None:
-        print("rsme left ", l_rmse, " rmse right ", r_rmse)
+        #print("rsme left ", l_rmse, " rmse right ", r_rmse)
         if(l_rmse<1 or r_rmse<1):
             
             w_l = weight(l_rmse)

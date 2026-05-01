@@ -16,8 +16,11 @@ class RobotState:
         self.behaviour = None
         self.lastbehaviour = None
         self.bashedHead = 0
+        self.rmse_right = [] # Root Mean Square Error for right sensor
+        self.rmse_left = [] # Root Mean Square Error for left sensor
         self.x = 0
         self.y = 0
+        self.position = np.array([0.0, 0.0])
         self.world = WorldState()
         self.rowAngles = [30,60,90,120,150]
         self.Sensors = SensorState()
