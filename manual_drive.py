@@ -588,6 +588,7 @@ def ManualDrive(state:RobotState):
     elif key =="e":
         state.targetAngle = state.rotation
         state.world.centerDirection = np.array([math.cos(math.radians(state.rotation)), math.sin(math.radians(state.rotation))])
+        state.world.centerMean = np.array([state.x, state.y])
         state.corridorAngle = state.rotation
         return SteerCenter
         
