@@ -422,7 +422,7 @@ def OrientationSpinn(state=state): ## Deprecated, not used anymore
                    
 
 def SteerCenter(state:RobotState):
-
+    state.direction = 1
     if(state.realRun and ((state.lastPhotoSpot[0]-state.x)**2 + (state.lastPhotoSpot[1]-state.y)**2) > state.photoInterval**2):
         state.lastPhotoSpot=(state.x,state.y)
         wheels.stop()
