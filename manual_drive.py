@@ -171,7 +171,7 @@ def MoveToPoint(state:RobotState, point=None):
     def moveToPoint(state:RobotState):
         nonlocal nextBehavior
         nonlocal destination
-        if(np.linalg.norm(destination - state.position) < 10):
+        if(np.linalg.norm(destination - state.position) < 1):
             return nextBehavior
         else:
             to_target = destination - state.position
