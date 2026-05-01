@@ -481,7 +481,7 @@ def SteerCenter(state:RobotState):
             # #Flip direction if it points the wrong way
             if np.dot(new_center_dir, state.world.centerDirection) < 0:
                 new_center_dir = -new_center_dir
-            alpha = 0.1  # 0 = very stable, 1 = very reactive
+            alpha = 0.2  # 0 = very stable, 1 = very reactive
 
             state.world.centerMean= alpha * new_center_mean + (1 - alpha) * state.world.centerMean
             state.world.centerDirection = alpha * new_center_dir  + (1 - alpha) * state.world.centerDirection
