@@ -173,6 +173,7 @@ def MoveToPoint(state:RobotState, point=None):
         nonlocal destination
         
         if(np.linalg.norm(destination - state.position) < 1):
+            wheels.stop()
             return nextBehavior
         else:
             to_target = destination - state.position
