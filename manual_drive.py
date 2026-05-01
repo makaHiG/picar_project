@@ -173,7 +173,13 @@ def MoveToPoint(state:RobotState, point=None):
         if(np.linalg.norm(destination - state.position) < 10):
             return nextBehavior
         else:
-            MoveTo(state, destination)
+            to_target = destination - state.position
+            angle = math.degrees(np.arctan2(to_target[1], to_target[0]))
+            angle_error = (state.rotation - angle  + 180) % 360 - 180
+            if abs(angle_error)<45:
+                MoveTo(state, destination)
+            else:
+                return(SpinnTo(state, angle))
             return moveToPoint
     return moveToPoint
 
