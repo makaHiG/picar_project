@@ -515,7 +515,7 @@ def SteerCenter(state:RobotState):
     
     
     if(0<state.front_distance<20):
-        return MoveToPoint(state, (state.position - 30*state.world.centerNormal))(state)
+        #return MoveToPoint(state, (state.position - 30*state.world.centerNormal))(state)
         
         state.bashedHead+=1
         wheels.backward()
