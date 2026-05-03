@@ -103,23 +103,6 @@ TURN_SPEED = 100#default 30
 Travel_Speed = 44*3.14/15 #Speed from test,cm/s
 
 
-# def UpDownTest(state:RobotState=state):
-#     camera_servo.turn_left()
-#     state.spinn.row=1
-#     time.sleep(1)
-#     if(state.realRun):
-#         TakePhoto(state)
-#     camera_servo.turn_straight()
-#     state.spinn.row=2
-#     time.sleep(1)
-#     if(state.realRun):
-#         TakePhoto(state)
-#     camera_servo.turn_right()
-#     state.spinn.row=3
-#     time.sleep(2)
-#     if(state.realRun):
-#         TakePhoto(state)
-#     camera_servo.turn_straight()
 
 #Take Photos, angles defined in state    
 def PhotoCollumn(state:RobotState=state):
@@ -162,9 +145,17 @@ def CapturePanorama(state:RobotState):
             spinn.targetRotation = spinn.startRotation + 360/spinn.maxSteps * spinn.stepCount
         else: 
             spinn.active=False
+            spotInfo = {
+                "name": f"info_panorama_{state.spinn.panoramacounter}",
+                "coordinates": state.position.tolist(),
+                "rotation": state.spinn.startRotation
+            }
+            filename = os.path.join(state.spinn.panoramafolder, f"info_panorama_{state.spinn.panoramacounter}.json")
+            with open(filename, "w") as f:
+                json.dump(spotInfo, f)
             state.spinn.panoramacounter+=1
             #Adding 360 since we spun a circle
-            state.corridorAngle = state.corridorAngle + 360
+            state.corridorAngle = state.corridorAngle + 360 ## Questionable
             return SteerCenter
     else:
         mod = error /3
@@ -567,7 +558,41 @@ def SteerCenter(state:RobotState):
         #state.mode = Mode.ORIENTING
 
     return SteerCenter
-      
+def followLine(mean, dir,dist = 100):
+    p = state.position
+    c0 = mean
+    d = dir
+    d = d / np.linalg.norm(d)
+
+    # robot_dir = np.array([
+    #     math.cos(math.radians(state.rotation)),
+    #     math.sin(math.radians(state.rotation))
+    # ])
+
+    # if np.dot(d, state.world.centerDirection) < 0:
+    #     d = -d
+
+    proj = c0 + np.dot(p - c0, d) * d
+    proj + dist * d
+    MoveTo(proj)
+    
+def Obstructed(state: RobotState):
+    startPoint = state.position
+    # followLine(startPoint, state.world.centerNormal)
+    # obstructionPoints = np.array([])
+    # buffer = 50
+    # robot_dir = np.array([
+    #     math.cos(math.radians(state.rotation)),
+    #     math.sin(math.radians(state.rotation))
+    # ])
+    # if(relevantSensor<safe):
+    #     safePoint = state.position
+    # else:
+    #     if(np.linalg.norm(state.position-safePoint)> buffer):
+    #         return SteerCenter
+    # if(state.front_distance<20 and np.array([math.cos(state.rotation),
+
+
 def veer(error):
     wheels.forward()
     
