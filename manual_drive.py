@@ -237,7 +237,7 @@ def SpinnTo(state:RobotState, target_angle=None):
     return Realign
 def Realign(state:RobotState):
     error = state.targetAngle-state.rotation
-    if abs(error<0.5):
+    if abs(error)<0.5:
         wheels.stop()
         return state.lastbehaviour
     else:
