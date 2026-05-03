@@ -87,7 +87,7 @@ offset = sum(samples) / len(samples)
 debug = {
     "wheels": False,
     "camera": False,
-    "sensors": True,
+    "sensors": False,
     "gryo": False,
     "navigation": False
 }
@@ -659,7 +659,10 @@ US_Manager.start()
 state.behaviour=ManualDrive
 try:
     while True:
+        behaviour = state.behaviour
         state.behaviour = state.behaviour(state)
+        if(behaviour != state.behaviour):
+            print("Switching behaviour from ", behaviour.__name__, " to ", state.behaviour.__name__ )
         #sock.sendto(b"Hello", ("255.255.255.255", 5005))
         # if(get_key_nonblocking()=="m"):
             #     state.mode = Mode.MANUAL
