@@ -87,7 +87,7 @@ offset = sum(samples) / len(samples)
 debug = {
     "wheels": False,
     "camera": False,
-    "sensors": False,
+    "sensors": True,
     "gryo": False,
     "navigation": False
 }
@@ -448,7 +448,7 @@ def SteerCenter(state:RobotState):
 
         angle_error = (state.rotation - center_angle + 180) % 360 - 180
         
-        if(angle_error>10):
+        if(abs(angle_error)>10):
             return SpinnTo(state,center_angle)
         state.lastPhotoSpot=(state.x,state.y)
         wheels.stop()
