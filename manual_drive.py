@@ -245,7 +245,7 @@ def SpinnTo(state:RobotState, target_angle=None):
         nonlocal nextBehavior
         nonlocal angle
         print("Realign to ", angle)
-        error = angle-state.rotation
+        error = state.rotation -angle
         if abs(error)<0.5:
             wheels.stop()
             print("next behavior ", nextBehavior)
@@ -506,7 +506,7 @@ def SteerCenter(state:RobotState):
             # new_center_dir = (l_direction + r_direction) / 2
             #new_center_dir /= np.linalg.norm(new_center_dir)
             # #Flip direction if it points the wrong way
-            alpha = 0.2  # 0 = very stable, 1 = very reactive
+            alpha = 0.15  # 0 = very stable, 1 = very reactive
 
             state.world.centerMean= alpha * new_center_mean + (1 - alpha) * state.world.centerMean
 
@@ -528,7 +528,7 @@ def SteerCenter(state:RobotState):
     targetPos = furtherPoint()
     to_target = targetPos - pos
     angle = math.degrees(np.arctan2(to_target[1], to_target[0]))
-    angle_error = (state.rotation - angle  + 180) % 360 - 180
+    angle_error = (angle-state.rotation  + 180) % 360 - 180
     if abs(angle_error)<45:
         MoveTo(state, targetPos)
         
@@ -538,7 +538,7 @@ def SteerCenter(state:RobotState):
     
     # if(0<state.front_distance<100):
     #     return(MoveToPoint(state, pos + 50*state.world.centerNormal if error>0 else pos - 50*state.world.centerNormal))
-    if(0<state.front_distance<100):
+    if(0<state.front_distance<50):
                 delta = state.Sensors.front_points[0]-state.world.centerMean
                 side = np.sign(np.dot(delta, state.world.centerNormal))
                 offset = side * buffer_distance*2 * state.world.centerNormal
