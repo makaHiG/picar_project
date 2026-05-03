@@ -522,7 +522,8 @@ def SteerCenter(state:RobotState):
         return(SpinnTo(state, angle))
 
     
-    
+    if(0<state.front_distance<100):
+        return(MoveToPoint(state, pos + 50*state.world.centerNormal if error>0 else pos - 50*state.world.centerNormal))
     
     if(0<state.front_distance<20):
         #return MoveToPoint(state, (state.position - 30*state.world.centerNormal))(state)
