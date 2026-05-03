@@ -200,7 +200,7 @@ def MoveTo(state: RobotState, point: np.ndarray):
     if abs(align_error) > resonableTurn * position_error:
         # too misaligned → just turn
         #Realign(state)
-        veer(align_error / 90)
+        veer(align_error / 45)
     else:
         # aligned enough → move forward with correction
         veer(align_error / 90)
