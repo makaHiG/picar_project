@@ -224,7 +224,7 @@ def MoveToPoint(state:RobotState, point=None):
         else:
             to_target = destination - state.position
             angle = math.degrees(np.arctan2(to_target[1], to_target[0]))
-            angle_error = (state.rotation - angle  + 180) % 360 - 180
+            angle_error = ( angle -state.rotation  + 180) % 360 - 180
             if abs(angle_error)<45:
                 MoveTo(state, destination)
                 return moveToPoint
@@ -244,8 +244,7 @@ def SpinnTo(state:RobotState, target_angle=None):
     def Realign(state:RobotState):
         nonlocal nextBehavior
         nonlocal angle
-        print("Realign to ", angle)
-        error = state.rotation -angle
+        error = ( angle -state.rotation  + 180) % 360 - 180
         if abs(error)<0.5:
             wheels.stop()
             print("next behavior ", nextBehavior)
