@@ -499,12 +499,7 @@ def SteerCenter(state:RobotState):
                     new_center_dir = -new_center_dir
                 state.world.centerDirection = alpha * new_center_dir  + (1 - alpha) * state.world.centerDirection
             
-            if(0<state.front_distance<100):
-                delta = state.Sensors.front_points[0]-state.world.centerMean
-                side = np.sign(np.dot(delta, state.world.centerNormal))
-                offset = side * buffer_distance * state.world.centerNormal
-                
-                #return MoveToPoint(state,state.Sensors.front_points[-1]-50*state.world.centerNormal)
+            
             new_center_mean = (l_mean + r_mean) / (2) + offset
 
 
@@ -543,9 +538,14 @@ def SteerCenter(state:RobotState):
     
     # if(0<state.front_distance<100):
     #     return(MoveToPoint(state, pos + 50*state.world.centerNormal if error>0 else pos - 50*state.world.centerNormal))
-    
+    if(0<state.front_distance<100):
+                delta = state.Sensors.front_points[0]-state.world.centerMean
+                side = np.sign(np.dot(delta, state.world.centerNormal))
+                offset = side * buffer_distance*2 * state.world.centerNormal
+                
+                return MoveToPoint(state,state.Sensors.front_points[-1]-50*state.world.centerNormal)
     if(0<state.front_distance<20):
-        #return MoveToPoint(state, (state.position - 30*state.world.centerNormal))(state)
+        return MoveToPoint(state, (state.position - 30*state.world.centerNormal))(state)
         
         state.bashedHead+=1
         wheels.backward()
