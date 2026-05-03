@@ -98,7 +98,7 @@ class Back_Wheels(object):
 		self._debug_('Stop')
 
 	@property
-	def speed(self, speed):
+	def speed(self):
 		return self._speed
 
 	@speed.setter
