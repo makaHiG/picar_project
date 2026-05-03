@@ -203,7 +203,9 @@ def MoveTo(state: RobotState, point: np.ndarray):
         veer(align_error / 45)
     else:
         # aligned enough → move forward with correction
-        veer(align_error / 90)
+        veer(align_error / 45)
+
+    
 
 def MoveToPoint(state:RobotState, point=None):
     destination = point
