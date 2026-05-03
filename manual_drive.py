@@ -103,23 +103,23 @@ TURN_SPEED = 100#default 30
 Travel_Speed = 44*3.14/15 #Speed from test,cm/s
 
 
-def UpDownTest(state:RobotState=state):
-    camera_servo.turn_left()
-    state.spinn.row=1
-    time.sleep(1)
-    if(state.realRun):
-        TakePhoto(state)
-    camera_servo.turn_straight()
-    state.spinn.row=2
-    time.sleep(1)
-    if(state.realRun):
-        TakePhoto(state)
-    camera_servo.turn_right()
-    state.spinn.row=3
-    time.sleep(2)
-    if(state.realRun):
-        TakePhoto(state)
-    camera_servo.turn_straight()
+# def UpDownTest(state:RobotState=state):
+#     camera_servo.turn_left()
+#     state.spinn.row=1
+#     time.sleep(1)
+#     if(state.realRun):
+#         TakePhoto(state)
+#     camera_servo.turn_straight()
+#     state.spinn.row=2
+#     time.sleep(1)
+#     if(state.realRun):
+#         TakePhoto(state)
+#     camera_servo.turn_right()
+#     state.spinn.row=3
+#     time.sleep(2)
+#     if(state.realRun):
+#         TakePhoto(state)
+#     camera_servo.turn_straight()
 
 #Take Photos, angles defined in state    
 def PhotoCollumn(state:RobotState=state):
@@ -136,6 +136,47 @@ def PhotoCollumn(state:RobotState=state):
         time.sleep(1)
         if(state.realRun):
             TakePhoto(state)
+
+def CapturePanorama(state:RobotState):
+    spinn = state.spinn
+    spinn: SpinnState
+    if(spinn.active == False):
+        if(state.realRun == True):
+            spinn.panoramafolder = os.path.join(spinn.batchfolder, "panorama"+str(spinn.panoramacounter))
+            # os.path.expanduser("~/photos")
+            os.makedirs(spinn.panoramafolder, exist_ok=True)
+        spinn.stepCount = 0
+        spinn.startRotation = state.rotation
+        spinn.active = True
+        spinn.targetRotation = spinn.startRotation
+        #UpDownTest(state)
+    error = spinn.targetRotation-state.rotation
+
+    if abs(error)<0.5:
+        wheels.stop()
+        time.sleep(1)
+        if(spinn.stepCount<spinn.maxSteps):
+            
+            PhotoCollumn(state)
+            spinn.stepCount += 1
+            spinn.targetRotation = spinn.startRotation + 360/spinn.maxSteps * spinn.stepCount
+        else: 
+            spinn.active=False
+            state.spinn.panoramacounter+=1
+            #Adding 360 since we spun a circle
+            state.corridorAngle = state.corridorAngle + 360
+            return SteerCenter
+    else:
+        mod = error /3
+        wheels.speed = int(min(100,max(25,TURN_SPEED*mod)))
+        if error<0 :
+            wheels.spinn_right()
+            state.direction = 0
+        else:
+            wheels.spinn_left()
+            state.direction = 0
+    return CapturePanorama
+
 def MoveTo(state: RobotState, point: np.ndarray):
 
     px, py = point[0], point[1]
@@ -186,45 +227,6 @@ def MoveToPoint(state:RobotState, point=None):
                 return(SpinnTo(state, angle))
     return moveToPoint
 
-def CapturePanorama(state:RobotState):
-    spinn = state.spinn
-    spinn: SpinnState
-    if(spinn.active == False):
-        if(state.realRun == True):
-            spinn.panoramafolder = os.path.join(spinn.batchfolder, "panorama"+str(spinn.panoramacounter))
-            # os.path.expanduser("~/photos")
-            os.makedirs(spinn.panoramafolder, exist_ok=True)
-        spinn.stepCount = 0
-        spinn.startRotation = state.rotation
-        spinn.active = True
-        spinn.targetRotation = spinn.startRotation
-        #UpDownTest(state)
-    error = spinn.targetRotation-state.rotation
-
-    if abs(error<0.5):
-        wheels.stop()
-        time.sleep(1)
-        if(spinn.stepCount<spinn.maxSteps):
-            
-            PhotoCollumn(state)
-            spinn.stepCount += 1
-            spinn.targetRotation = spinn.startRotation + 360/spinn.maxSteps * spinn.stepCount
-        else: 
-            spinn.active=False
-            state.spinn.panoramacounter+=1
-            #Adding 360 since we spun a circle
-            state.corridorAngle = state.corridorAngle + 360
-            return SteerCenter
-    else:
-        mod = error /3
-        wheels.speed = int(min(100,max(25,TURN_SPEED*mod)))
-        if error<0 :
-            wheels.spinn_right()
-            state.direction = 0
-        else:
-            wheels.spinn_left()
-            state.direction = 0
-    return CapturePanorama
                 
 
     # wheels.speed = TURN_SPEED
@@ -245,7 +247,7 @@ def SpinnTo(state:RobotState, target_angle=None):
         else:
         
             mod = error /3
-            speed = int(min(100,max(25,TURN_SPEED*mod)))
+            speed = 50#int(min(100,max(25,TURN_SPEED*mod)))
             if wheels.speed != speed:
                 wheels.speed =  speed
             if error<0 :
@@ -280,12 +282,12 @@ def TakePhoto(state:RobotState):
     
 
 
-def CaptureTest():
-    turns=0
-    while (turns<12):
-        UpDownTest()
-        CapturePanorama(state)
-        turns+=1
+# def CaptureTest():
+#     turns=0
+#     while (turns<12):
+#         UpDownTest()
+#         CapturePanorama(state)
+#         turns+=1
 
 @dataclass
 class SensorReading():
