@@ -232,25 +232,30 @@ def CapturePanorama(state:RobotState):
     # time.sleep(TURN_TIME)
     # wheels.stop()
 def SpinnTo(state:RobotState, target_angle=None):
-    state.targetAngle = target_angle
-    state.lastbehaviour = state.behaviour
-    return Realign
-def Realign(state:RobotState):
-    error = state.targetAngle-state.rotation
-    if abs(error)<0.5:
-        wheels.stop()
-        return state.lastbehaviour
-    else:
-    
-        mod = error /3
-        wheels.speed = int(min(100,max(25,TURN_SPEED*mod)))
-        if error<0 :
-            wheels.spinn_right()
-            state.direction = 0
+    angle = target_angle
+    nextBehavior = state.behaviour
+    def Realign(state:RobotState):
+
+        nonlocal nextBehavior
+        nonlocal angle
+        error = angle-state.rotation
+        if abs(error)<0.5:
+            wheels.stop()
+            return nextBehavior
         else:
-            wheels.spinn_left()
-            state.direction = 0
-        return Realign
+        
+            mod = error /3
+            speed = int(min(100,max(25,TURN_SPEED*mod)))
+            if wheels.speed != speed:
+                wheels.speed =  speed
+            if error<0 :
+                wheels.spinn_right()
+                state.direction = 0
+            else:
+                wheels.spinn_left()
+                state.direction = 0
+            return Realign
+    return Realign
      
 def TakePhoto(state:RobotState):
     
