@@ -457,12 +457,12 @@ def SteerCenter(state:RobotState):
         d = state.world.centerDirection
         d = d / np.linalg.norm(d)
 
-        robot_dir = np.array([
-            math.cos(math.radians(state.rotation)),
-            math.sin(math.radians(state.rotation))
-        ])
+        # robot_dir = np.array([
+        #     math.cos(math.radians(state.rotation)),
+        #     math.sin(math.radians(state.rotation))
+        # ])
 
-        if np.dot(d, robot_dir) < 0:
+        if np.dot(d, state.world.centerDirection) < 0:
             d = -d
 
         proj = c0 + np.dot(p - c0, d) * d
