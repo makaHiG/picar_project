@@ -436,6 +436,20 @@ def OrientationSpinn(state=state): ## Deprecated, not used anymore
 def SteerCenter(state:RobotState):
     state.direction = 1
     if(state.realRun and ((state.lastPhotoSpot[0]-state.x)**2 + (state.lastPhotoSpot[1]-state.y)**2) > state.photoInterval**2):
+        p = state.position
+        c0 = state.world.centerMean
+        d  = state.world.centerDirection
+        d  = d / np.linalg.norm(d)  # make sure it's normalized
+
+        proj = c0 + np.dot(p - c0, d) * d
+        if(np.linalg.norm(proj-state.position)>10):
+            return MoveToPoint(state, proj)
+        center_angle = math.degrees(math.atan2(d[1], d[0]))
+
+        angle_error = (state.rotation - center_angle + 180) % 360 - 180
+        
+        if(angle_error>10):
+            return SpinnTo(state,center_angle)
         state.lastPhotoSpot=(state.x,state.y)
         wheels.stop()
         #state.mode = Mode.SPINNING
