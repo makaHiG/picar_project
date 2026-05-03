@@ -438,6 +438,7 @@ def SteerCenter(state:RobotState):
     kp_align=0.3
     derivative = 0
     integral = 0
+    buffer_distance = 30
     def furtherPoint():
         p = np.array([state.x, state.y])
         c0 = state.world.centerMean
@@ -465,26 +466,35 @@ def SteerCenter(state:RobotState):
             
             w_l = weight(l_rmse)
             w_r = weight(r_rmse)
-            
+            bias = (w_l-w_r)/(w_l+w_r+1e-6)
+            confidence = abs(w_r - w_l) / (w_r + w_l + 1e-6)
+            offset = bias * confidence * buffer_distance * state.world.centerNormal
             # fix flipping
             if np.dot(l_direction, r_direction) < 0:
                 r_direction = -r_direction
-
-            new_center_dir = w_l * l_direction + w_r * r_direction
-            new_center_dir /= np.linalg.norm(new_center_dir)
+            if(np.dot(np.linalg.norm(l_direction), np.linalg.norm(r_direction)))<0.1 and l_rmse+r_rmse<2:
+                pass
+            else:
+                if(abs( np.dot(np.linalg.norm(l_direction), np.linalg.norm(state.world.centerDirection)))> 0.2):
+                    w_l = 0
+                if(abs( np.dot(np.linalg.norm(r_direction), np.linalg.norm(state.world.centerDirection)))> 0.2):
+                    w_r = 0
+            if(w_l+w_r)>0:
+                new_center_dir = w_l * l_direction + w_r * r_direction
+                new_center_dir /= np.linalg.norm(new_center_dir)
+                if np.dot(new_center_dir, state.world.centerDirection) < 0:
+                    new_center_dir = -new_center_dir
+                state.world.centerDirection = alpha * new_center_dir  + (1 - alpha) * state.world.centerDirection
             
-            new_center_mean = (l_mean + r_mean) / 2
+            new_center_mean = (l_mean + r_mean) / (2) + offset
 
 
             # new_center_dir = (l_direction + r_direction) / 2
             #new_center_dir /= np.linalg.norm(new_center_dir)
             # #Flip direction if it points the wrong way
-            if np.dot(new_center_dir, state.world.centerDirection) < 0:
-                new_center_dir = -new_center_dir
             alpha = 0.2  # 0 = very stable, 1 = very reactive
 
             state.world.centerMean= alpha * new_center_mean + (1 - alpha) * state.world.centerMean
-            state.world.centerDirection = alpha * new_center_dir  + (1 - alpha) * state.world.centerDirection
 
             # IMPORTANT: re-normalize direction
             state.world.centerDirection = state.world.centerDirection / np.linalg.norm(state.world.centerDirection)
