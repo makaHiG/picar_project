@@ -237,7 +237,7 @@ def SpinnTo(state:RobotState, target_angle=None):
     angle = target_angle
     nextBehavior = state.behaviour
     def Realign(state:RobotState):
-
+        print("Realign to ", angle)
         nonlocal nextBehavior
         nonlocal angle
         error = angle-state.rotation
