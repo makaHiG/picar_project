@@ -214,7 +214,10 @@ def MoveToPoint(state:RobotState, point=None):
     def moveToPoint(state:RobotState):
         nonlocal nextBehavior
         nonlocal destination
-        
+        if(state.front_distance<20):
+            wheels.stop()
+            return nextBehavior
+
         if(np.linalg.norm(destination - state.position) < 1):
             wheels.stop()
             return nextBehavior
