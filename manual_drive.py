@@ -243,7 +243,9 @@ def SpinnTo(state:RobotState, target_angle=None):
         error = angle-state.rotation
         if abs(error)<0.5:
             wheels.stop()
+            print("next behavior ", nextBehavior)
             return nextBehavior
+            
         else:
         
             mod = error /3
