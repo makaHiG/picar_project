@@ -253,10 +253,9 @@ def SpinnTo(state:RobotState, target_angle=None):
             
         else:
         
-            mod = error /3
-            speed = 50#int(min(100,max(25,TURN_SPEED*mod)))
-            if wheels.speed != speed:
-                wheels.speed =  speed
+            
+            
+            wheels.speed =  SPEED
             if error<0 :
                 wheels.spinn_right()
                 state.direction = 0
