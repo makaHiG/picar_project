@@ -545,7 +545,7 @@ def SteerCenter(state:RobotState):
     # if(0<state.front_distance<100):
     #     return(MoveToPoint(state, pos + 50*state.world.centerNormal if error>0 else pos - 50*state.world.centerNormal))
     if(0<state.front_distance<50):
-                return Obstructed()
+                return Obstructed(state)
                 delta = state.Sensors.front_points[0]-state.world.centerMean
                 side = np.sign(np.dot(delta, state.world.centerNormal))
                 offset = side * buffer_distance*2 * state.world.centerNormal
