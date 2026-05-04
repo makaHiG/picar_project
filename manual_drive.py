@@ -583,15 +583,14 @@ def angle_to_vector(deg):
     r = np.deg2rad(deg)
     return np.array([np.cos(r), np.sin(r)])
 
-def is_aligned(robot_angle, target_angle, tolerance_deg=15):
-    v1 = angle_to_vector(robot_angle)
-    v2 = angle_to_vector(target_angle)
+def is_aligned(v1, v2, tolerance_deg=15):
+    v1 = v1 / np.linalg.norm(v1)
+    v2 = v2 / np.linalg.norm(v2)
 
     dot = np.dot(v1, v2)
-
-    # convert tolerance to cosine threshold
     threshold = np.cos(np.deg2rad(tolerance_deg))
-    return (dot>threshold)
+
+    return dot > threshold
 
     return dot >= threshold    
 def Obstructed(state: RobotState):
