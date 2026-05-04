@@ -474,7 +474,7 @@ def SteerCenter(state:RobotState):
             # new_center_dir = (l_direction + r_direction) / 2
             #new_center_dir /= np.linalg.norm(new_center_dir)
             # #Flip direction if it points the wrong way
-            alpha = 0.15  # 0 = very stable, 1 = very reactive
+            alpha = 0.15 * dt  # 0 = very stable, 1 = very reactive
 
             state.world.centerMean= alpha * new_center_mean + (1 - alpha) * state.world.centerMean
 
@@ -513,14 +513,14 @@ def SteerCenter(state:RobotState):
                 offset = side * buffer_distance*2 * state.world.centerNormal
                 return MoveToPoint(state,state.position-50*state.world.centerNormal*side)
                 #return MoveToPoint(state,state.Sensors.front_points[-1]-50*state.world.centerNormal)
-    if(0<state.front_distance<20):
-        return MoveToPoint(state, (state.position - 30*state.world.centerNormal))(state)
+    # if(0<state.front_distance<20):
+    #     return MoveToPoint(state, (state.position - 30*state.world.centerNormal))
         
-        state.bashedHead+=1
-        wheels.backward()
-        wheels.speed = TURN_SPEED
-        time.sleep(1)
-        #state.mode = Mode.ORIENTING
+    #     state.bashedHead+=1
+    #     wheels.backward()
+    #     wheels.speed = TURN_SPEED
+    #     time.sleep(1)
+    #     #state.mode = Mode.ORIENTING
 
     return SteerCenter
 def followLine(mean, dir,dist = 100):
@@ -607,7 +607,8 @@ def Obstructed(state: RobotState):
             
             
         if(np.linalg.norm(state.position-safePoint)> buffer):
-            return MoveToPoint(state,state.position+state.world.centerDirection*50,SteerCenter)
+            state.world.centerMean = state.position
+            return SteerCenter#MoveToPoint(state,state.position+state.world.centerDirection*50,SteerCenter)
         if(0<state.front_distance<35 ):##Need to check for alignment/position, otherwise it will just resolve both
             if(side == "right" and is_aligned(robot_dir,right_normal,25)):
                 
