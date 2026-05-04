@@ -448,8 +448,8 @@ def SteerCenter(state:RobotState):
         #state.mode = Mode.SPINNING
         return CapturePanorama
     
-    if(state.bashedHead>3):
-        return Idle
+    # if(state.bashedHead>3):
+    #     return Idle
     center_error =0
     p=0.5
     intCoeff=0.5
@@ -641,7 +641,7 @@ def Obstructed(state: RobotState):
             
         if(np.linalg.norm(state.position-safePoint)> buffer):
             return SteerCenter
-        if(state.front_distance<20 ):##Need to check for alignment/position, otherwise it will just resolve both
+        if(0<state.front_distance<20 ):##Need to check for alignment/position, otherwise it will just resolve both
             if(side == "right" and is_aligned(robot_dir,right_normal,25)):
                 
                 checked_right = True
