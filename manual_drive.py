@@ -624,7 +624,7 @@ def Obstructed(state: RobotState):
 
         
         if side == "left":
-            if(is_aligned(robot_dir,left_normal)):
+            if(is_aligned(robot_dir,left_normal),25):
                 followLine(startPoint, left_normal)
             else:
                 SpinnTo(state,math.atan2(left_normal[1],left_normal[0]))
