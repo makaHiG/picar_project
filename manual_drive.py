@@ -592,7 +592,7 @@ def is_aligned(v1, v2, tolerance_deg=15):
 
     return dot > threshold
 
-    return dot >= threshold    
+        
 def Obstructed(state: RobotState):
     startPoint = state.position
     deadend=0
@@ -621,14 +621,21 @@ def Obstructed(state: RobotState):
             math.cos(math.radians(state.rotation)),
             math.sin(math.radians(state.rotation))
         ])
+
+        
         if side == "left":
-            followLine(startPoint, left_normal)
+            if(is_aligned(robot_dir,left_normal)):
+                followLine(startPoint, left_normal)
+            else:
+                SpinnTo(math.atan2(left_normal))
             if(0<state.right_distance<safeDistance):
                 safePoint = state.position
-            ##May need to add a check distance to obstruction, to avoid hitting it if missaligned
         else:
-            followLine(startPoint, right_normal)
-            if(0<state.right_distance<safeDistance):
+            if(is_aligned(robot_dir,right_normal)):
+                followLine(startPoint, right_normal)
+            else:
+                SpinnTo(math.atan2(right_normal))
+            if(0<state.left_distance<safeDistance):
                 safePoint = state.position
             
             
