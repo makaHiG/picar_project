@@ -402,11 +402,11 @@ def SteerCenter(state:RobotState):
     
 
     if len(state.Sensors.right_points)>0: 
-        if state.rightWall[-1] !=state.Sensors.right_points[-1]:
-            state.rightWall.append(state.Sensors.right_points[-1]) 
+        if state.world.rightWall[-1] !=state.Sensors.right_points[-1]:
+            state.world.rightWall.append(state.Sensors.right_points[-1]) 
     if len(state.Sensors.left_points)>0: 
-        if state.leftWall[-1] !=state.Sensors.left_points[-1]:
-            state.leftWall.append(state.Sensors.left_points[-1])
+        if state.world.leftWall[-1] !=state.Sensors.left_points[-1]:
+            state.world.leftWall.append(state.Sensors.left_points[-1])
     # if(state.bashedHead>3):
     #     return Idle
     center_error =0
