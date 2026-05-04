@@ -568,7 +568,7 @@ def Obstructed(state: RobotState):
     center = state.world.centerDirection
     left_normal  = np.array([-center[1], center[0]])
     right_normal = np.array([ center[1], -center[0]])
-    buffer = 30
+    buffer = 25
     safePoint = state.position.copy()
     checked_right = False
     checked_left = False
@@ -608,7 +608,7 @@ def Obstructed(state: RobotState):
             
         if(np.linalg.norm(state.position-safePoint)> buffer):
             return MoveToPoint(state,state.position+state.world.centerDirection*50,SteerCenter)
-        if(0<state.front_distance<20 ):##Need to check for alignment/position, otherwise it will just resolve both
+        if(0<state.front_distance<35 ):##Need to check for alignment/position, otherwise it will just resolve both
             if(side == "right" and is_aligned(robot_dir,right_normal,25)):
                 
                 checked_right = True
