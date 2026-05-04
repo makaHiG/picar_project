@@ -323,7 +323,7 @@ def ReadSensors(state:RobotState=state):
         state.left_distance=left
         state.right_distance=right
         state.front_distance=front
-        if(state.behaviour == SteerCenter): #only add readings when moving forward, sideways are unreliable and break average atm
+        if(state.direction == 1): #only add readings when moving forward, sideways are unreliable and break average atm
             if(left>0): state.Sensors.add_reading("left", left, state.x, state.y, state.rotation)
 
             if(front>0): state.Sensors.add_reading("front", front, state.x, state.y, state.rotation)
@@ -376,54 +376,6 @@ def EstimateDistance(state):
             #sock.sendto(json.dumps([state.x,state.y]).encode(), (IP, PORT))
             #time.sleep(0.05)
 
-def OrientationSpinn(state=state): ## Deprecated, not used anymore
-    scan=state.scan
-    scan:ScanState
-    if(scan.active == False):
-        wheels.spinn_left()
-        wheels.speed = TURN_SPEED
-        scan.startRotation=state.rotation
-        scan.readings.clear()
-        scan.active = True
-    
-    
-    lowestLeft=None
-    lowestRight=None
-    lowestAdded=None
-    if(state.rotation>scan.startRotation+360):
-        singleReadings=[]
-        for reading in scan.readings:
-            reading:SensorReading
-            if reading.left_distance > 0:
-                 if lowestLeft == None or reading.left_distance<lowestLeft.left_distance:
-                    lowestLeft = reading
-            if reading.right_distance > 0: 
-                if(lowestRight == None or reading.right_distance<lowestRight.right_distance):
-                    lowestRight = reading
-            if reading.left_distance > 0 and reading.right_distance > 0:
-                if lowestAdded == None or reading.right_distance+reading.left_distance<lowestAdded.right_distance+lowestAdded.left_distance:
-                    lowestAdded = reading
-            singleReadings.append([(reading.rotation - 90) % 360, reading.right_distance])
-            singleReadings.append([reading.rotation % 360, reading.front_distance])
-            singleReadings.append([(reading.rotation + 90) % 360, reading.left_distance])   
-            #sock.sendto(json.dumps(singleReadings).encode(), (IP, PORT))
-            
-        ## ADD a Check values against curves to check if it is likely to be valid.
-        ## ADD Check that front is clear
-        if lowestAdded is not None:
-            diff = (state.corridorAngle - lowestAdded.rotation + 180) % 360 - 180
-
-            if abs(diff) > 90:
-                state.corridorAngle = (lowestAdded.rotation + 180) % 360
-            else:
-                state.corridorAngle = lowestAdded.rotation
-            
-        if(debug["navigation"]):
-            print("coordiorAngelApriximated at ",lowestAdded.rotation)
-            scan.active=False
-        
-        wheels.stop()    
-        state.mode=Mode.DIRECTIONAL_MOVE
                    
 
 def SteerCenter(state:RobotState):
@@ -448,6 +400,13 @@ def SteerCenter(state:RobotState):
         #state.mode = Mode.SPINNING
         return CapturePanorama
     
+
+    if len(state.Sensors.right_points)>0: 
+        if state.rightWall[-1] !=state.Sensors.right_points[-1]:
+            state.rightWall.append(state.Sensors.right_points[-1]) 
+    if len(state.Sensors.left_points)>0: 
+        if state.leftWall[-1] !=state.Sensors.left_points[-1]:
+            state.leftWall.append(state.Sensors.left_points[-1])
     # if(state.bashedHead>3):
     #     return Idle
     center_error =0
@@ -477,8 +436,8 @@ def SteerCenter(state:RobotState):
 
     def weight(rmse):
         return 1.0 / (rmse + 1e-6)
-    l_angle, l_rmse, l_mean, l_direction = state.Sensors.get_leftWallAngle() or (None,None,None,None)
-    r_angle, r_rmse, r_mean, r_direction = state.Sensors.get_rightWallAngle() or (None,None,None,None)
+    l_angle, l_rmse, l_mean, l_direction = state.Sensors.fit_line_and_error(state.world.leftWall) or (None,None,None,None)#state.Sensors.get_leftWallAngle() or (None,None,None,None)
+    r_angle, r_rmse, r_mean, r_direction = state.Sensors.fit_line_and_error(state.world.rightWall) or (None,None,None,None)
     if l_mean is not None and r_mean is not None:
         #print("rsme left ", l_rmse, " rmse right ", r_rmse)
         if(l_rmse<1 or r_rmse<1):
@@ -788,10 +747,7 @@ try:
         state.behaviour = state.behaviour(state)
         if(behaviour != state.behaviour):
             print("Switching behaviour from ", behaviour.__name__, " to ", state.behaviour.__name__ )
-        #sock.sendto(b"Hello", ("255.255.255.255", 5005))
-        # if(get_key_nonblocking()=="m"):
-            #     state.mode = Mode.MANUAL
-            
+           
         now = time.time()
         dt = now - prev_time if now - prev_time < 0.5 else 0.01
         prev_time = now
@@ -799,14 +755,6 @@ try:
         ReadSensors()
         EstimateDistance(state)
         
-        # if(state.mode == Mode.MANUAL):
-        #     ManualDrive(state)
-        # if(state.mode == Mode.DIRECTIONAL_MOVE):
-        #     SteerCenter(state)
-        # if(state.mode == Mode.ORIENTING):
-        #     OrientationSpinn(state)
-        # if(state.mode == Mode.SPINNING):
-        #     CapturePanorama(state)
 except KeyboardInterrupt:
     wheels.stop()
     camera_servo.turn_straight()

@@ -51,7 +51,8 @@ class ScanState:
         self.startRotation = 0
 class WorldState:
     def __init__(self):
-
+        self.rightWall = []
+        self.leftWall = []
         self.corridorWidth = 200
         #self.centerLine = np.array([0.0, 0.0])
         self.centerDirection = np.array([1.0, 0.0])
