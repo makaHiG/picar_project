@@ -606,7 +606,7 @@ def Obstructed(state: RobotState):
     center = state.world.centerDirection
     left_normal  = np.array([-center[1], center[0]])
     right_normal = np.array([ center[1], -center[0]])
-    buffer = 50
+    buffer = 30
     safePoint = state.position
     checked_right = False
     checked_left = False
