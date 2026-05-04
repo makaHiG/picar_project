@@ -615,7 +615,8 @@ def Obstructed(state: RobotState):
         safeDistance = 100
         nonlocal left_normal
         nonlocal right_normal
-        
+        nonlocal checked_left
+        nonlocal checked_right
         robot_dir = np.array([
             math.cos(math.radians(state.rotation)),
             math.sin(math.radians(state.rotation))
