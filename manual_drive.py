@@ -591,6 +591,7 @@ def is_aligned(robot_angle, target_angle, tolerance_deg=15):
 
     # convert tolerance to cosine threshold
     threshold = np.cos(np.deg2rad(tolerance_deg))
+    return dot>threshold
 
     return dot >= threshold    
 def Obstructed(state: RobotState):
