@@ -561,9 +561,9 @@ def Obstructed(state: RobotState):
     
     obstructionPoints = np.array([])
     if side_of(state.world.centerMean, state.Sensors.front_points[-1]):
-        side = "left"
+        side = "right"
     else:
-        side = "right" 
+        side = "left" 
 
     center = state.world.centerDirection
     left_normal  = np.array([-center[1], center[0]])
