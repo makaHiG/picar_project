@@ -621,7 +621,7 @@ def Obstructed(state: RobotState):
             math.cos(math.radians(state.rotation)),
             math.sin(math.radians(state.rotation))
         ])
-
+        print("obstructed runs")
         
         if side == "left":
             if(is_aligned(robot_dir,left_normal,25)):
