@@ -607,7 +607,7 @@ def Obstructed(state: RobotState):
     left_normal  = np.array([-center[1], center[0]])
     right_normal = np.array([ center[1], -center[0]])
     buffer = 30
-    safePoint = state.position
+    safePoint = state.position.copy()
     checked_right = False
     checked_left = False
     #relevantSensor...
@@ -634,14 +634,14 @@ def Obstructed(state: RobotState):
             else:
                 return SpinnTo(state,math.degrees(math.atan2(left_normal[1],left_normal[0])))
             if(0<state.right_distance<safeDistance):
-                safePoint = state.position
+                safePoint = state.position.copy()
         else:
             if(is_aligned(robot_dir,right_normal,25)):
                 followLine(startPoint, right_normal)
             else:
                 return SpinnTo(state,math.degrees(math.atan2(right_normal[1],right_normal[0])))
             if(0<state.left_distance<safeDistance):
-                safePoint = state.position
+                safePoint = state.position.copy()
             
             
         if(np.linalg.norm(state.position-safePoint)> buffer):
