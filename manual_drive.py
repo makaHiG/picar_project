@@ -739,7 +739,7 @@ def ManualDrive(state:RobotState):
     elif key =="1": #try turning servo
         #state.targetAngle = (state.rotation + 90)
         #state.lastbehaviour = state.behaviour
-        return Obstructed()
+        return Obstructed(state)
         #return MoveToPoint(state, np.array([state.x+random.uniform(-50,50), state.y+random.uniform(-50,50)]))
     #elif key =="2": #test Navigation
         #state.mode = Mode.ORIENTING
