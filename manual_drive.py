@@ -576,8 +576,8 @@ def followLine(mean, dir,dist = 100):
     #     d = -d
 
     proj = c0 + np.dot(p - c0, d) * d
-    proj + dist * d
-    MoveTo(proj)
+    point = proj + dist * d
+    MoveTo(state, point)
 
 def angle_to_vector(deg):
     r = np.deg2rad(deg)
