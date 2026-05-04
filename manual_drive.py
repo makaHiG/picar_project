@@ -420,6 +420,7 @@ def SteerCenter(state:RobotState):
     derivative = 0
     integral = 0
     buffer_distance = 30
+    alpha = 0.15 * dt  # 0 = very stable, 1 = very reactive
     def furtherPoint():
         p = np.array([state.x, state.y])
         c0 = state.world.centerMean
@@ -453,12 +454,12 @@ def SteerCenter(state:RobotState):
             # fix flipping
             if np.dot(l_direction, r_direction) < 0:
                 r_direction = -r_direction
-            if(np.dot(np.linalg.norm(l_direction), np.linalg.norm(r_direction)))<0.1 and l_rmse+r_rmse<2:
+            if is_aligned(l_direction,r_direction,5) and l_rmse+r_rmse<2:
                 pass
             else:
-                if(abs( np.dot(np.linalg.norm(l_direction), np.linalg.norm(state.world.centerDirection)))> 0.2):
+                if(is_aligned(l_direction,state.world.centerDirection,5)==False):
                     w_l = 0
-                if(abs( np.dot(np.linalg.norm(r_direction), np.linalg.norm(state.world.centerDirection)))> 0.2):
+                if(is_aligned(r_direction,state.world.centerDirection,5)==False):
                     w_r = 0
             if(w_l+w_r)>0:
                 new_center_dir = w_l * l_direction + w_r * r_direction
@@ -474,7 +475,7 @@ def SteerCenter(state:RobotState):
             # new_center_dir = (l_direction + r_direction) / 2
             #new_center_dir /= np.linalg.norm(new_center_dir)
             # #Flip direction if it points the wrong way
-            alpha = 0.15 * dt  # 0 = very stable, 1 = very reactive
+            
 
             state.world.centerMean= alpha * new_center_mean + (1 - alpha) * state.world.centerMean
 
