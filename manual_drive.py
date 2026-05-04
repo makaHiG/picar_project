@@ -323,7 +323,7 @@ def ReadSensors(state:RobotState=state):
         state.left_distance=left
         state.right_distance=right
         state.front_distance=front
-        if(state.direction == 1): #only add readings when moving forward, sideways are unreliable and break average atm
+        if(state.behaviour == SteerCenter): #only add readings when moving forward, sideways are unreliable and break average atm
             if(left>0): state.Sensors.add_reading("left", left, state.x, state.y, state.rotation)
 
             if(front>0): state.Sensors.add_reading("front", front, state.x, state.y, state.rotation)
