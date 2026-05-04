@@ -591,13 +591,18 @@ def is_aligned(v1, v2, tolerance_deg=15):
     threshold = np.cos(np.deg2rad(tolerance_deg))
 
     return dot > threshold
-
+def side_of(v, w):
+    return v[0]*w[1] - v[1]*w[0]
         
 def Obstructed(state: RobotState):
     startPoint = state.position
-    deadend=0
+    
     obstructionPoints = np.array([])
-    side = "left" # if left is better otherwiseright
+    if side_of(state.world.centerMean, state.Sensors.front_points[-1]):
+        side = "left"
+    else:
+        side = "right" 
+
     center = state.world.centerDirection
     left_normal  = np.array([-center[1], center[0]])
     right_normal = np.array([ center[1], -center[0]])
@@ -609,7 +614,7 @@ def Obstructed(state: RobotState):
     def obstructed(state:RobotState):
         nonlocal safePoint
         nonlocal side
-        nonlocal deadend
+        
         nonlocal startPoint
         nonlocal buffer
         safeDistance = 100
@@ -653,6 +658,7 @@ def Obstructed(state: RobotState):
                 
         
         if(checked_left and checked_right):
+            wheels.stop()
             return ManualDrive
         return obstructed
     return obstructed
