@@ -198,9 +198,12 @@ def MoveTo(state: RobotState, point: np.ndarray):
 
     
 
-def MoveToPoint(state:RobotState, point=None):
+def MoveToPoint(state:RobotState, point=None, next_Behaviour = None):
     destination = point
-    nextBehavior = state.behaviour
+    if(next_Behaviour == None):
+        nextBehavior = state.behaviour
+    else:
+        nextBehavior = next_Behaviour
     print("next behavior ", nextBehavior)
     def moveToPoint(state:RobotState):
         nonlocal nextBehavior
@@ -604,7 +607,7 @@ def Obstructed(state: RobotState):
             
             
         if(np.linalg.norm(state.position-safePoint)> buffer):
-            return SteerCenter
+            return MoveToPoint(state,state.position+state.world.centerDirection*50,SteerCenter)
         if(0<state.front_distance<20 ):##Need to check for alignment/position, otherwise it will just resolve both
             if(side == "right" and is_aligned(robot_dir,right_normal,25)):
                 
