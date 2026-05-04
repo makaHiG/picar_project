@@ -27,6 +27,7 @@ class RobotState:
         self.Sensors = SensorState()
         self.direction = 0
         self.rotation = 0
+        self.npRotation = np.array([0,0])
         self.mode = Mode.IDLE
         self.targetAngle = 0
         self.corridorAngle=0
@@ -41,6 +42,8 @@ class RobotState:
         self.lastPhotoSpot = (0,0)
         self.photoInterval = 600
         self.realRun = False
+        
+            
 class ScanState:
     def __init__(self):
         self.readings=[]
@@ -98,43 +101,9 @@ class SensorState:
             return None
         else:
             return self.fit_line_and_error(self.right_points)
-    # def fit_line_and_error(self, points):
-    #     if len(points) < 2:
-    #         return None, None
+   
 
-    #     pts = np.array(points[-10:])  # last 10 points
-
-    #     # --- compute mean ---
-    #     mean = np.mean(pts, axis=0)
-
-    #     # --- center data ---
-    #     centered = pts - mean
-
-    #     # --- covariance ---
-    #     cov = np.cov(centered.T)
-
-    #     # --- eigen decomposition ---
-    #     eigenvalues, eigenvectors = np.linalg.eig(cov)
-
-    #     # largest eigenvector = line direction
-    #     idx = np.argmax(eigenvalues)
-    #     direction = eigenvectors[:, idx]
-
-    #     # --- angle of line ---
-    #     angle = math.atan2(direction[1], direction[0])
-
-    #     # --- compute perpendicular distances (error) ---
-    #     # normal vector to the line
-    #     normal = np.array([-direction[1], direction[0]])
-
-    #     distances = np.abs(centered @ normal)
-
-    #     # RMSE (noise metric)
-    #     rmse = np.sqrt(np.mean(distances**2))
-
-    #     return math.degrees(angle), rmse
-
-    def ransac_line(points, iterations=100, threshold=5):
+    def ransac_line(points, iterations=100, threshold=5): ##Not yet used
         best_line = None
         best_inliers = []
 

@@ -209,7 +209,7 @@ def MoveToPoint(state:RobotState, point=None):
             wheels.stop()
             return nextBehavior
 
-        if(np.linalg.norm(destination - state.position) < 1):
+        if(np.linalg.norm(destination - state.position) < 5):
             wheels.stop()
             return nextBehavior
         else:
@@ -357,9 +357,11 @@ def ReadSensors(state:RobotState=state):
             print(left, "|",front,"|",right)
             #print(corridorAngle)
 def ReadGyro():
+    global dt
     raw = read_gyro_z()
     gyro_z = (raw - offset) / 131.0  # deg/sec
     state.rotation += gyro_z * dt
+    state.npRotation = np.array([np.cos(math.radians(state.rotation)), np.sin(math.radians(state.rotation))])
 
     if debug["gryo"]:
         print(f"Rate: {gyro_z:6.2f} deg/s | Angle: {state.rotation:7.2f} deg")
@@ -543,6 +545,7 @@ def SteerCenter(state:RobotState):
     # if(0<state.front_distance<100):
     #     return(MoveToPoint(state, pos + 50*state.world.centerNormal if error>0 else pos - 50*state.world.centerNormal))
     if(0<state.front_distance<50):
+                return Obstructed()
                 delta = state.Sensors.front_points[0]-state.world.centerMean
                 side = np.sign(np.dot(delta, state.world.centerNormal))
                 offset = side * buffer_distance*2 * state.world.centerNormal
@@ -575,22 +578,78 @@ def followLine(mean, dir,dist = 100):
     proj = c0 + np.dot(p - c0, d) * d
     proj + dist * d
     MoveTo(proj)
-    
+
+def angle_to_vector(deg):
+    r = np.deg2rad(deg)
+    return np.array([np.cos(r), np.sin(r)])
+
+def is_aligned(robot_angle, target_angle, tolerance_deg=15):
+    v1 = angle_to_vector(robot_angle)
+    v2 = angle_to_vector(target_angle)
+
+    dot = np.dot(v1, v2)
+
+    # convert tolerance to cosine threshold
+    threshold = np.cos(np.deg2rad(tolerance_deg))
+
+    return dot >= threshold    
 def Obstructed(state: RobotState):
     startPoint = state.position
-    # followLine(startPoint, state.world.centerNormal)
-    # obstructionPoints = np.array([])
-    # buffer = 50
-    # robot_dir = np.array([
-    #     math.cos(math.radians(state.rotation)),
-    #     math.sin(math.radians(state.rotation))
-    # ])
-    # if(relevantSensor<safe):
-    #     safePoint = state.position
-    # else:
-    #     if(np.linalg.norm(state.position-safePoint)> buffer):
-    #         return SteerCenter
-    # if(state.front_distance<20 and np.array([math.cos(state.rotation),
+    deadend=0
+    obstructionPoints = np.array([])
+    side = "left" # if left is better otherwiseright
+    center = state.world.centerDirection
+    left_normal  = np.array([-center[1], center[0]])
+    right_normal = np.array([ center[1], -center[0]])
+    buffer = 50
+    safePoint = state.position
+    checked_right = False
+    checked_left = False
+    #relevantSensor...
+    def obstructed(state:RobotState):
+        nonlocal safePoint
+        nonlocal side
+        nonlocal deadend
+        nonlocal startPoint
+        nonlocal buffer
+        safeDistance = 100
+        nonlocal left_normal
+        nonlocal right_normal
+        
+        robot_dir = np.array([
+            math.cos(math.radians(state.rotation)),
+            math.sin(math.radians(state.rotation))
+        ])
+        if side == "left":
+            followLine(startPoint, left_normal)
+            if(0<state.right_distance<safeDistance):
+                safePoint = state.position
+            ##May need to add a check distance to obstruction, to avoid hitting it if missaligned
+        else:
+            followLine(startPoint, right_normal)
+            if(0<state.right_distance<safeDistance):
+                safePoint = state.position
+            
+            
+        if(np.linalg.norm(state.position-safePoint)> buffer):
+            return SteerCenter
+        if(state.front_distance<20 ):##Need to check for alignment/position, otherwise it will just resolve both
+            if(side == "right" and is_aligned(robot_dir,right_normal,25)):
+                
+                checked_right = True
+                side = "left"
+            if(side == "left" and is_aligned(robot_dir,left_normal,25)):
+                
+                checked_left = True
+                side = "right"
+                
+        
+        if(checked_left and checked_right):
+            return ManualDrive
+        return obstructed
+    return obstructed
+    
+            
 
 
 def veer(error):
@@ -680,8 +739,8 @@ def ManualDrive(state:RobotState):
     elif key =="1": #try turning servo
         #state.targetAngle = (state.rotation + 90)
         #state.lastbehaviour = state.behaviour
-
-        return MoveToPoint(state, np.array([state.x+random.uniform(-50,50), state.y+random.uniform(-50,50)]))
+        return Obstructed()
+        #return MoveToPoint(state, np.array([state.x+random.uniform(-50,50), state.y+random.uniform(-50,50)]))
     #elif key =="2": #test Navigation
         #state.mode = Mode.ORIENTING
     elif key =="3": #testPhoto
