@@ -303,7 +303,7 @@ def RealRun(state:RobotState): #Setup for real run, create folders and set camer
     run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
     
     run_folder = os.path.join(base_folder, f"run_{run_id}")
-    if len(sys.argv)<1:
+    if len(sys.argv)>1:
         run_folder = os.path.join(base_folder,sys.argv[1])
     
     state.spinn.batchfolder = run_folder
@@ -532,7 +532,8 @@ def SteerCenter(state:RobotState):
         return MoveToPoint(state,state.position-50*state.world.centerNormal*side)
         #return MoveToPoint(state,state.Sensors.front_points[-1]-50*state.world.centerNormal)
     for obs in state.world.obstructions:
-        if(distancePointOnLine(state.position))
+        if(squared_distance(state.position,obs)>20*20):
+            if(distancePointOnLine(obs,state.position,))
     # if(0<state.front_distance<20):
     #     return MoveToPoint(state, (state.position - 30*state.world.centerNormal))
         
@@ -575,6 +576,10 @@ def distancePointOnLine(point, line_point, line_dir):
 
     distance = np.linalg.norm(perp)
     return distance
+def squared_distance(a, b):
+    d = a - b
+    return np.dot(d, d)
+
 def angle_to_vector(deg):
     r = np.deg2rad(deg)
     return np.array([np.cos(r), np.sin(r)])
