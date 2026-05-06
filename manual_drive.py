@@ -260,7 +260,7 @@ def SpinnTo(state:RobotState, target_angle=None):
      
 def TakePhoto(state:RobotState):
     
-    filename = f"r{state.spinn.row}c{state.spinn.stepCount}.jpg"
+    filename = f"r{state.spinn.row:02d}c{state.spinn.stepCount:02d}.jpg"
     filepath = os.path.join(state.spinn.panoramafolder, filename)
 
     
@@ -269,7 +269,7 @@ def TakePhoto(state:RobotState):
         "fswebcam",
         "-r", "1920x1080",
         "--frames", "1",   # real improvement here
-        "--skip", "10",
+        "--skip", "20",
         "--no-banner",
         filepath
     ])
@@ -541,7 +541,21 @@ def followLine(mean, dir,dist = 100):
     proj = c0 + np.dot(p - c0, d) * d
     point = proj + dist * d
     MoveTo(state, point)
+def distancePointOnLine(point, line_point, line_dir):
+    P = point      # your point
+    A = line_point    # a point on the line
+    v = line_dir    # direction vector of the line
 
+    AP = P - A
+
+    # projection of AP onto v
+    proj = (np.dot(AP, v) / np.dot(v, v)) * v
+
+    # perpendicular component
+    perp = AP - proj
+
+    distance = np.linalg.norm(perp)
+    return distance
 def angle_to_vector(deg):
     r = np.deg2rad(deg)
     return np.array([np.cos(r), np.sin(r)])
@@ -598,6 +612,8 @@ def Obstructed(state: RobotState):
                 return SpinnTo(state,math.degrees(math.atan2(left_normal[1],left_normal[0])))
             if(0<state.right_distance<safeDistance):
                 safePoint = state.position.copy()
+            if(distancePointOnLine(state.Sensors.front_points[-1], startPoint, left_normal)<buffer):
+                startPoint -= state.world.centerDirection* buffer
         else:
             if(is_aligned(robot_dir,right_normal,25)):
                 followLine(startPoint, right_normal)

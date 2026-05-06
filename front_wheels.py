@@ -13,6 +13,7 @@
 '''
 from .SunFounder_PCA9685 import Servo
 from .import filedb
+import time
 
 class Front_Wheels(object):
 	''' Front wheels control class '''
@@ -65,6 +66,21 @@ class Front_Wheels(object):
 		# 	angle = self._angle["right"]
 		angle = min(180,max(0,angle))
 		self.wheel.write(angle)
+	# def smooth_turn(self, angle):
+	# 	startTime = time.time()
+		
+	# 	transitionTime = 1
+	# 	while time.time()<startTime+transitionTime:
+	# 		intermediateAngle =  
+	# 		self.wheel.write()	
+	# 	# ''' Turn the front wheels to the giving angle '''
+	# 	# self._debug_("Turn to %s " % angle)
+	# 	# if angle < self._angle["left"]:
+	# 	# 	angle = self._angle["left"]
+	# 	# if angle > self._angle["right"]:
+	# 	# 	angle = self._angle["right"]
+	# 	angle = int (min(180,max(0,angle)))
+	# 	self.wheel.write(angle)
 
 	@property
 	def channel(self):
