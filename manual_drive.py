@@ -301,7 +301,11 @@ class SensorReading():
 
 def RealRun(state:RobotState): #Setup for real run, create folders and set camera settings
     run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
+    
     run_folder = os.path.join(base_folder, f"run_{run_id}")
+    if len(sys.argv)<1:
+        run_folder = os.path.join(base_folder,sys.argv[1])
+    
     state.spinn.batchfolder = run_folder
     state.realRun = True
     state.spinn.lastPhotoSpot=(state.x,state.y)
