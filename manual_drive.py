@@ -114,7 +114,7 @@ def PhotoCollumn(state:RobotState=state):
         if(state.realRun):
             TakePhoto(state)
     if(state.spinn.stepCount == 0):
-        state.spinn.row="zenith"
+        state.spinn.row=5
         camera_servo.turn(180)
         time.sleep(1)
         if(state.realRun):
@@ -260,7 +260,7 @@ def SpinnTo(state:RobotState, target_angle=None):
      
 def TakePhoto(state:RobotState):
     
-    filename = f"r{state.spinn.row:02d}c{state.spinn.stepCount:02d}.jpg"
+    filename = f"r{int(state.spinn.row):02d}c{int(state.spinn.stepCount):02d}.jpg"
     filepath = os.path.join(state.spinn.panoramafolder, filename)
 
     
