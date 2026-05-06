@@ -326,13 +326,26 @@ def ReadSensors(state:RobotState=state):
         state.left_distance=left
         state.right_distance=right
         state.front_distance=front
-        if(state.direction == 1): #only add readings when moving forward, sideways are unreliable and break average atm
-            if(left>0): state.Sensors.add_reading("left", left, state.x, state.y, state.rotation)
+        #only add readings when moving forward, sideways are unreliable and break average atm
+        if(left>0): 
+            state.Sensors.add_reading("left", left, state.x, state.y, state.rotation)
+            if left<30:
+                state.world.obstructions.append(state.Sensors.left_points[-1])
+                if len(state.world.obstructions) > 100:
+                    state.world.obstructions.pop(0) 
 
-            if(front>0): state.Sensors.add_reading("front", front, state.x, state.y, state.rotation)
-
-            if(right>0): state.Sensors.add_reading("right", right, state.x, state.y, state.rotation)
-
+        if(front>0): 
+            state.Sensors.add_reading("front", front, state.x, state.y, state.rotation)
+            if front<20:
+                state.world.obstructions.append(state.Sensors.front_points[-1])
+                if len(state.world.obstructions) > 100:
+                    state.world.obstructions.pop(0)
+        if(right>0): 
+            state.Sensors.add_reading("right", right, state.x, state.y, state.rotation)
+            if right<30:
+                state.world.obstructions.append(state.Sensors.right_points[-1])
+                if len(state.world.obstructions) > 100:
+                    state.world.obstructions.pop(0)
         #state.scan.readings.append(SensorReading(time.time(),state.rotation,left,front,right))
         state.readings.append(SensorReading(time.time(),state.rotation,left,front,right))
         #ransac_lines = state.Sensors.ransac_line(state.Sensors.right_points+state.Sensors.left_points) if len(state.Sensors.right_points)+len(state.Sensors.left_points)>10 else None
@@ -508,12 +521,14 @@ def SteerCenter(state:RobotState):
     # if(0<state.front_distance<100):
     #     return(MoveToPoint(state, pos + 50*state.world.centerNormal if error>0 else pos - 50*state.world.centerNormal))
     if(0<state.front_distance<50):
-                return Obstructed(state)
-                delta = state.Sensors.front_points[0]-state.world.centerMean
-                side = np.sign(np.dot(delta, state.world.centerNormal))
-                offset = side * buffer_distance*2 * state.world.centerNormal
-                return MoveToPoint(state,state.position-50*state.world.centerNormal*side)
-                #return MoveToPoint(state,state.Sensors.front_points[-1]-50*state.world.centerNormal)
+        return Obstructed(state)
+        delta = state.Sensors.front_points[0]-state.world.centerMean
+        side = np.sign(np.dot(delta, state.world.centerNormal))
+        offset = side * buffer_distance*2 * state.world.centerNormal
+        return MoveToPoint(state,state.position-50*state.world.centerNormal*side)
+        #return MoveToPoint(state,state.Sensors.front_points[-1]-50*state.world.centerNormal)
+    for obs in state.world.obstructions:
+        if(distancePointOnLine(state.position))
     # if(0<state.front_distance<20):
     #     return MoveToPoint(state, (state.position - 30*state.world.centerNormal))
         

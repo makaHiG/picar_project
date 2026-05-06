@@ -1,5 +1,6 @@
 import multiprocessing as mp
 import time
+from queue import Full
 from .ultrasonic_avoidance_3pin import Ultrasonic_Avoidance2 as UA2
 from .new_ultrasonic_4pin import Ultrasonic_4pin as UA4
 class UltrasonicManager:
@@ -70,7 +71,12 @@ class UltrasonicManager:
             self.HandleUltrasonicData( self.right.distance(),self.right_values)
             self.right_distance = (sorted(self.right_values)[len(self.right_values)//2]) if self.right_values else 0
             #print(self.right_distance," | ",self.left_distance )
-            self.que.put((self.left_distance,self.front_distance,self.right_distance))
+            
+
+            try:
+                self.que.put((self.left_distance, self.front_distance, self.right_distance), block=False)
+            except Full:
+                pass
             time.sleep(0.01)
 
             
