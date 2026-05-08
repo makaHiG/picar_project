@@ -542,19 +542,12 @@ def SteerCenter(state:RobotState):
         offset = side * buffer_distance*2 * state.world.centerNormal
         return MoveToPoint(state,state.position-50*state.world.centerNormal*side)
         #return MoveToPoint(state,state.Sensors.front_points[-1]-50*state.world.centerNormal)
-    for obs in state.world.obstructions:
-        if(np.dot(state.forwardVector(),(obs-state.position))>0 and squared_distance(state.position,obs)<20*20):
-            if distancePointOnLine(obs,state.position,state,state.forwardVecotr())<25:
-                return Obstructed(state)
-    # if(0<state.front_distance<20):
-    #     return MoveToPoint(state, (state.position - 30*state.world.centerNormal))
-        
-    #     state.bashedHead+=1
-    #     wheels.backward()
-    #     wheels.speed = TURN_SPEED
-    #     time.sleep(1)
-    #     #state.mode = Mode.ORIENTING
-
+    # if len(state.world.obstructions):
+    #     for obs in state.world.obstructions:
+    #         if(np.dot(state.forwardVector(),(obs-state.position))>0 and squared_distance(state.position,obs)<20*20):
+    #             if distancePointOnLine(obs,state.position,state,state.forwardVecotr())<25:
+    #                 return Obstructed(state)
+    
     return SteerCenter
 def followLine(mean, dir,dist = 100):
     p = state.position
