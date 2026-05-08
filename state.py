@@ -15,6 +15,7 @@ class RobotState:
     def __init__(self):
         self.behaviour = None
         self.lastbehaviour = None
+        self.obstructions=[]
         self.bashedHead = 0
         self.rmse_right = [] # Root Mean Square Error for right sensor
         self.rmse_left = [] # Root Mean Square Error for left sensor
