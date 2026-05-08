@@ -88,7 +88,7 @@ debug = {
     "wheels": False,
     "camera": False,
     "sensors": True,
-    "gryo": False,
+    "gryo": True,
     "navigation": False
 }
 
