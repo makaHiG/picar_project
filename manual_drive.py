@@ -99,8 +99,8 @@ STEER_ANGLE = 30  # degrees left/right
 SPEED = 100       # speed 0-100 default 50
 TURN_TIME = 1.6
 #wheels.speed = SPEED
-TURN_SPEED = 100#default 30
-Travel_Speed = 44*3.14/15 #Speed from test,cm/s
+TURN_SPEED = 30#default 30
+Travel_Speed = 48*3.14/5.55 #Speed from test,cm/s
 
 
 
@@ -125,9 +125,20 @@ def CapturePanorama(state:RobotState):
     spinn: SpinnState
     if(spinn.active == False):
         if(state.realRun == True):
-            spinn.panoramafolder = os.path.join(spinn.batchfolder, "panorama"+str(spinn.panoramacounter))
-            # os.path.expanduser("~/photos")
-            os.makedirs(spinn.panoramafolder, exist_ok=True)
+            # spinn.panoramafolder = os.path.join(spinn.batchfolder, "panorama"+str(spinn.panoramacounter))
+            # # os.path.expanduser("~/photos")
+            # os.makedirs(spinn.panoramafolder, exist_ok=True)
+            base = os.path.join(spinn.batchfolder, "panorama")
+
+            counter = 1
+            folder = base
+
+            while os.path.exists(folder):
+                folder = f"{base}({counter})"
+                counter += 1
+
+            spinn.panoramafolder = folder
+            os.makedirs(spinn.panoramafolder)
         spinn.stepCount = 0
         spinn.startRotation = state.rotation
         spinn.active = True
@@ -532,8 +543,9 @@ def SteerCenter(state:RobotState):
         return MoveToPoint(state,state.position-50*state.world.centerNormal*side)
         #return MoveToPoint(state,state.Sensors.front_points[-1]-50*state.world.centerNormal)
     for obs in state.world.obstructions:
-        if(squared_distance(state.position,obs)>20*20):
-            if(distancePointOnLine(obs,state.position,))
+        if(np.dot(state.forwardVector(),(obs-state.position))>0 and squared_distance(state.position,obs)<20*20):
+            if distancePointOnLine(obs,state.position,state,state.forwardVecotr())<25:
+                return Obstructed(state)
     # if(0<state.front_distance<20):
     #     return MoveToPoint(state, (state.position - 30*state.world.centerNormal))
         
