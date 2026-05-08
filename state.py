@@ -15,7 +15,7 @@ class RobotState:
     def __init__(self):
         self.behaviour = None
         self.lastbehaviour = None
-        self.obstructions=[]
+        
         self.bashedHead = 0
         self.rmse_right = [] # Root Mean Square Error for right sensor
         self.rmse_left = [] # Root Mean Square Error for left sensor
@@ -60,6 +60,7 @@ class WorldState:
     def __init__(self):
         self.rightWall = []
         self.leftWall = []
+        self.obstructions=[]
         self.corridorWidth = 200
         #self.centerLine = np.array([0.0, 0.0])
         self.centerDirection = np.array([1.0, 0.0])
