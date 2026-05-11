@@ -408,7 +408,14 @@ def EstimateDistance(state):
             #sock.sendto(json.dumps([state.x,state.y]).encode(), (IP, PORT))
             #time.sleep(0.05)
 
-                   
+def forwardCast(state):
+    if len(state.world.obstructions):
+        for obs in state.world.obstructions:
+            if(np.dot(state.forwardVector(),(obs-state.position))>0 and squared_distance(state.position,obs)<50*50):
+                if distancePointOnLine(obs,state.position,state.forwardVector())<25:
+                    return obs
+         
+    return None
 
 def SteerCenter(state:RobotState):
     state.direction = 1
@@ -545,7 +552,7 @@ def SteerCenter(state:RobotState):
         #return MoveToPoint(state,state.Sensors.front_points[-1]-50*state.world.centerNormal)
     if len(state.world.obstructions):
         for obs in state.world.obstructions:
-            if(np.dot(state.forwardVector(),(obs-state.position))>0 and squared_distance(state.position,obs)<20*20):
+            if(np.dot(state.forwardVector(),(obs-state.position))>0 and squared_distance(state.position,obs)<50*50):
                 if distancePointOnLine(obs,state.position,state.forwardVector())<25:
                     return Obstructed(state)
     
@@ -635,6 +642,12 @@ def Obstructed(state: RobotState):
         ])
         print("obstructed runs")
         
+        obs = forwardCast()
+        if (obs!= None):
+            shiftAwayPoint = state.position+ state.position-obs
+            return(MoveToPoint(shiftAwayPoint))
+
+
         if side == "left":
             if(is_aligned(robot_dir,left_normal,25)):
                 followLine(startPoint, left_normal)
