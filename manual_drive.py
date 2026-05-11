@@ -386,7 +386,7 @@ def ReadSensors(state:RobotState=state):
         if len(state.readings)>10:
             state.readings.pop(0)
         if(debug["sensors"]):
-            print(left, "|",front,"|",right)
+            print(left, "|",front,"|",right, "|", time.time())
             #print(corridorAngle)
 def ReadGyro():
     global dt
@@ -546,7 +546,7 @@ def SteerCenter(state:RobotState):
     if len(state.world.obstructions):
         for obs in state.world.obstructions:
             if(np.dot(state.forwardVector(),(obs-state.position))>0 and squared_distance(state.position,obs)<20*20):
-                if distancePointOnLine(obs,state.position,state,state.forwardVecotr())<25:
+                if distancePointOnLine(obs,state.position,state,state.forwardVector())<25:
                     return Obstructed(state)
     
     return SteerCenter
@@ -639,6 +639,7 @@ def Obstructed(state: RobotState):
             if(is_aligned(robot_dir,left_normal,25)):
                 followLine(startPoint, left_normal)
             else:
+                
                 return SpinnTo(state,math.degrees(math.atan2(left_normal[1],left_normal[0])))
             if(0<state.right_distance<safeDistance):
                 safePoint = state.position.copy()
