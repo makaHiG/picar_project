@@ -109,7 +109,7 @@ def PhotoCollumn(state:RobotState=state):
     for i in range(len(state.rowAngles)):
         angle = state.rowAngles[i]
         camera_servo.turn(angle)
-        time.sleep(1)
+        #time.sleep(1) May not be needed, as warmup runs for half a second anyway
         state.spinn.row=i
         if(state.realRun):
             TakePhoto(state)
@@ -432,7 +432,7 @@ def SteerCenter(state:RobotState):
 
         angle_error = (state.rotation - center_angle + 180) % 360 - 180
         
-        if(abs(angle_error)>10):
+        if(abs(angle_error)>5):
             return SpinnTo(state,center_angle)
         state.lastPhotoSpot=(state.x,state.y)
         wheels.stop()
@@ -645,7 +645,7 @@ def Obstructed(state: RobotState):
         obs = forwardCast(state)
         if (obs!= None):
             shiftAwayPoint = state.position+ state.position-obs
-            return(MoveToPoint(shiftAwayPoint))
+            return(MoveToPoint(state,shiftAwayPoint))
 
 
         if side == "left":
