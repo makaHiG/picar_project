@@ -60,7 +60,7 @@ MPU6050_ADDR = 0x68
 direction = False
 PWR_MGMT_1 = 0x6B
 GYRO_ZOUT_H = 0x47
-
+print(sys.argv)
 bus.write_byte_data(MPU6050_ADDR, PWR_MGMT_1, 0)
 # Gyro functions
 def read_word(reg):
