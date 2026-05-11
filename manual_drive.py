@@ -113,12 +113,12 @@ def PhotoCollumn(state:RobotState=state):
         state.spinn.row=i
         if(state.realRun):
             TakePhoto(state)
-    if(state.spinn.stepCount == 0):
-        state.spinn.row=5
-        camera_servo.turn(180)
-        time.sleep(1)
-        if(state.realRun):
-            TakePhoto(state)
+    # if(state.spinn.stepCount == 0):
+    #     state.spinn.row=5
+    #     camera_servo.turn(180)
+    #     time.sleep(1)
+    #     if(state.realRun):
+    #         TakePhoto(state)
 
 def CapturePanorama(state:RobotState):
     spinn = state.spinn
