@@ -643,7 +643,7 @@ def Obstructed(state: RobotState):
                 return SpinnTo(state,math.degrees(math.atan2(left_normal[1],left_normal[0])))
             if(0<state.right_distance<safeDistance):
                 safePoint = state.position.copy()
-            if(distancePointOnLine(state.Sensors.front_points[-1], startPoint, left_normal)<buffer):
+            if(distancePointOnLine(state.Sensors.right_points[-1], startPoint, left_normal)<buffer):
                 startPoint -= state.world.centerDirection* buffer
         else:
             if(is_aligned(robot_dir,right_normal,25)):
@@ -652,17 +652,18 @@ def Obstructed(state: RobotState):
                 return SpinnTo(state,math.degrees(math.atan2(right_normal[1],right_normal[0])))
             if(0<state.left_distance<safeDistance):
                 safePoint = state.position.copy()
-            
+            if(distancePointOnLine(state.Sensors.left_points[-1], startPoint, left_normal)<buffer):
+                startPoint -= state.world.centerDirection* buffer
             
         if(np.linalg.norm(state.position-safePoint)> buffer):
             state.world.centerMean = state.position
             return SteerCenter#MoveToPoint(state,state.position+state.world.centerDirection*50,SteerCenter)
         if(0<state.front_distance<35 ):##Need to check for alignment/position, otherwise it will just resolve both
-            if(side == "right" and is_aligned(robot_dir,right_normal,25)):
+            if(side == "right" and is_aligned(robot_dir,right_normal,15)):
                 
                 checked_right = True
                 side = "left"
-            if(side == "left" and is_aligned(robot_dir,left_normal,25)):
+            elif(side == "left" and is_aligned(robot_dir,left_normal,15)):
                 
                 checked_left = True
                 side = "right"
