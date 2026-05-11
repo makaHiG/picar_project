@@ -642,7 +642,7 @@ def Obstructed(state: RobotState):
         ])
         print("obstructed runs")
         
-        obs = forwardCast()
+        obs = forwardCast(state)
         if (obs!= None):
             shiftAwayPoint = state.position+ state.position-obs
             return(MoveToPoint(shiftAwayPoint))
