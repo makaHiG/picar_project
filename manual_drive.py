@@ -88,7 +88,7 @@ debug = {
     "wheels": False,
     "camera": False,
     "sensors": True,
-    "gryo": True,
+    "gryo": False,
     "navigation": False
 }
 
@@ -316,6 +316,7 @@ def RealRun(state:RobotState): #Setup for real run, create folders and set camer
     run_folder = os.path.join(base_folder, f"run_{run_id}")
     if len(sys.argv)>1:
         run_folder = os.path.join(base_folder,sys.argv[1])
+        print(sys.argv)[1]
     
     state.spinn.batchfolder = run_folder
     state.realRun = True
