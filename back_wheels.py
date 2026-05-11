@@ -119,7 +119,7 @@ class Back_Wheels(object):
 		self._speedR = speed
 		''' Set moving speeds '''
 		#self.left_wheel.speed = self._speed
-		self.right_wheel.speed = self._speedR
+		self.right_wheel.speed = int(self._speedR * self.RIGHTSPEED_OFFSET)
 		##self._debug_('Set speedR to %s' % self._speed)
 
 	@property
@@ -130,7 +130,7 @@ class Back_Wheels(object):
 	def speedL(self, speed):
 		self._speedL = speed
 		''' Set moving speeds '''
-		self.left_wheel.speed = self._speedL
+		self.left_wheel.speed = int(self._speedL * self.LEFTSPEED_OFFSET)
 		##self.right_wheel.speed = self._speedR
 		##self._debug_('Set speedR to %s' % self._speed)
 
