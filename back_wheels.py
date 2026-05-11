@@ -26,12 +26,14 @@ class Back_Wheels(object):
 
 	_DEBUG = False
 	_DEBUG_INFO = 'DEBUG "back_wheels.py":'
+	
 
 	def __init__(self, debug=False, bus_number=1, db="config"):
 		''' Init the direction channel and pwm channel '''
 		self.forward_A = True
 		self.forward_B = True
-
+		self.RIGHTSPEED_OFFSET = 0.8
+		self.LEFTSPEED_OFFSET = 1
 		self.db = filedb.fileDB(db=db)
 
 		self.forward_A = 1 # Changed these ##int(self.db.get('forward_A', default_value=1))
@@ -105,8 +107,8 @@ class Back_Wheels(object):
 	def speed(self, speed):
 		self._speed = speed
 		''' Set moving speeds '''
-		self.left_wheel.speed = self._speed
-		self.right_wheel.speed = self._speed
+		self.left_wheel.speed = int(self._speed *self.LEFTSPEED_OFFSET )
+		self.right_wheel.speed = int(self._speed *self.RIGHTSPEED_OFFSET )
 		self._debug_('Set speed to %s' % self._speed)
 	@property
 	def speedR(self):
