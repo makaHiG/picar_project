@@ -109,7 +109,7 @@ def PhotoCollumn(state:RobotState=state):
     for i in range(len(state.rowAngles)):
         angle = state.rowAngles[i]
         camera_servo.turn(angle)
-        #time.sleep(1) May not be needed, as warmup runs for half a second anyway
+        time.sleep(1) #Probably needed   #May not be needed, as warmup runs for half a second anyway
         state.spinn.row=i
         if(state.realRun):
             TakePhoto(state)
