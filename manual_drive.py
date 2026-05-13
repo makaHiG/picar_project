@@ -326,7 +326,7 @@ def RealRun(state:RobotState): #Setup for real run, create folders and set camer
     "--set-fmt-video=width=1920,height=1080,pixelformat=MJPG",
     "-c", "auto_exposure=3",
     #"-c", "exposure_time_absolute=120",
-    "-c", "gain=0"
+    #"-c", "gain=0"
     ])
     
     # subprocess.run([
@@ -337,6 +337,11 @@ def RealRun(state:RobotState): #Setup for real run, create folders and set camer
     # ], check=True)
 
 def ReadSensors(state:RobotState=state):
+    state.world.obstructions = [
+        (obs, timer)
+        for obs, timer in state.world.obstructions
+        if now - timer <= 5
+    ]
     while not sensor_queue.empty():
         left,front,right = sensor_queue.get()
         state.left_distance=left
@@ -346,20 +351,20 @@ def ReadSensors(state:RobotState=state):
         if(left>0): 
             state.Sensors.add_reading("left", left, state.x, state.y, state.rotation)
             if left<30:
-                state.world.obstructions.append(state.Sensors.left_points[-1])
+                state.world.obstructions.append(state.Sensors.left_points[-1],time.time())
                 if len(state.world.obstructions) > 100:
                     state.world.obstructions.pop(0) 
 
         if(front>0): 
             state.Sensors.add_reading("front", front, state.x, state.y, state.rotation)
             if front<20:
-                state.world.obstructions.append(state.Sensors.front_points[-1])
+                state.world.obstructions.append(state.Sensors.front_points[-1],time.time())
                 if len(state.world.obstructions) > 100:
                     state.world.obstructions.pop(0)
         if(right>0): 
             state.Sensors.add_reading("right", right, state.x, state.y, state.rotation)
             if right<30:
-                state.world.obstructions.append(state.Sensors.right_points[-1])
+                state.world.obstructions.append(state.Sensors.right_points[-1],time.time())
                 if len(state.world.obstructions) > 100:
                     state.world.obstructions.pop(0)
         #state.scan.readings.append(SensorReading(time.time(),state.rotation,left,front,right))
@@ -408,11 +413,13 @@ def EstimateDistance(state):
             #sock.sendto(json.dumps([state.x,state.y]).encode(), (IP, PORT))
             #time.sleep(0.05)
 
-def forwardCast(state):
-    if len(state.world.obstructions):
-        for obs in state.world.obstructions:
-            if(np.dot(state.forwardVector(),(obs-state.position))>0 and squared_distance(state.position,obs)<50*50):
-                if distancePointOnLine(obs,state.position,state.forwardVector())<25:
+def forwardCast(state, vector = None):
+    if vector is None:
+        vector = state.forwardVector()
+    if len(state.world.obstructions>0):
+        for obs, timer in state.world.obstructions:
+            if(np.dot(vector,(obs-state.position))>0 and squared_distance(state.position,obs)<50*50):
+                if distancePointOnLine(obs,state.position,vector)<25:
                     return obs
          
     return None
@@ -551,7 +558,7 @@ def SteerCenter(state:RobotState):
         return MoveToPoint(state,state.position-50*state.world.centerNormal*side)
         #return MoveToPoint(state,state.Sensors.front_points[-1]-50*state.world.centerNormal)
     if len(state.world.obstructions):
-        for obs in state.world.obstructions:
+        for obs ,timer in state.world.obstructions:
             if(np.dot(state.forwardVector(),(obs-state.position))>0 and squared_distance(state.position,obs)<50*50):
                 if distancePointOnLine(obs,state.position,state.forwardVector())<25:
                     return Obstructed(state)
@@ -640,12 +647,14 @@ def Obstructed(state: RobotState):
             math.cos(math.radians(state.rotation)),
             math.sin(math.radians(state.rotation))
         ])
-        print("obstructed runs")
+        
         
         obs = forwardCast(state)
         if (obs!= None):
-            shiftAwayPoint = state.position+ state.position-obs
-            return(MoveToPoint(state,shiftAwayPoint))
+            if(forwardCast(state, -state.forwardVector()) == None):
+                #obs = forwardCast(state, left_normal)
+                shiftAwayPoint = state.position+ state.position-obs
+                return(MoveToPoint(state,shiftAwayPoint))
 
 
         if side == "left":
