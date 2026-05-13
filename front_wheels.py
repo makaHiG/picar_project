@@ -73,7 +73,7 @@ class Front_Wheels(object):
 		start_angle = self.current_angle
 		start_time = time.time()
 
-		transition_time = 10.0
+		transition_time = 1.0
 
 		while True:
 
