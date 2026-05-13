@@ -28,6 +28,7 @@ class Front_Wheels(object):
 		self._channel = channel
 		self._straight_angle = 90
 		self.turning_max = 45
+		self.current_angle = self._straight_angle
 		self._turning_offset = int(self.db.get('turning_offset', default_value=0))
 
 		self.wheel = Servo.Servo(self._channel, bus_number=bus_number, offset=self.turning_offset)
@@ -66,13 +67,39 @@ class Front_Wheels(object):
 		# 	angle = self._angle["right"]
 		angle = min(180,max(0,angle))
 		self.wheel.write(angle)
-	# def smooth_turn(self, angle):
-	# 	startTime = time.time()
-		
-	# 	transitionTime = 1
-	# 	while time.time()<startTime+transitionTime:
-	# 		intermediateAngle =  
-	# 		self.wheel.write()	
+	
+	def smooth_turn(self, target_angle):
+
+		start_angle = self.current_angle
+		start_time = time.time()
+
+		transition_time = 1.0
+
+		while True:
+
+			elapsed = time.time() - start_time
+
+			if elapsed >= transition_time:
+				break
+
+			# Normalize to 0 -> 1
+			t = elapsed / transition_time
+
+			# Smoothstep easing
+			smooth_t = 3 * t**2 - 2 * t**3
+
+			# Interpolate angle
+			intermediate_angle = (
+				start_angle
+				+ (target_angle - start_angle) * smooth_t
+			)
+
+			self.wheel.write(int(intermediate_angle))
+
+			time.sleep(0.01)
+
+		self.wheel.write(int(target_angle))
+		self.current_angle = target_angle
 	# 	# ''' Turn the front wheels to the giving angle '''
 	# 	# self._debug_("Turn to %s " % angle)
 	# 	# if angle < self._angle["left"]:
