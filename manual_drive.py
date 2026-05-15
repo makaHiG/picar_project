@@ -96,7 +96,7 @@ debug = {
 
 # Steering & speed parameters
 STEER_ANGLE = 30  # degrees left/right
-SPEED = 100       # speed 0-100 default 50
+SPEED = 50       # speed 0-100 default 50
 TURN_TIME = 1.6
 #wheels.speed = SPEED
 TURN_SPEED = 50#default 30
@@ -431,7 +431,7 @@ def SteerCenter(state:RobotState):
         c0 = state.world.centerMean
         d  = state.world.centerDirection
         d  = d / np.linalg.norm(d)  # make sure it's normalized
-
+        
         proj = c0 + np.dot(p - c0, d) * d
         if(np.linalg.norm(proj-state.position)>10):
             return MoveToPoint(state, proj)
@@ -441,6 +441,8 @@ def SteerCenter(state:RobotState):
         
         if(abs(angle_error)>5):
             return SpinnTo(state,center_angle)
+        if((state.right_distance<100 or state.left_distance<100) ):
+            MoveToPoint(state.Sensors.right_points[-1])
         state.lastPhotoSpot=(state.x,state.y)
         wheels.stop()
         #state.mode = Mode.SPINNING
