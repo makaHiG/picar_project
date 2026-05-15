@@ -24,7 +24,7 @@ class RobotState:
         self.position = np.array([0.0, 0.0])
         self.destination = np.array([0.0, 0.0])
         self.world = WorldState()
-        self.rowAngles = [30,50,70,90,110,130,150,170]
+        self.rowAngles = [30,60,90,120,150,180]
         self.Sensors = SensorState()
         self.direction = 0
         self.rotation = 0
