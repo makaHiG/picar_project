@@ -442,7 +442,7 @@ def SteerCenter(state:RobotState):
         if(abs(angle_error)>5):
             return SpinnTo(state,center_angle)
         if((state.right_distance<100 or state.left_distance<100) ):
-            MoveToPoint(state.Sensors.right_points[-1])
+            MoveToPoint(state.Sensors.right_points[-1]+state.Sensors.left_points[-1]/2)
         state.lastPhotoSpot=(state.x,state.y)
         wheels.stop()
         #state.mode = Mode.SPINNING
