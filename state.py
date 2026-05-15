@@ -50,6 +50,20 @@ class RobotState:
         ])
         return robot_dir
         
+    def rightVector(self):
+        angle = self.rotation - 90
+        robot_dir = np.array([
+        math.cos(math.radians(angle)),
+        math.sin(math.radians(angle))
+        ])
+        return robot_dir
+    def leftVector(self):
+        angle = self.rotation + 90
+        robot_dir = np.array([
+        math.cos(math.radians(angle)),
+        math.sin(math.radians(angle))
+        ])
+        return robot_dir
             
 class ScanState:
     def __init__(self):
