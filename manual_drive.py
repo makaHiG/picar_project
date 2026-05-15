@@ -170,7 +170,7 @@ def CapturePanorama(state:RobotState):
             return SteerCenter
     else:
         mod = error /30
-        wheels.speed = int(min(50,max(15,TURN_SPEED*mod)))
+        wheels.speed = int(min(50,max(25,TURN_SPEED*mod)))
         if error<0 :
             wheels.spinn_right()
             state.direction = 0
