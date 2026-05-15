@@ -351,20 +351,20 @@ def ReadSensors(state:RobotState=state):
         if(left>0): 
             state.Sensors.add_reading("left", left, state.x, state.y, state.rotation)
             if left<30:
-                state.world.obstructions.append(state.Sensors.left_points[-1],time.time())
+                state.world.obstructions.append([state.Sensors.left_points[-1],time.time()])
                 if len(state.world.obstructions) > 100:
                     state.world.obstructions.pop(0) 
 
         if(front>0): 
             state.Sensors.add_reading("front", front, state.x, state.y, state.rotation)
             if front<20:
-                state.world.obstructions.append(state.Sensors.front_points[-1],time.time())
+                state.world.obstructions.append([state.Sensors.front_points[-1],time.time()])
                 if len(state.world.obstructions) > 100:
                     state.world.obstructions.pop(0)
         if(right>0): 
             state.Sensors.add_reading("right", right, state.x, state.y, state.rotation)
             if right<30:
-                state.world.obstructions.append(state.Sensors.right_points[-1],time.time())
+                state.world.obstructions.append([state.Sensors.right_points[-1],time.time()])
                 if len(state.world.obstructions) > 100:
                     state.world.obstructions.pop(0)
         #state.scan.readings.append(SensorReading(time.time(),state.rotation,left,front,right))
