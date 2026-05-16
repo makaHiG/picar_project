@@ -41,7 +41,7 @@ class RobotState:
         self.scan = ScanState()
         self.spinn = SpinnState()
         self.lastPhotoSpot = (0,0)
-        self.photoInterval = 600
+        self.photoInterval = 1000
         self.realRun = False
     def forwardVector(self):
         robot_dir = np.array([

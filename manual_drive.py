@@ -96,7 +96,7 @@ debug = {
 
 # Steering & speed parameters
 STEER_ANGLE = 30  # degrees left/right
-SPEED = 50       # speed 0-100 default 50
+SPEED = 60       # speed 0-100 default 50
 TURN_TIME = 1.6
 #wheels.speed = SPEED
 TURN_SPEED = 50#default 30
@@ -441,7 +441,7 @@ def SteerCenter(state:RobotState):
         
         if(abs(angle_error)>5):
             return SpinnTo(state,center_angle)
-        if((state.right_distance<100 or state.left_distance<100) ):
+        if((state.right_distance<100 or state.left_distance<100) and state.right_distance>0 and state.left_distance>0):
             midpoint = state.position+ (state.rightVector()*state.right_distance+state.leftVector()*state.left_distance)/2
             MoveToPoint(state,midpoint)
         state.lastPhotoSpot=(state.x,state.y)
