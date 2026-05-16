@@ -109,16 +109,16 @@ def PhotoCollumn(state:RobotState=state):
     for i in range(len(state.rowAngles)):
         angle = state.rowAngles[i]
         camera_servo.smooth_turn(angle)
-        time.sleep(0.3) #Probably needed   #May not be needed, as warmup runs for half a second anyway
+        time.sleep(1) #Probably needed   #May not be needed, as warmup runs for half a second anyway
         state.spinn.row=i
         if(state.realRun):
             TakePhoto(state)
-    # if(state.spinn.stepCount == 0):
-    #     state.spinn.row=5
-    #     camera_servo.smooth_turn(180)
-    #     time.sleep(1)
-    #     if(state.realRun):
-    #         TakePhoto(state)
+    if(state.spinn.stepCount == 0 or state.spinn.stepCount == 3):
+        state.spinn.row=5
+        camera_servo.smooth_turn(180)
+        time.sleep(1)
+        if(state.realRun):
+            TakePhoto(state)
 
 def CapturePanorama(state:RobotState):
     spinn = state.spinn

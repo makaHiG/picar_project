@@ -51,6 +51,7 @@ class Front_Wheels(object):
 	def turn_straight(self):
 		''' Turn the front wheels back straight '''
 		self._debug_("Turn straight")
+		self.current_angle = self._angle["straight"]
 		self.wheel.write(self._angle["straight"])
 
 	def turn_right(self):
