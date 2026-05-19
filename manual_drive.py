@@ -96,7 +96,7 @@ debug = {
 
 # Steering & speed parameters
 STEER_ANGLE = 30  # degrees left/right
-SPEED = 60       # speed 0-100 default 50
+SPEED = 100       # speed 0-100 default 50
 TURN_TIME = 1.6
 #wheels.speed = SPEED
 TURN_SPEED = 50#default 30
