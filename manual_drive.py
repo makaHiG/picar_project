@@ -838,7 +838,7 @@ try:
         ReadGyro()
         ReadSensors()
         EstimateDistance(state)
-        read_line_follower()
+        print(read_line_follower())
         
 except KeyboardInterrupt:
     wheels.stop()
