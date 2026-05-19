@@ -32,7 +32,7 @@ class Back_Wheels(object):
 		''' Init the direction channel and pwm channel '''
 		self.forward_A = True
 		self.forward_B = True
-		self.RIGHTSPEED_OFFSET = 0.8
+		self.RIGHTSPEED_OFFSET = 1
 		self.LEFTSPEED_OFFSET = 1
 		self.db = filedb.fileDB(db=db)
 
