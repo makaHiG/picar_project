@@ -21,6 +21,7 @@ import numpy as np
 from .ultrasonic_manager import UltrasonicManager
 #from . import ultrasonic_module as UA4
 from .state import RobotState,Mode,ScanState,SpinnState
+from .Line_Follower import Line_Follower
 
 import subprocess
 import os
@@ -48,6 +49,7 @@ os.makedirs(base_folder, exist_ok=True)
 # Initialize ultrasonic sensors
 sensor_queue = Queue()
 US_Manager = UltrasonicManager(20, (16,12), (26,19), sensor_queue)
+line_follower = Line_Follower()
 
 ## SocketSetup
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -70,10 +72,14 @@ def read_word(reg):
     if value >= 0x8000:
         value = -((65535 - value) + 1)
     return value
-
+def read_line_follower():
+    try:
+        return line_follower.read_analog()
+    except IOError:
+        print("Line follower read error. Please check the wiring.")
+        return [0, 0, 0, 0, 0]
 def read_gyro_z():
     return read_word(GYRO_ZOUT_H)
-
 # --- Calibration ---
 samples = []
 for _ in range(100):
@@ -832,6 +838,7 @@ try:
         ReadGyro()
         ReadSensors()
         EstimateDistance(state)
+        read_line_follower()
         
 except KeyboardInterrupt:
     wheels.stop()
