@@ -422,7 +422,7 @@ def EstimateDistance(state):
 def forwardCast(state, vector = None):
     if vector is None:
         vector = state.forwardVector()
-    if len(state.world.obstructions>0):
+    if len(state.world.obstructions)>0:
         for obs, timer in state.world.obstructions:
             if(np.dot(vector,(obs-state.position))>0 and squared_distance(state.position,obs)<50*50):
                 if distancePointOnLine(obs,state.position,vector)<25:
