@@ -74,7 +74,7 @@ def read_word(reg):
     return value
 def read_line_follower():
     try:
-        return line_follower.read_analog()
+        return line_follower.get_average(5)
     except IOError:
         print("Line follower read error. Please check the wiring.")
         return [0, 0, 0, 0, 0]
@@ -838,7 +838,10 @@ try:
         ReadGyro()
         ReadSensors()
         EstimateDistance(state)
-        print(read_line_follower())
+        if min(read_line_follower())<50:
+            state.behaviour = ManualDrive
+            wheels.stop()
+            print("Floor lost, switching to manual control")
         
 except KeyboardInterrupt:
     wheels.stop()
