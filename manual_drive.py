@@ -838,10 +838,10 @@ try:
         ReadGyro()
         ReadSensors()
         EstimateDistance(state)
-        if min(read_line_follower())<50:
-            state.behaviour = ManualDrive
-            wheels.stop()
-            print("Floor lost, switching to manual control")
+        if min(read_line_follower())<30:
+            # state.behaviour = ManualDrive
+            # wheels.stop()
+            print("Line lost, switching to manual control")
         
 except KeyboardInterrupt:
     wheels.stop()
