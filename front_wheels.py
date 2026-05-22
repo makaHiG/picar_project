@@ -69,7 +69,7 @@ class Front_Wheels(object):
 		angle = min(180,max(0,angle))
 		self.wheel.write(angle)
 	
-	def smooth_turn(self, target_angle):
+	def smooth_turn(self, target_angle,tracker=None):
 
 		start_angle = self.current_angle
 		start_time = time.time()
@@ -79,7 +79,8 @@ class Front_Wheels(object):
 		while True:
 
 			elapsed = time.time() - start_time
-
+			if(tracker is not None):
+				tracker()
 			if elapsed >= transition_time:
 				break
 

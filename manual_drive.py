@@ -114,14 +114,16 @@ Travel_Speed = 48*3.14/5.55 #Speed from test,cm/s
 def PhotoCollumn(state:RobotState=state):
     for i in range(len(state.rowAngles)):
         angle = state.rowAngles[i]
-        camera_servo.smooth_turn(angle)
-        time.sleep(1) #Probably needed   #May not be needed, as warmup runs for half a second anyway
+        camera_servo.smooth_turn(angle,showOff)
         state.spinn.row=i
         if(state.realRun):
+            time.sleep(1) #Probably needed   #May not be needed, as warmup runs for half a second anyway
             TakePhoto(state)
+        else:
+            time.sleep(0.3)
     if(state.spinn.stepCount == 0 or state.spinn.stepCount == 3):
         state.spinn.row=5
-        camera_servo.smooth_turn(180)
+        camera_servo.smooth_turn(180,showOff)
         time.sleep(1)
         if(state.realRun):
             TakePhoto(state)
@@ -184,6 +186,67 @@ def CapturePanorama(state:RobotState):
             wheels.spinn_left()
             state.direction = 0
     return CapturePanorama
+
+
+def CapturePanoramaShowOff(state:RobotState):
+    spinn = state.spinn
+    spinn: SpinnState
+    if(spinn.active == False):
+        # if(state.realRun == True):
+        #     # spinn.panoramafolder = os.path.join(spinn.batchfolder, "panorama"+str(spinn.panoramacounter))
+        #     # # os.path.expanduser("~/photos")
+        #     # os.makedirs(spinn.panoramafolder, exist_ok=True)
+        #     base = os.path.join(spinn.batchfolder, "panorama")
+
+        #     counter = 1
+        #     folder = base
+
+        #     while os.path.exists(folder):
+        #         folder = f"{base}({counter})"
+        #         counter += 1
+
+        #     spinn.panoramafolder = folder
+        #     os.makedirs(spinn.panoramafolder)
+        spinn.stepCount = 0
+        spinn.startRotation = state.rotation
+        spinn.active = True
+        spinn.targetRotation = spinn.startRotation
+        #UpDownTest(state)
+    error = spinn.targetRotation-state.rotation
+
+    if abs(error)<0.5:
+        wheels.stop()
+        time.sleep(1)
+        if(spinn.stepCount<spinn.maxSteps):
+            
+            PhotoCollumn(state)
+            spinn.stepCount += 1
+            spinn.targetRotation = spinn.startRotation + 360/spinn.maxSteps * spinn.stepCount
+        else: 
+            spinn.active=False
+            if(state.realRun==True):
+                spotInfo = {
+                    "name": f"info_panorama_{state.spinn.panoramacounter}",
+                    "coordinates": state.position.tolist(),
+                    "rotation": state.spinn.startRotation
+                }
+                filename = os.path.join(state.spinn.panoramafolder, f"info_panorama_{state.spinn.panoramacounter}.json")
+                with open(filename, "w") as f:
+                    json.dump(spotInfo, f)
+            state.spinn.panoramacounter+=1
+            #Adding 360 since we spun a circle
+            state.corridorAngle = state.corridorAngle + 360 ## Questionable
+            return CapturePanoramaShowOff
+    else:
+        mod = error /30
+        wheels.speed = int(min(50,max(25,TURN_SPEED*mod)))
+        if error<0 :
+            wheels.spinn_right()
+            state.direction = 0
+        else:
+            wheels.spinn_left()
+            state.direction = 0
+    return CapturePanoramaShowOff
 
 def MoveTo(state: RobotState, point: np.ndarray):
 
@@ -401,13 +464,7 @@ def ReadSensors(state:RobotState=state):
             print(left, "|",front,"|",right, "|", time.time())
             #print(corridorAngle)
 lastSend = 0
-def ReadGyro():
-    global dt
-    global lastSend
-    raw = read_gyro_z()
-    gyro_z = (raw - offset) / 131.0  # deg/sec
-    state.rotation += gyro_z * dt
-    state.npRotation = np.array([np.cos(math.radians(state.rotation)), np.sin(math.radians(state.rotation))])
+def showOff():
     if time.time() - lastSend > 0.01:
         data = { "yaw" :state.rotation,
                     "pitch": camera_servo.current_angle,
@@ -420,6 +477,15 @@ def ReadGyro():
         
         except OSError as e:
                 print(f"Network error: {e}")
+
+def ReadGyro():
+    global dt
+    global lastSend
+    raw = read_gyro_z()
+    gyro_z = (raw - offset) / 131.0  # deg/sec
+    state.rotation += gyro_z * dt
+    state.npRotation = np.array([np.cos(math.radians(state.rotation)), np.sin(math.radians(state.rotation))])
+    
     if debug["gryo"]:
         print(f"Rate: {gyro_z:6.2f} deg/s | Angle: {state.rotation:7.2f} deg")
 
