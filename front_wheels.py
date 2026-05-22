@@ -98,7 +98,7 @@ class Front_Wheels(object):
 				tracker(intermediate_angle)
 			self.wheel.write(int(intermediate_angle))
 
-			time.sleep(0.01)
+			#time.sleep(0.01)
 		
 		self.wheel.write(int(target_angle))
 		self.current_angle = target_angle
