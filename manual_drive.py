@@ -408,7 +408,7 @@ def ReadGyro():
     gyro_z = (raw - offset) / 131.0  # deg/sec
     state.rotation += gyro_z * dt
     state.npRotation = np.array([np.cos(math.radians(state.rotation)), np.sin(math.radians(state.rotation))])
-    if time.time() - lastSend > 0.1:
+    if time.time() - lastSend > 0.01:
         data = { "yaw" :state.rotation,
                     "pitch": camera_servo.current_angle,
                     
@@ -818,7 +818,10 @@ def ManualDrive(state:RobotState):
         #state.mode = Mode.SPINNING
         RealRun(state)
         return CapturePanorama
-        
+    elif key =="4": #testPhoto
+        #state.mode = Mode.SPINNING
+        #RealRun(state)
+        return CapturePanorama    
     elif key =="e":
         state.targetAngle = state.rotation
         state.world.centerDirection = np.array([math.cos(math.radians(state.rotation)), math.sin(math.radians(state.rotation))])
