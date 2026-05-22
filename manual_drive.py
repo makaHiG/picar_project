@@ -403,6 +403,7 @@ def ReadSensors(state:RobotState=state):
 lastSend = 0
 def ReadGyro():
     global dt
+    global lastSend
     raw = read_gyro_z()
     gyro_z = (raw - offset) / 131.0  # deg/sec
     state.rotation += gyro_z * dt
