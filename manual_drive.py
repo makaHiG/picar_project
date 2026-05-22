@@ -376,37 +376,48 @@ def ReadSensors(state:RobotState=state):
         #state.scan.readings.append(SensorReading(time.time(),state.rotation,left,front,right))
         state.readings.append(SensorReading(time.time(),state.rotation,left,front,right))
         #ransac_lines = state.Sensors.ransac_line(state.Sensors.right_points+state.Sensors.left_points) if len(state.Sensors.right_points)+len(state.Sensors.left_points)>10 else None
-        data = {
-            "time": time.time(),
-            "x":state.x,
-            "y":state.y,
-            "rotation":state.rotation,
-            "left_distance":left,
-            "right_distance":right,
-            "front_distance":front,
-            "centerDirection": state.world.centerDirection.tolist(),
-            "centerMean": state.world.centerMean.tolist(),
-            #"ransacLines": ransac_lines.tolist() if ransac_lines is not None else None
-            "pitch": camera_servo.current_angle
-        }
-        try:
-            sock.sendto(json.dumps(data).encode(), (IP, PORT))
+        # data = {
+        #     "time": time.time(),
+        #     "x":state.x,
+        #     "y":state.y,
+        #     "rotation":state.rotation,
+        #     "left_distance":left,
+        #     "right_distance":right,
+        #     "front_distance":front,
+        #     "centerDirection": state.world.centerDirection.tolist(),
+        #     "centerMean": state.world.centerMean.tolist(),
+        #     #"ransacLines": ransac_lines.tolist() if ransac_lines is not None else None
+        #     "pitch": camera_servo.current_angle
+        # }
+        # try:
+        #     sock.sendto(json.dumps(data).encode(), (IP, PORT))
     
-        except OSError as e:
-            print(f"Network error: {e}")
+        # except OSError as e:
+        #     print(f"Network error: {e}")
 
         if len(state.readings)>10:
             state.readings.pop(0)
         if(debug["sensors"]):
             print(left, "|",front,"|",right, "|", time.time())
             #print(corridorAngle)
+lastSend = 0
 def ReadGyro():
     global dt
     raw = read_gyro_z()
     gyro_z = (raw - offset) / 131.0  # deg/sec
     state.rotation += gyro_z * dt
     state.npRotation = np.array([np.cos(math.radians(state.rotation)), np.sin(math.radians(state.rotation))])
-
+    if time.time() - lastSend > 0.1:
+        data = { "yaw" :state.rotation,
+                    "pitch": camera_servo.current_angle,
+                    
+                }
+        try:
+            sock.sendto(json.dumps(data).encode(), (IP, PORT))
+            lastSend = time.time()
+        
+        except OSError as e:
+                print(f"Network error: {e}")
     if debug["gryo"]:
         print(f"Rate: {gyro_z:6.2f} deg/s | Angle: {state.rotation:7.2f} deg")
 
