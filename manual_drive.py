@@ -472,7 +472,7 @@ def showOff(angle = None):
         if(angle is not None):
             pitch = angle
         data = { "yaw" :state.rotation,
-                    "pitch": camera_servo.current_angle,
+                    "pitch": angle,
                     
                 }
         print (data)
