@@ -413,6 +413,7 @@ def ReadGyro():
                     "pitch": camera_servo.current_angle,
                     
                 }
+        print (data)
         try:
             sock.sendto(json.dumps(data).encode(), (IP, PORT))
             lastSend = time.time()
