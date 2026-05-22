@@ -97,7 +97,7 @@ debug = {
     "gryo": False,
     "navigation": False
 }
-
+showOffMode = True
 #print("Tracking rotation...")
 
 # Steering & speed parameters
@@ -465,6 +465,7 @@ def ReadSensors(state:RobotState=state):
             #print(corridorAngle)
 lastSend = 0
 def showOff():
+    lastSend = 0
     if time.time() - lastSend > 0.01:
         data = { "yaw" :state.rotation,
                     "pitch": camera_servo.current_angle,
@@ -887,6 +888,8 @@ def ManualDrive(state:RobotState):
     elif key =="4": #testPhoto
         #state.mode = Mode.SPINNING
         #RealRun(state)
+        global showOffMode
+        showOffMode = True
         return CapturePanorama    
     elif key =="e":
         state.targetAngle = state.rotation
@@ -914,7 +917,8 @@ try:
         state.behaviour = state.behaviour(state)
         if(behaviour != state.behaviour):
             print("Switching behaviour from ", behaviour.__name__, " to ", state.behaviour.__name__ )
-           
+        if(showOffMode == True):
+            showOff()   
         now = time.time()
         dt = now - prev_time if now - prev_time < 0.5 else 0.01
         prev_time = now
