@@ -387,7 +387,7 @@ def ReadSensors(state:RobotState=state):
             "centerDirection": state.world.centerDirection.tolist(),
             "centerMean": state.world.centerMean.tolist(),
             #"ransacLines": ransac_lines.tolist() if ransac_lines is not None else None
-            "pitch": camera_servo.angle
+            "pitch": camera_servo.current_angle
         }
         try:
             sock.sendto(json.dumps(data).encode(), (IP, PORT))
