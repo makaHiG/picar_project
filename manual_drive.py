@@ -127,6 +127,7 @@ def PhotoCollumn(state:RobotState=state):
         time.sleep(1)
         if(state.realRun):
             TakePhoto(state)
+    camera_servo.smooth_turn(90,showOff)
 
 def CapturePanorama(state:RobotState):
     spinn = state.spinn
@@ -464,9 +465,12 @@ def ReadSensors(state:RobotState=state):
             print(left, "|",front,"|",right, "|", time.time())
             #print(corridorAngle)
 lastSend = 0
-def showOff():
+def showOff(angle = None):
     lastSend = 0
     if time.time() - lastSend > 0.01:
+        pitch = camera_servo.current_angle
+        if(angle is not None):
+            pitch = angle
         data = { "yaw" :state.rotation,
                     "pitch": camera_servo.current_angle,
                     
@@ -890,7 +894,7 @@ def ManualDrive(state:RobotState):
         #RealRun(state)
         global showOffMode
         showOffMode = True
-        return CapturePanorama    
+        return CapturePanoramaShowOff    
     elif key =="e":
         state.targetAngle = state.rotation
         state.world.centerDirection = np.array([math.cos(math.radians(state.rotation)), math.sin(math.radians(state.rotation))])

@@ -74,13 +74,12 @@ class Front_Wheels(object):
 		start_angle = self.current_angle
 		start_time = time.time()
 
-		transition_time = 0.5
+		transition_time = 1
 
 		while True:
 
 			elapsed = time.time() - start_time
-			if(tracker is not None):
-				tracker()
+			
 			if elapsed >= transition_time:
 				break
 
@@ -95,11 +94,12 @@ class Front_Wheels(object):
 				start_angle
 				+ (target_angle - start_angle) * smooth_t
 			)
-
+			if(tracker is not None):
+				tracker(intermediate_angle)
 			self.wheel.write(int(intermediate_angle))
 
 			time.sleep(0.01)
-
+		
 		self.wheel.write(int(target_angle))
 		self.current_angle = target_angle
 	# 	# ''' Turn the front wheels to the giving angle '''
