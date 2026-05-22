@@ -467,12 +467,12 @@ def ReadSensors(state:RobotState=state):
 lastSend = 0
 def showOff(angle = None):
     lastSend = 0
-    if time.time() - lastSend > 0.01:
+    if time.time() - lastSend > 0.03:
         pitch = camera_servo.current_angle
         if(angle is not None):
             pitch = angle
         data = { "yaw" :state.rotation,
-                    "pitch": angle,
+                    "pitch": pitch,
                     
                 }
         print (data)
