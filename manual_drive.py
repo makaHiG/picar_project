@@ -411,7 +411,7 @@ def RealRun(state:RobotState): #Setup for real run, create folders and set camer
 
 def ReadSensors(state:RobotState=state):
     #if(debug["sensors"]):
-    if(len(state.readings)>0 and state.readings[-1].time- time.ime())>3:
+    if(len(state.readings)>0 and state.readings[-1].time- time.time())>3:
         print("Sensor queue delay: ", state.readings[-1].time - state.readings[0].time)
     state.world.obstructions = [
         (obs, timer)
