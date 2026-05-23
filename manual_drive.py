@@ -446,30 +446,33 @@ def ReadSensors(state:RobotState=state):
         #state.scan.readings.append(SensorReading(time.time(),state.rotation,left,front,right))
         state.readings.append(SensorReading(time.time(),state.rotation,left,front,right))
         #ransac_lines = state.Sensors.ransac_line(state.Sensors.right_points+state.Sensors.left_points) if len(state.Sensors.right_points)+len(state.Sensors.left_points)>10 else None
-        # data = {
-        #     "time": time.time(),
-        #     "x":state.x,
-        #     "y":state.y,
-        #     "rotation":state.rotation,
-        #     "left_distance":left,
-        #     "right_distance":right,
-        #     "front_distance":front,
-        #     "centerDirection": state.world.centerDirection.tolist(),
-        #     "centerMean": state.world.centerMean.tolist(),
-        #     #"ransacLines": ransac_lines.tolist() if ransac_lines is not None else None
-        #     "pitch": camera_servo.current_angle
-        # }
-        # try:
-        #     sock.sendto(json.dumps(data).encode(), (IP, PORT))
-    
-        # except OSError as e:
-        #     print(f"Network error: {e}")
-
+        SendData(state)
         if len(state.readings)>10:
             state.readings.pop(0)
         if(debug["sensors"]):
             print(left, "|",front,"|",right, "|", time.time())
             #print(corridorAngle)
+def SendData(state:RobotState):
+        data = {
+            "time": time.time(),
+            "x":state.x,
+            "y":state.y,
+            "rotation":state.rotation,
+            "left_distance":state.left_distance,
+            "right_distance":state.right_distance,
+            "front_distance":state.front_distance,
+            "centerDirection": state.world.centerDirection.tolist(),
+            "centerMean": state.world.centerMean.tolist(),
+            
+        }
+        try:
+            sock.sendto(json.dumps(data).encode(), (IP, PORT))
+        
+        except OSError as e:
+            print(f"Network error: {e}")
+
+
+
 lastSend = 0
 def showOff(angle = None):
     lastSend = 0
