@@ -568,6 +568,7 @@ def SteerCenter(state:RobotState):
     buffer_distance = 30
     tau = 0.15  # seconds
     alpha = 1 - math.exp(-dt / tau)
+    mean_alpha = 0.5
     #alpha = 1 * dt  # 0 = very stable, 1 = very reactive
     def furtherPoint():
         p = np.array([state.x, state.y])
@@ -625,7 +626,7 @@ def SteerCenter(state:RobotState):
             # #Flip direction if it points the wrong way
             
 
-            state.world.centerMean= alpha * new_center_mean + (1 - alpha) * state.world.centerMean
+            state.world.centerMean= mean_alpha * new_center_mean + (1 - mean_alpha) * state.world.centerMean
 
             # IMPORTANT: re-normalize direction
             state.world.centerDirection = state.world.centerDirection / np.linalg.norm(state.world.centerDirection)
