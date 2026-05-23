@@ -97,7 +97,7 @@ debug = {
     "gryo": False,
     "navigation": False
 }
-showOffMode = True
+showOffMode = False
 #print("Tracking rotation...")
 
 # Steering & speed parameters
