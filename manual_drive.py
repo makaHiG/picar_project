@@ -123,11 +123,14 @@ def PhotoCollumn(state:RobotState=state):
             time.sleep(0.3)
     if(state.spinn.stepCount == 0 or state.spinn.stepCount == 3):
         state.spinn.row=5
-        camera_servo.smooth_turn(180,showOff)
+        if(showOffMode):
+            camera_servo.smooth_turn(180,showOff)
+        else:
+            camera_servo.smooth_turn(180)
         time.sleep(1)
         if(state.realRun):
             TakePhoto(state)
-    camera_servo.smooth_turn(90,showOff)
+    camera_servo.smooth_turn(90,showOff if showOffMode else None)
 
 def CapturePanorama(state:RobotState):
     spinn = state.spinn
@@ -407,6 +410,9 @@ def RealRun(state:RobotState): #Setup for real run, create folders and set camer
     # ], check=True)
 
 def ReadSensors(state:RobotState=state):
+    #if(debug["sensors"]):
+    if(state.readings[-1].time - state.readings[0].time)>3:
+        print("Sensor queue delay: ", state.readings[-1].time - state.readings[0].time)
     state.world.obstructions = [
         (obs, timer)
         for obs, timer in state.world.obstructions
