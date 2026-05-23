@@ -552,7 +552,8 @@ def SteerCenter(state:RobotState):
 
     if len(state.Sensors.right_points)>0: 
         if len(state.world.rightWall)==0 or state.world.rightWall[-1] !=state.Sensors.right_points[-1]:
-            state.world.rightWall.append(state.Sensors.right_points[-1]) 
+            state.world.rightWall.append(state.Sensors.right_points[-1])
+             
     if len(state.Sensors.left_points)>0: 
         if len(state.world.leftWall)==0 or state.world.leftWall[-1] !=state.Sensors.left_points[-1]:
             state.world.leftWall.append(state.Sensors.left_points[-1])
@@ -598,8 +599,9 @@ def SteerCenter(state:RobotState):
             w_l = weight(l_rmse)
             w_r = weight(r_rmse)
             bias = (w_l-w_r)/(w_l+w_r+1e-6)
-            confidence = abs(w_r - w_l) / (w_r + w_l + 1e-6)
-            offset = bias * confidence * buffer_distance * state.world.centerNormal
+            #confidence = abs(w_r - w_l) / (w_r + w_l + 1e-6)
+            #offset = bias * confidence * buffer_distance * state.world.centerNormal
+            offset = bias * buffer_distance * state.world.centerNormal
             # fix flipping
             if np.dot(l_direction, r_direction) < 0:
                 r_direction = -r_direction
