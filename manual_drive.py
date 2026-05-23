@@ -114,7 +114,7 @@ Travel_Speed = 48*3.14/5.55 #Speed from test,cm/s
 def PhotoCollumn(state:RobotState=state):
     for i in range(len(state.rowAngles)):
         angle = state.rowAngles[i]
-        camera_servo.smooth_turn(angle,showOff)
+        camera_servo.smooth_turn(angle,showOff if showOffMode else None)
         state.spinn.row=i
         if(state.realRun):
             time.sleep(1) #Probably needed   #May not be needed, as warmup runs for half a second anyway
