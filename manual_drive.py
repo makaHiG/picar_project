@@ -543,7 +543,7 @@ def SteerCenter(state:RobotState):
             return SpinnTo(state,center_angle)
         if((state.right_distance<100 or state.left_distance<100) and state.right_distance>0 and state.left_distance>0):
             midpoint = state.position+ (state.rightVector()*state.right_distance+state.leftVector()*state.left_distance)/2
-            MoveToPoint(state,midpoint)
+            return MoveToPoint(state,midpoint)
         state.lastPhotoSpot=(state.x,state.y)
         wheels.stop()
         #state.mode = Mode.SPINNING
@@ -566,7 +566,9 @@ def SteerCenter(state:RobotState):
     derivative = 0
     integral = 0
     buffer_distance = 30
-    alpha = 1 * dt  # 0 = very stable, 1 = very reactive
+    tau = 0.15  # seconds
+    alpha = 1 - math.exp(-dt / tau)
+    #alpha = 1 * dt  # 0 = very stable, 1 = very reactive
     def furtherPoint():
         p = np.array([state.x, state.y])
         c0 = state.world.centerMean
