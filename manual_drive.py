@@ -429,7 +429,7 @@ def RealRun(state:RobotState): #Setup for real run, create folders and set camer
     # ], check=True)
 def ReadLidar():
 
-    while not sensor_queue.empty():
+    while not lidar_queue.empty():
         scan = lidar_queue.get_nowait()
         print(scan)
         #print(scan.append)
