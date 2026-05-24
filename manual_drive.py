@@ -985,5 +985,6 @@ finally:
     wheels.speed=0
     camera_servo.turn_straight()
     US_Manager.stop()
-    lidar.stop()
-    lidar.disconnect()
+    if(lidar_connected):
+        lidar.stop()
+        lidar.disconnect()
