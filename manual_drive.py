@@ -15,7 +15,17 @@ from datetime import datetime
 from rplidar import RPLidar
 PORT = '/dev/ttyUSB0'
 
-lidar = RPLidar(PORT)
+
+try:
+    lidar = RPLidar(PORT)
+    info = lidar.get_info()
+
+    print("LiDAR connected:", info)
+
+    lidar_connected = True
+
+except Exception as e:
+    print("LiDAR not available:", e)
 
 import numpy as np
 # from . import ultrasonic_manager
@@ -959,7 +969,7 @@ try:
         ReadGyro()
         ReadSensors()
         EstimateDistance(state)
-        ReadLidar(state)
+        if(lidar_connected):ReadLidar(state)
         # if min(read_line_follower())<30:
         #     # state.behaviour = ManualDrive
         #     # wheels.stop()
