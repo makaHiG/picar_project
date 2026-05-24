@@ -975,7 +975,7 @@ try:
         ReadGyro()
         ReadSensors()
         EstimateDistance(state)
-        if(lidar_connected):ReadLidar(state)
+        if(lidar_connected):ReadLidar()
         # if min(read_line_follower())<30:
         #     # state.behaviour = ManualDrive
         #     # wheels.stop()
