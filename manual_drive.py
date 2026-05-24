@@ -418,9 +418,7 @@ def ReadLidar(state:RobotState=state):
 
             for scan in lidar.iter_scans():
                 print(scan[:5])  # print first 5 points
-        finally:
-            lidar.stop()
-            lidar.disconnect()
+                
 def ReadSensors(state:RobotState=state):
     #if(debug["sensors"]):
     if(len(state.readings)>0 and state.readings[-1].time- time.time())>3:
