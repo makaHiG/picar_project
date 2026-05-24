@@ -15,7 +15,7 @@ from datetime import datetime
 from rplidar import RPLidar
 PORT = '/dev/ttyUSB0'
 
-
+lidar_connected = False
 try:
     lidar = RPLidar(PORT)
     info = lidar.get_info()
@@ -421,19 +421,20 @@ def RealRun(state:RobotState): #Setup for real run, create folders and set camer
     #     "--set-fmt-video=width=1920,height=1080,pixelformat=MJPEG",
     #     "-c", "auto_exposure=1"
     # ], check=True)
-def ReadLidar(state:RobotState=state):
-        #try:
-            # print(lidar.get_info())
-            # print(lidar.get_health())
+def ReadLidar(state: RobotState = state):
+
+    scan = next(lidar.iter_scans())
+
     closest_angle = None
     closest_distance = float('inf')
-    for scan in lidar.iter_scans():
-        for quality, angle, distance in scan:
 
-            if(distance<closest_distance):
-                closest_distance = distance
-                closest_angle = angle
-    print(closest_angle)  # print first 5 points
+    for quality, angle, distance in scan:
+
+        if distance < closest_distance:
+            closest_distance = distance
+            closest_angle = angle
+
+    print(closest_angle, closest_distance)
 
 def ReadSensors(state:RobotState=state):
     #if(debug["sensors"]):
