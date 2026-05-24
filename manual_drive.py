@@ -63,6 +63,8 @@ os.makedirs(base_folder, exist_ok=True)
 lidar_queue = Queue()
 lidar_manager = LidarManager(lidar_queue) 
 lidar_connected = lidar_manager.connected
+if(lidar_connected):
+    lidar_manager.start()
 # Initialize ultrasonic sensors
 sensor_queue = Queue()
 US_Manager = UltrasonicManager(20, (16,12), (26,19), sensor_queue)
@@ -991,6 +993,4 @@ finally:
     wheels.speed=0
     camera_servo.turn_straight()
     US_Manager.stop()
-    if(lidar_connected):
-        lidar.stop()
-        lidar.disconnect()
+    lidar_manager.stop()
