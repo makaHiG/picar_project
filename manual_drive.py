@@ -6,13 +6,16 @@ import termios
 import time
 import math
 import socket
-
 import json
 from multiprocessing import Queue
 from dataclasses import dataclass
 import random
 from turtle import pos
 from datetime import datetime
+from rplidar import RPLidar
+PORT = '/dev/ttyUSB0'
+
+lidar = RPLidar(PORT)
 
 import numpy as np
 # from . import ultrasonic_manager
@@ -93,7 +96,7 @@ offset = sum(samples) / len(samples)
 debug = {
     "wheels": False,
     "camera": False,
-    "sensors": True,
+    "sensors": False,
     "gryo": False,
     "navigation": False
 }
@@ -408,7 +411,16 @@ def RealRun(state:RobotState): #Setup for real run, create folders and set camer
     #     "--set-fmt-video=width=1920,height=1080,pixelformat=MJPEG",
     #     "-c", "auto_exposure=1"
     # ], check=True)
+def ReadLidar(state:RobotState=state):
+        #try:
+            print(lidar.info)
+            print(lidar.health)
 
+            for scan in lidar.iter_scans():
+                print(scan[:5])  # print first 5 points
+        finally:
+            lidar.stop()
+            lidar.disconnect()
 def ReadSensors(state:RobotState=state):
     #if(debug["sensors"]):
     if(len(state.readings)>0 and state.readings[-1].time- time.time())>3:
@@ -943,6 +955,7 @@ try:
         ReadGyro()
         ReadSensors()
         EstimateDistance(state)
+        ReadLidar(state)
         # if min(read_line_follower())<30:
         #     # state.behaviour = ManualDrive
         #     # wheels.stop()
@@ -957,3 +970,5 @@ finally:
     wheels.speed=0
     camera_servo.turn_straight()
     US_Manager.stop()
+    lidar.stop()
+    lidar.disconnect()
