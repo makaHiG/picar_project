@@ -413,12 +413,12 @@ def RealRun(state:RobotState): #Setup for real run, create folders and set camer
     # ], check=True)
 def ReadLidar(state:RobotState=state):
         #try:
-            print(lidar.info)
-            print(lidar.health)
+            print(lidar.get_info())
+            print(lidar.get_health())
 
             for scan in lidar.iter_scans():
                 print(scan[:5])  # print first 5 points
-                
+
 def ReadSensors(state:RobotState=state):
     #if(debug["sensors"]):
     if(len(state.readings)>0 and state.readings[-1].time- time.time())>3:
