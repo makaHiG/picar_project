@@ -413,11 +413,17 @@ def RealRun(state:RobotState): #Setup for real run, create folders and set camer
     # ], check=True)
 def ReadLidar(state:RobotState=state):
         #try:
-            print(lidar.get_info())
-            print(lidar.get_health())
+            # print(lidar.get_info())
+            # print(lidar.get_health())
+    closest_angle = None
+    closest_distance = float('inf')
+    for scan in lidar.iter_scans():
+        for quality, angle, distance in scan:
 
-            for scan in lidar.iter_scans():
-                print(scan[:5])  # print first 5 points
+            if(distance<closest_distance):
+                closest_distance = distance
+                closest_angle = angle
+    print(closest_angle)  # print first 5 points
 
 def ReadSensors(state:RobotState=state):
     #if(debug["sensors"]):
