@@ -13,19 +13,18 @@ import random
 from turtle import pos
 from datetime import datetime
 from rplidar import RPLidar
-PORT = '/dev/ttyUSB0'
+# PORT = '/dev/ttyUSB0'
 
-lidar_connected = False
-try:
-    lidar = RPLidar(PORT)
-    info = lidar.get_info()
+# try:
+#     lidar = RPLidar(PORT)
+#     info = lidar.get_info()
 
-    print("LiDAR connected:", info)
+#     print("LiDAR connected:", info)
 
-    lidar_connected = True
+#     lidar_connected = True
 
-except Exception as e:
-    print("LiDAR not available:", e)
+# except Exception as e:
+#     print("LiDAR not available:", e)
 
 import numpy as np
 # from . import ultrasonic_manager
@@ -60,8 +59,10 @@ print(picar.back_wheels.__file__)
 
 base_folder = os.path.expanduser("~/photos")
 os.makedirs(base_folder, exist_ok=True)
+
 lidar_queue = Queue()
-lidar_manager = LidarManager(lidar_queue) if lidar_connected else None
+lidar_manager = LidarManager(lidar_queue) 
+lidar_connected = lidar_manager.connected
 # Initialize ultrasonic sensors
 sensor_queue = Queue()
 US_Manager = UltrasonicManager(20, (16,12), (26,19), sensor_queue)

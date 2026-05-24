@@ -17,6 +17,14 @@ robotRadius = 24
 lidarOffset = np.array([10,0])
 class LidarManager:
     def __init__(self, que):
+        self.connected = False
+        self.lidar = None
+        try:
+            self.lidar = RPLidar(PORT_NAME)
+            self.connected = True
+        except Exception as e:
+            print("LiDAR unavailable:", e)
+
         self.que = que
         self.running = Value('b', False)
         self.process = Process(target=self.run)
@@ -33,8 +41,8 @@ class LidarManager:
 
     def run(self):
         try:
-            scan_iterator = lidar.iter_scans()        
-            lidar = RPLidar(PORT_NAME)
+            scan_iterator = self.lidar.iter_scans()        
+            
             
             while self.running.value:
                 scan = next(scan_iterator)
