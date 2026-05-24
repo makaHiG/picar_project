@@ -32,6 +32,7 @@ import numpy as np
 # from ultrasonic_manager import UltrasonicManager
 # import ultrasonic_module as UA4
 from .ultrasonic_manager import UltrasonicManager
+from .lidar_manager import LidarManager
 #from . import ultrasonic_module as UA4
 from .state import RobotState,Mode,ScanState,SpinnState
 from .Line_Follower import Line_Follower
@@ -59,6 +60,8 @@ print(picar.back_wheels.__file__)
 
 base_folder = os.path.expanduser("~/photos")
 os.makedirs(base_folder, exist_ok=True)
+lidar_queue = Queue()
+lidar_manager = LidarManager(lidar_queue) if lidar_connected else None
 # Initialize ultrasonic sensors
 sensor_queue = Queue()
 US_Manager = UltrasonicManager(20, (16,12), (26,19), sensor_queue)
@@ -421,20 +424,22 @@ def RealRun(state:RobotState): #Setup for real run, create folders and set camer
     #     "--set-fmt-video=width=1920,height=1080,pixelformat=MJPEG",
     #     "-c", "auto_exposure=1"
     # ], check=True)
-def ReadLidar(state: RobotState = state):
+def ReadLidar():
 
-    scan = next(lidar.iter_scans())
+    while not sensor_queue.empty():
+        scan = sensor_queue.get_nowait()
+        print(scan)
+        print(scan.append)
+    # closest_angle = None
+    # closest_distance = float('inf')
 
-    closest_angle = None
-    closest_distance = float('inf')
+    # for quality, angle, distance in scan:
 
-    for quality, angle, distance in scan:
+    #     if distance < closest_distance:
+    #         closest_distance = distance
+    #         closest_angle = angle
 
-        if distance < closest_distance:
-            closest_distance = distance
-            closest_angle = angle
-
-    print(closest_angle, closest_distance)
+    # print(closest_angle, closest_distance)
 
 def ReadSensors(state:RobotState=state):
     #if(debug["sensors"]):
