@@ -68,8 +68,8 @@ class LidarManager:
 
                 self.que.put(spots)
         finally:
-            lidar.stop()
-            lidar.disconnect()
+            self.lidar.stop()
+            self.lidar.disconnect()
     
 
 
