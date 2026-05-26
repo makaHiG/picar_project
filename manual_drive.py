@@ -608,8 +608,8 @@ def SteerCenter(state:RobotState):
     buffer_distance = 30
     tau = 0.15  # seconds
     #alpha = 1 - math.exp(-dt / tau)
-    mean_alpha = 1*dt
-    alpha = 0.5 * dt  # 0 = very stable, 1 = very reactive
+    mean_alpha = 1
+    alpha = 0.5  # 0 = very stable, 1 = very reactive
     def furtherPoint():
         p = np.array([state.x, state.y])
         c0 = state.world.centerMean
