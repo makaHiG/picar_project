@@ -770,7 +770,7 @@ def Obstructed(state: RobotState):
     center = state.world.centerDirection
     left_normal  = np.array([-center[1], center[0]])
     right_normal = np.array([ center[1], -center[0]])
-    buffer = 25
+    buffer = 35
     safePoint = state.position.copy()
     checked_right = False
     checked_left = False
@@ -993,4 +993,5 @@ finally:
     wheels.speed=0
     camera_servo.turn_straight()
     US_Manager.stop()
-    lidar_manager.stop()
+    if(lidar_manager.connected):
+        lidar_manager.stop()
