@@ -432,6 +432,10 @@ def ReadLidar():
     while not lidar_queue.empty():
         scan = lidar_queue.get_nowait()
         print(scan)
+        if(scan is not None):
+            state.scan.readings.append(scan)
+            if len(state.scan.readings)>10:
+                state.scan.readings.pop(0)
         #print(scan.append)
     # closest_angle = None
     # closest_distance = float('inf')

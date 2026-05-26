@@ -5,6 +5,7 @@ import time
 from multiprocessing import Process, Value
 from rplidar import RPLidar
 from queue import Full
+from queue import Empty
 from serial.tools import list_ports
 
 
@@ -63,9 +64,14 @@ class LidarManager:
                         'pos': np.array([x, y])+lidarOffset,
                         "time": time.time()
                     })
-                while not self.que.empty():
-                    self.que.get_nowait()
 
+                
+                try:
+                    while True:
+                        self.que.get_nowait()
+
+                except Empty:
+                    pass
                 self.que.put(spots)
         finally:
             self.lidar.stop()
